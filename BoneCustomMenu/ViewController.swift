@@ -36,8 +36,9 @@ class ViewController: UIViewController {
 
         menuView = BoneCustomMenu(top: 200, height: 40)
         menuView.delegate = self
-        BoneCustomPopup.Color.font = UIColor.gray
+        BoneCustomPopup.Color.font = UIColor.gray   // 字体颜色
 //        BoneCustomPopup.Color.fontSelect = UIColor.red
+//        BoneCustomPopup.Color.line // 分割线颜色
         self.view.addSubview(menuView)
         
         menuView.reloadData()
