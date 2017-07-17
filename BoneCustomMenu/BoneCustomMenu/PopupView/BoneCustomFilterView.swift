@@ -18,7 +18,7 @@ class BoneCustomFilterView: UIView {
     fileprivate var confirmBtn: UIButton!
     fileprivate var selectArray = [[Int]]()
     
-    var delegate: BoneCustomListsDelegate?
+    var delegate: BoneCustomDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -10,7 +10,7 @@ import UIKit
 
 class BoneCustomListsView: UIView {
     
-    var delegate: BoneCustomListsDelegate?
+    var delegate: BoneCustomDelegate?
     
     typealias Color = BoneCustomPopup.Color
     typealias Size = BoneCustomPopup.Size

@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E1A4FD01F15116A00971EC1 /* BoneCustomMenuPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A4FCF1F15116A00971EC1 /* BoneCustomMenuPresenter.swift */; };
-		7E1A4FD21F151AA200971EC1 /* BoneCustomListsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A4FD11F151AA200971EC1 /* BoneCustomListsDelegate.swift */; };
 		7E1A4FD41F160B1B00971EC1 /* BoneCustomIcon.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */; };
-		7E1A4FD61F16183500971EC1 /* BoneListsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A4FD51F16183500971EC1 /* BoneListsCell.swift */; };
 		7E3038131F0F257B00B16ACB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038121F0F257B00B16ACB /* AppDelegate.swift */; };
 		7E3038151F0F257B00B16ACB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038141F0F257B00B16ACB /* ViewController.swift */; };
 		7E3038181F0F257B00B16ACB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E3038161F0F257B00B16ACB /* Main.storyboard */; };
@@ -18,19 +15,18 @@
 		7E30381D1F0F257B00B16ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7E30381B1F0F257B00B16ACB /* LaunchScreen.storyboard */; };
 		7E3038261F0F48B800B16ACB /* BoneCustomPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038251F0F48B800B16ACB /* BoneCustomPopup.swift */; };
 		7E3038281F0FC36000B16ACB /* BoneCustomMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038271F0FC36000B16ACB /* BoneCustomMenu.swift */; };
-		7E30382A1F0FC3F000B16ACB /* BoneTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038291F0FC3F000B16ACB /* BoneTools.swift */; };
-		7E30382C1F0FC40B00B16ACB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E30382B1F0FC40B00B16ACB /* String+Extension.swift */; };
 		7E3038301F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E30382F1F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift */; };
-		7E39A0691F19C1EB0030EB75 /* BoneCustomFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0681F19C1EB0030EB75 /* BoneCustomFilterView.swift */; };
-		7E39A06B1F19E8990030EB75 /* BoneFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A06A1F19E8990030EB75 /* BoneFilterCell.swift */; };
-		7EAAC6161F149B7C00963197 /* BoneCustomListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EAAC6151F149B7C00963197 /* BoneCustomListsView.swift */; };
+		7E39A06E1F1C98F50030EB75 /* BoneTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A06C1F1C98F50030EB75 /* BoneTools.swift */; };
+		7E39A06F1F1C98F50030EB75 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A06D1F1C98F50030EB75 /* String+Extension.swift */; };
+		7E39A0761F1C999E0030EB75 /* BoneCustomFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0711F1C999E0030EB75 /* BoneCustomFilterView.swift */; };
+		7E39A0771F1C999E0030EB75 /* BoneCustomDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */; };
+		7E39A0781F1C999E0030EB75 /* BoneCustomListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0731F1C999E0030EB75 /* BoneCustomListsView.swift */; };
+		7E39A0791F1C999E0030EB75 /* BoneFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0741F1C999E0030EB75 /* BoneFilterCell.swift */; };
+		7E39A07A1F1C999E0030EB75 /* BoneListsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0751F1C999E0030EB75 /* BoneListsCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7E1A4FCF1F15116A00971EC1 /* BoneCustomMenuPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomMenuPresenter.swift; sourceTree = "<group>"; };
-		7E1A4FD11F151AA200971EC1 /* BoneCustomListsDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomListsDelegate.swift; sourceTree = "<group>"; };
 		7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BoneCustomIcon.bundle; sourceTree = "<group>"; };
-		7E1A4FD51F16183500971EC1 /* BoneListsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneListsCell.swift; sourceTree = "<group>"; };
 		7E30380F1F0F257B00B16ACB /* BoneCustomMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoneCustomMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E3038121F0F257B00B16ACB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7E3038141F0F257B00B16ACB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -40,12 +36,14 @@
 		7E30381E1F0F257B00B16ACB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7E3038251F0F48B800B16ACB /* BoneCustomPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomPopup.swift; sourceTree = "<group>"; };
 		7E3038271F0FC36000B16ACB /* BoneCustomMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomMenu.swift; sourceTree = "<group>"; };
-		7E3038291F0FC3F000B16ACB /* BoneTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneTools.swift; sourceTree = "<group>"; };
-		7E30382B1F0FC40B00B16ACB /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		7E30382F1F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomMenuDelegate.swift; sourceTree = "<group>"; };
-		7E39A0681F19C1EB0030EB75 /* BoneCustomFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterView.swift; sourceTree = "<group>"; };
-		7E39A06A1F19E8990030EB75 /* BoneFilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneFilterCell.swift; sourceTree = "<group>"; };
-		7EAAC6151F149B7C00963197 /* BoneCustomListsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomListsView.swift; sourceTree = "<group>"; };
+		7E39A06C1F1C98F50030EB75 /* BoneTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneTools.swift; sourceTree = "<group>"; };
+		7E39A06D1F1C98F50030EB75 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		7E39A0711F1C999E0030EB75 /* BoneCustomFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterView.swift; sourceTree = "<group>"; };
+		7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomDelegate.swift; sourceTree = "<group>"; };
+		7E39A0731F1C999E0030EB75 /* BoneCustomListsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomListsView.swift; sourceTree = "<group>"; };
+		7E39A0741F1C999E0030EB75 /* BoneFilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneFilterCell.swift; sourceTree = "<group>"; };
+		7E39A0751F1C999E0030EB75 /* BoneListsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneListsCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,15 +57,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7E1A4FCE1F150C7E00971EC1 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-				7E30382B1F0FC40B00B16ACB /* String+Extension.swift */,
-				7E3038291F0FC3F000B16ACB /* BoneTools.swift */,
-			);
-			name = "New Group";
-			sourceTree = "<group>";
-		};
 		7E3038061F0F257B00B16ACB = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +78,8 @@
 			children = (
 				7E3038241F0F258900B16ACB /* BoneCustomMenu */,
 				7E3038121F0F257B00B16ACB /* AppDelegate.swift */,
+				7E39A06C1F1C98F50030EB75 /* BoneTools.swift */,
+				7E39A06D1F1C98F50030EB75 /* String+Extension.swift */,
 				7E3038141F0F257B00B16ACB /* ViewController.swift */,
 				7E3038161F0F257B00B16ACB /* Main.storyboard */,
 				7E3038191F0F257B00B16ACB /* Assets.xcassets */,
@@ -101,27 +92,25 @@
 		7E3038241F0F258900B16ACB /* BoneCustomMenu */ = {
 			isa = PBXGroup;
 			children = (
-				7E39A0671F19BF230030EB75 /* CustomView */,
+				7E39A0701F1C999E0030EB75 /* PopupView */,
 				7E3038251F0F48B800B16ACB /* BoneCustomPopup.swift */,
 				7E3038271F0FC36000B16ACB /* BoneCustomMenu.swift */,
-				7E1A4FCF1F15116A00971EC1 /* BoneCustomMenuPresenter.swift */,
 				7E30382F1F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift */,
-				7E1A4FCE1F150C7E00971EC1 /* New Group */,
 				7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */,
 			);
 			path = BoneCustomMenu;
 			sourceTree = "<group>";
 		};
-		7E39A0671F19BF230030EB75 /* CustomView */ = {
+		7E39A0701F1C999E0030EB75 /* PopupView */ = {
 			isa = PBXGroup;
 			children = (
-				7E1A4FD11F151AA200971EC1 /* BoneCustomListsDelegate.swift */,
-				7EAAC6151F149B7C00963197 /* BoneCustomListsView.swift */,
-				7E1A4FD51F16183500971EC1 /* BoneListsCell.swift */,
-				7E39A0681F19C1EB0030EB75 /* BoneCustomFilterView.swift */,
-				7E39A06A1F19E8990030EB75 /* BoneFilterCell.swift */,
+				7E39A0711F1C999E0030EB75 /* BoneCustomFilterView.swift */,
+				7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */,
+				7E39A0731F1C999E0030EB75 /* BoneCustomListsView.swift */,
+				7E39A0741F1C999E0030EB75 /* BoneFilterCell.swift */,
+				7E39A0751F1C999E0030EB75 /* BoneListsCell.swift */,
 			);
-			name = CustomView;
+			path = PopupView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,18 +187,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E1A4FD01F15116A00971EC1 /* BoneCustomMenuPresenter.swift in Sources */,
-				7E1A4FD61F16183500971EC1 /* BoneListsCell.swift in Sources */,
 				7E3038151F0F257B00B16ACB /* ViewController.swift in Sources */,
+				7E39A07A1F1C999E0030EB75 /* BoneListsCell.swift in Sources */,
+				7E39A0791F1C999E0030EB75 /* BoneFilterCell.swift in Sources */,
 				7E3038131F0F257B00B16ACB /* AppDelegate.swift in Sources */,
 				7E3038301F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift in Sources */,
-				7E39A0691F19C1EB0030EB75 /* BoneCustomFilterView.swift in Sources */,
+				7E39A06F1F1C98F50030EB75 /* String+Extension.swift in Sources */,
+				7E39A0771F1C999E0030EB75 /* BoneCustomDelegate.swift in Sources */,
+				7E39A0781F1C999E0030EB75 /* BoneCustomListsView.swift in Sources */,
 				7E3038261F0F48B800B16ACB /* BoneCustomPopup.swift in Sources */,
-				7EAAC6161F149B7C00963197 /* BoneCustomListsView.swift in Sources */,
-				7E39A06B1F19E8990030EB75 /* BoneFilterCell.swift in Sources */,
-				7E30382A1F0FC3F000B16ACB /* BoneTools.swift in Sources */,
-				7E1A4FD21F151AA200971EC1 /* BoneCustomListsDelegate.swift in Sources */,
-				7E30382C1F0FC40B00B16ACB /* String+Extension.swift in Sources */,
+				7E39A0761F1C999E0030EB75 /* BoneCustomFilterView.swift in Sources */,
+				7E39A06E1F1C98F50030EB75 /* BoneTools.swift in Sources */,
 				7E3038281F0FC36000B16ACB /* BoneCustomMenu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

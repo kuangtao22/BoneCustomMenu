@@ -171,7 +171,7 @@ extension BoneCustomMenu: BoneCustomPopupDelegate {
 
 
 // MARK: - 列表类型代理协议
-extension BoneCustomMenu: BoneCustomListsDelegate {
+extension BoneCustomMenu: BoneCustomDelegate {
     
     
     internal func customList(_ view: UIView, didSelect filterDatas: [[Int]], isConfirm: Bool) {

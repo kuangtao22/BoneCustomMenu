@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol BoneCustomListsDelegate: NSObjectProtocol {
+protocol BoneCustomDelegate: NSObjectProtocol {
     
     func numberOfSection(_ view: UIView) -> Int
     
