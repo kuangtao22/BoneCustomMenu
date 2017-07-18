@@ -135,7 +135,9 @@ extension BoneCustomFilterView: UITableViewDelegate, UITableViewDataSource {
         if self.items.count > 0 {
             cell?.datas = self.items[indexPath.section]
         }
-        cell?.selects = self.selectArray[indexPath.section]
+        if self.selectArray.count > 0 {
+            cell?.selects = self.selectArray[indexPath.section]
+        }
         cell?.onClickAction(cellback: { (array) in
             self.selectArray[indexPath.section] = array
         })

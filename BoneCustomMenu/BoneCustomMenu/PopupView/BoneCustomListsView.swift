@@ -81,9 +81,13 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
         }
         
         self.leftTable.reloadData()
-        // 自动定位到选中行
-        let leftIndex = IndexPath(row: self.selectRow.section, section: 0)
-        self.leftTable.scrollToRow(at: leftIndex, at: .middle, animated: false)
+        for i in 0..<self.leftTable.numberOfSections {
+            if self.leftTable.numberOfRows(inSection: i) > 0 {
+                // 自动定位到选中行
+                let leftIndex = IndexPath(row: self.selectRow.section, section: 0)
+                self.leftTable.scrollToRow(at: leftIndex, at: .middle, animated: false)
+            }
+        }
         
         
         if self.delegate?.isRight() == true {
