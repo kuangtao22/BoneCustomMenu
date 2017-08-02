@@ -56,8 +56,6 @@ class BoneCustomListsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
 }
 
 extension BoneCustomListsView: BoneCustomMenuProtocol {
@@ -79,7 +77,7 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
             self.rightTable.isHidden = true
             self.leftTable.frame.size.width = self.frame.width
         }
-        
+
         self.leftTable.reloadData()
         for i in 0..<self.leftTable.numberOfSections {
             if self.leftTable.numberOfRows(inSection: i) > 0 {
@@ -88,13 +86,13 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
                 self.leftTable.scrollToRow(at: leftIndex, at: .middle, animated: false)
             }
         }
-        
-        
+
         if self.delegate?.isRight() == true {
             self.rightTable.reloadData()
             let rightIndex = IndexPath(row: self.selectRow.row, section: 0)
             self.rightTable.scrollToRow(at: rightIndex, at: .middle, animated: false)
         }
+
     }
 }
 

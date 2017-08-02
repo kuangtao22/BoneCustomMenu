@@ -36,20 +36,24 @@ class BoneFilterCell: UITableViewCell {
                 return
             }
             
-            let width = UIScreen.main.bounds.width / CGFloat(self.col)
-            let height = BoneCustomPopup.Size.rowHeight
+            let width = UIScreen.main.bounds.width / CGFloat(self.col) + 0.5
+            let height = Size.rowHeight
             for i in 0..<datas.count {
-                let x = CGFloat(i % self.col) * width
+                var x = CGFloat(i % self.col) * width
+                x = (x == 0) ? 0 : (x - 0.5 * CGFloat(i))
                 let y = CGFloat(i / self.col) * height
                 let button = UIButton(frame: CGRect(
                     origin: CGPoint(x: x, y: y),
                     size: CGSize(width: width, height: height))
                 )
                 button.setTitle(datas[i].title, for: UIControlState.normal)
+
                 button.setTitleColor(Color.font, for: UIControlState.normal)
-                button.setTitleColor(UIColor.white, for: UIControlState.selected)
+                button.setTitleColor(Color.fontSelect, for: UIControlState.selected)
 //                button.setImage(datas[i].icon, for: UIControlState.normal)
-                button.setImage(BoneCustomPopup.Icon.select?.color(to: UIColor.white), for: UIControlState.selected)
+                
+                let gouIcon = BoneCustomPopup.Icon.select?.color(to: Color.fontSelect)
+                button.setImage(gouIcon, for: UIControlState.selected)
                 button.tag = i + 100
                 button.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)
                 button.layer.borderColor = UIColor.clear.cgColor
@@ -70,14 +74,14 @@ class BoneFilterCell: UITableViewCell {
             
             if datas.count < 2 {
                 let colLine = UIView(
-                    frame: CGRect(x: width, y: 0, width: 0.5, height: BoneFilterCell.getHeight)
+                    frame: CGRect(x: width - 0.5, y: 0, width: 0.5, height: BoneFilterCell.getHeight)
                 )
                 colLine.backgroundColor = BoneCustomPopup.Color.line
                 self.contentView.addSubview(colLine)
             } else {
                 for i in 0..<self.col {
                     let colLine = UIView(
-                        frame: CGRect(x: CGFloat(i) * width, y: 0, width: 0.5, height: BoneFilterCell.getHeight)
+                        frame: CGRect(x: CGFloat(i) * width - 0.5 * CGFloat(i), y: 0, width: 0.5, height: BoneFilterCell.getHeight)
                     )
                     colLine.backgroundColor = BoneCustomPopup.Color.line
                     self.contentView.addSubview(colLine)
@@ -112,11 +116,14 @@ class BoneFilterCell: UITableViewCell {
     private var selectArray = NSMutableArray()
     fileprivate var onClick: touchUpInside?
     
-    static var getHeight: CGFloat = BoneCustomPopup.Size.rowHeight
+    static var getHeight: CGFloat = Size.rowHeight
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = UITableViewCellSelectionStyle.none
         
+        self.contentView.layer.masksToBounds = false
+        self.layer.masksToBounds = false
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -163,8 +170,10 @@ class BoneFilterCell: UITableViewCell {
     
     private func setButtonState(_ button: UIButton?) {
         if button?.isSelected == true {
-            button?.backgroundColor = Color.fontSelect.withAlphaComponent(0.7)
+            button?.layer.borderColor = Color.fontSelect.withAlphaComponent(0.6).cgColor
+            button?.backgroundColor = Color.fontSelect.withAlphaComponent(0.05)
         } else {
+            button?.layer.borderColor = UIColor.white.cgColor
             button?.backgroundColor = UIColor.white
         }
     }

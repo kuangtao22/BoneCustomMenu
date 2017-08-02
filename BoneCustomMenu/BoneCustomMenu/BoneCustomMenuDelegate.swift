@@ -124,4 +124,10 @@ extension BoneCustomMenuDelegate {
     func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, filterDatas: [[Int]]) {
         
     }
+    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneCustomPopup.IndexPath) -> String {
+        return ""
+    }
+    func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneCustomPopup.IndexPath) -> Int {
+        return 0
+    }
 }

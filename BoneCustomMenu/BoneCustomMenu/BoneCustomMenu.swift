@@ -28,7 +28,7 @@ class BoneCustomMenu: BoneCustomPopup {
     fileprivate var filterDatas = [[Int]]()
     
     convenience init(top: CGFloat, height: CGFloat) {
-        self.init(frame: CGRect(x: 0, y: top, width: Screen.width, height: height))
+        self.init(frame: CGRect(x: 0, y: top, width: screen_width, height: height))
         let line = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
         line.backgroundColor = Color.line
         self.addSubview(line)

@@ -50,11 +50,6 @@ extension BoneCustomPopup {
         case only   // 单选
         case multi  // 多选
     }
-}
-
-class BoneCustomPopup: UIView {
-    
-    var popupDelegate: BoneCustomPopupDelegate?
     
     struct Color {
         /// 字体颜色
@@ -66,7 +61,7 @@ class BoneCustomPopup: UIView {
         /// 分割线颜色
         static var line = UIColor(colorLiteralRed: 234/255, green: 234/255, blue: 234/255, alpha: 1)
     }
-
+    
     struct Size {
         /// 行高
         static var rowHeight: CGFloat = 45
@@ -81,6 +76,13 @@ class BoneCustomPopup: UIView {
     struct Icon {
         static var select = UIImage(named: "BoneCustomIcon.bundle/select")?.color(to: Color.fontSelect)
     }
+}
+
+class BoneCustomPopup: UIView {
+    
+    var popupDelegate: BoneCustomPopupDelegate?
+    
+    
     
     private var screen_width = UIScreen.main.bounds.width
     private var screen_height = UIScreen.main.bounds.height
@@ -90,6 +92,8 @@ class BoneCustomPopup: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
+        
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -103,12 +107,20 @@ class BoneCustomPopup: UIView {
             size: self.menuView.bounds.size)
         )
         view.backgroundColor = UIColor.white
+        view.isHidden = !self.show
         return view
     }()
     
     /// 背景
     fileprivate lazy var backgroundView: UIView = {
-        let backgroundView = UIView(frame: UIScreen.main.bounds)
+        let backgroundView = UIView(frame: CGRect(
+            origin: self.frame.origin,
+            size: CGSize(
+                width: self.frame.width,
+                height: UIScreen.main.bounds.height - self.frame.origin.x
+            )
+        ))
+        
         backgroundView.backgroundColor = UIColor(white: 0, alpha: 0.3)
         backgroundView.alpha = 0
         backgroundView.isOpaque = false
@@ -135,6 +147,7 @@ class BoneCustomPopup: UIView {
     ///
     /// - Parameter isShow: 是否显示
     fileprivate func popupAction(_ isShow: Bool) {
+        self.popupView.isHidden = !isShow
         if isShow {
             self.superview?.addSubview(self.backgroundView)
             self.superview?.addSubview(self.menuView)
@@ -157,6 +170,8 @@ class BoneCustomPopup: UIView {
             }, completion: { (finished) in
                 self.backgroundView.removeFromSuperview()
                 self.popupView.removeFromSuperview()
+                self.menuView.removeFromSuperview()
+
                 self.popupDelegate?.customPopup(isShow)
             })
         }
@@ -236,7 +251,7 @@ extension BoneCustomPopup {
             }
             UIView.animate(withDuration: 0.2) { () -> Void in
                 if isSelected {
-                    imageView.transform = imageView.transform.rotated(by: CGFloat(M_PI))
+                    imageView.transform = imageView.transform.rotated(by: CGFloat.pi)
                 } else {
                     imageView.transform = CGAffineTransform.identity
                 }
