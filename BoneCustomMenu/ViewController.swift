@@ -41,7 +41,7 @@ class ViewController: UIViewController {
 //        BoneCustomPopup.Color.line // 分割线颜色
         self.view.addSubview(menuView)
         
-        menuView.reloadData()
+//        menuView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {

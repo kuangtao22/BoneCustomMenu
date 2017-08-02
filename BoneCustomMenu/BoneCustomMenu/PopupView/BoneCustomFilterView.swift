@@ -92,6 +92,8 @@ extension BoneCustomFilterView: BoneCustomMenuProtocol {
                 self.items[i].append(Model(icon: nil, title: title))
             }
         }
+        self.cleanBtn.setTitleColor(BoneCustomPopup.Color.font, for: UIControlState.normal)
+        self.confirmBtn.backgroundColor = BoneCustomPopup.Color.fontSelect
         self.tableView.reloadData()
     }
 }
