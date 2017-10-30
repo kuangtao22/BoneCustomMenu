@@ -59,6 +59,7 @@ class BoneCustomListsView: UIView {
 }
 
 extension BoneCustomListsView: BoneCustomMenuProtocol {
+    
     /// 重载数据
     func reloadData() {
         

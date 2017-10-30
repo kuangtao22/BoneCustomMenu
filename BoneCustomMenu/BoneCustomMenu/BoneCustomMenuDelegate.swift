@@ -31,7 +31,14 @@ protocol BoneCustomMenuDelegate: NSObjectProtocol {
     func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, filterDatas: [[Int]])
     
     
-    
+    /// 日历点击事件
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - date:
+    ///   - error:
+    /// - Returns:
+    func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?)
     
     
     /// 返回 boneMenu 有多少列 ，默认1列
@@ -129,5 +136,9 @@ extension BoneCustomMenuDelegate {
     }
     func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneCustomPopup.IndexPath) -> Int {
         return 0
+    }
+    
+    func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?) {
+        
     }
 }

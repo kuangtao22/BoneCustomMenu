@@ -19,11 +19,8 @@ extension BoneCustomPopup {
         get {
             return self.show
         }
-        set {
-            self.show = newValue
-            self.popupAction(newValue)
-        }
     }
+    
     
     /// 格式
     struct IndexPath {
@@ -43,6 +40,7 @@ extension BoneCustomPopup {
         case button         // 直接触发
         case list           // 列表菜单
         case filter         // 筛选菜单
+        case calendar       // 日历
     }
     
     /// 筛选类型
@@ -53,13 +51,13 @@ extension BoneCustomPopup {
     
     struct Color {
         /// 字体颜色
-        static var font = UIColor(colorLiteralRed: 96/255, green: 96/255, blue: 96/255, alpha: 1)
+        static var font = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
         
-        static var fontSelect = UIColor(colorLiteralRed: 0/255, green: 139/255, blue: 254/255, alpha: 1)
+        static var fontSelect = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
         /// 一级分类底色
-        static var section = UIColor(colorLiteralRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+        static var section = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
         /// 分割线颜色
-        static var line = UIColor(colorLiteralRed: 234/255, green: 234/255, blue: 234/255, alpha: 1)
+        static var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
     }
     
     struct Size {
@@ -81,9 +79,7 @@ extension BoneCustomPopup {
 class BoneCustomPopup: UIView {
     
     var popupDelegate: BoneCustomPopupDelegate?
-    
-    
-    
+
     private var screen_width = UIScreen.main.bounds.width
     private var screen_height = UIScreen.main.bounds.height
     
@@ -140,14 +136,23 @@ class BoneCustomPopup: UIView {
     }()
     
     @objc private func backgroundTapped(sender: UITapGestureRecognizer) {
-        self.isShow = false
+        self.popupAction(false)
+    }
+    
+    open func setMenu(_ height: CGFloat) {
+        self.menuView.frame.size.height = height
+        self.popupView.frame.size.height = height
+        self.popupView.frame.origin.y = -height
     }
     
     /// 显示/隐藏动画
     ///
     /// - Parameter isShow: 是否显示
-    fileprivate func popupAction(_ isShow: Bool) {
+    open func popupAction(_ isShow: Bool) {
+
         self.popupView.isHidden = !isShow
+        self.show = isShow
+
         if isShow {
             self.superview?.addSubview(self.backgroundView)
             self.superview?.addSubview(self.menuView)
@@ -156,7 +161,7 @@ class BoneCustomPopup: UIView {
             
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundView.alpha = 1
-                self.popupView.transform = CGAffineTransform(translationX: 0, y: self.popupView.frame.height)
+                self.popupView.transform = CGAffineTransform(translationX: 0, y:self.popupView.frame.height)
                 
             }, completion: { (finished) in
                 self.popupDelegate?.customPopup(isShow)
@@ -268,6 +273,9 @@ extension BoneCustomPopup {
                 let image = UIImage(named: "BoneCustomIcon.bundle/filter")?.color(to: color)
                 return image
             case .list:
+                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(to: color)
+                return image
+            case .calendar:
                 let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(to: color)
                 return image
             }

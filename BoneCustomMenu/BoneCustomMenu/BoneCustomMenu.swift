@@ -12,20 +12,18 @@ protocol BoneCustomMenuProtocol {
     
     /// 重载数据
     func reloadData()
-    
 }
-
 
 class BoneCustomMenu: BoneCustomPopup {
     
     /// 代理协议
     var delegate: BoneCustomMenuDelegate?
-    
-
+ 
     fileprivate var scrollView: UIScrollView!
     fileprivate var currentSelect = 0               // 当前选中
     fileprivate var selectArray = [IndexPath]()     // 所有选中索引
     fileprivate var filterDatas = [[Int]]()
+    fileprivate var calendarDates = [Date]()        // 日历时间
     
     convenience init(top: CGFloat, height: CGFloat) {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: height))
@@ -39,6 +37,7 @@ class BoneCustomMenu: BoneCustomPopup {
         
         self.popupView.addSubview(self.listView)
         self.popupView.addSubview(self.filterView)
+        self.popupView.addSubview(self.calendarView)
     }
     
     lazy var listView: BoneCustomListsView = {
@@ -54,6 +53,14 @@ class BoneCustomMenu: BoneCustomPopup {
         view.isHidden = true
         return view
     }()
+    
+    lazy var calendarView: BoneCalendarView = {
+        let calenadr = BoneCalendarView(frame: self.popupView.bounds, type: .section)
+        calenadr.selectColor = UIColor.orange
+        calenadr.delegate = self
+        calenadr.isHidden = true
+        return calenadr
+    }()
 
     fileprivate func currentAction(type: ColumnType, button: ColumnBtn) {
         let tag = button.tag - 100
@@ -61,23 +68,27 @@ class BoneCustomMenu: BoneCustomPopup {
         
         self.filterView.isHidden = (type != .filter)
         self.listView.isHidden = (type != .list)
+        self.calendarView.isHidden = (type != .calendar)
         
         self.currentSelect = tag
         switch type {
         case .button:
-            self.isShow = false
+            self.popupAction(false)
             self.selectArray[tag].column = tag
             self.selectArray[tag].section = 0
             self.selectArray[tag].row = button.isSelected ? 1 : 0
             self.delegate?.boneMenu(self, didSelectRowAtIndexPath: self.selectArray[tag])
             
         case .filter:
-            self.isShow = button.isSelected
+            self.popupAction(button.isSelected)
             self.filterView.reloadData()
             
         case .list:
-            self.isShow = button.isSelected
+            self.popupAction(button.isSelected)
             self.listView.reloadData()
+            
+        case .calendar:
+            self.popupAction(button.isSelected)
         }
     }
     
@@ -95,12 +106,34 @@ class BoneCustomMenu: BoneCustomPopup {
             return false
         }
     }
+    
+    
 }
 
 
+// MARK: - 日历协议方法
+extension BoneCustomMenu: BoneCalenadrDelegate {
+    
+    /// 选择时间
+    func calenadr(_ calenadrView: BoneCalendarView, didSelect dates: [Date], error: String?) {
+        if let error = error {
+            self.delegate?.boneMenu(self, didSelectCalendar: dates, error: error)
+        }
+        
+    }
+    
+    /// 确认
+    func calenadr(_ calenadrView: BoneCalendarView, confirm dates: [Date]) {
+        self.calendarDates = dates
+        self.popupAction(false)
+        self.delegate?.boneMenu(self, didSelectCalendar: dates, error: nil)
+    }
+}
 
 extension BoneCustomMenu: BoneCustomMenuProtocol {
     
+    
+
     internal func reloadData() {
         for view in self.scrollView.subviews {
             view.removeFromSuperview()
@@ -177,7 +210,7 @@ extension BoneCustomMenu: BoneCustomDelegate {
     internal func customList(_ view: UIView, didSelect filterDatas: [[Int]], isConfirm: Bool) {
         self.filterDatas = filterDatas
         self.delegate?.boneMenu(self, didSelectRowAtColumn: self.currentSelect, filterDatas: self.filterDatas)
-        self.isShow = !isConfirm
+        self.popupAction(!isConfirm)
     }
 
     
@@ -208,8 +241,8 @@ extension BoneCustomMenu: BoneCustomDelegate {
         self.selectArray[self.currentSelect].column = self.currentSelect
         self.selectArray[self.currentSelect].section = section
         self.selectArray[self.currentSelect].row = row
-        
-        self.isShow = false
+
+        self.popupAction(false)
         let menuBtn = self.scrollView.viewWithTag(self.currentSelect + 100) as? ColumnBtn
         let index = BoneCustomPopup.IndexPath(column: self.currentSelect, section: section, row: row)
         if self.isHaveRight {

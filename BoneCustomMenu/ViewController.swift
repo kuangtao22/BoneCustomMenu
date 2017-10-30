@@ -41,12 +41,22 @@ class ViewController: UIViewController {
 //        BoneCustomPopup.Color.line // 分割线颜色
         self.view.addSubview(menuView)
         
-//        menuView.reloadData()
+        menuView.reloadData()
+        
+        menuView.calendarView.selectDates = [date("2013-04-11"), date("2013-03-23")]
+        menuView.calendarView.selectMaxDay = 20
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func date(_ string: String) -> Date {
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "yyyy-MM-dd"
+        let date = dateFormat.date(from: string)
+        return date!
     }
 
 }
@@ -127,11 +137,12 @@ extension ViewController: BoneCustomMenuDelegate {
         if column == 0 {
             return BoneCustomPopup.ColumnInfo(title: "分类", type: .list)
         } else if column == 1 {
-            return BoneCustomPopup.ColumnInfo(title: self.data3[0], type: .list)
+            return BoneCustomPopup.ColumnInfo(title: "时间选择", type: .calendar)
         } else if column == 2 {
             return BoneCustomPopup.ColumnInfo(title: "是否买单", type: .button)
         }
         return BoneCustomPopup.ColumnInfo(title: "筛选", type: .filter)
+        
     }
     
     
@@ -180,6 +191,9 @@ extension ViewController: BoneCustomMenuDelegate {
         return 4
     }
 
-    
+    func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?) {
+        print("error:\(error)")
+        print("date:\(date)")
+    }
     
 }
