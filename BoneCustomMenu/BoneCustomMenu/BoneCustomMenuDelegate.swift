@@ -82,7 +82,13 @@ protocol BoneCustomMenuDelegate: NSObjectProtocol {
     func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> BoneCustomPopup.ColumnInfo
     
     
-    
+    /// 返回每列菜单高度
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - column:
+    /// - Returns:
+    func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat?
     
     
     /// 返回 boneMenu section标题
@@ -140,5 +146,9 @@ extension BoneCustomMenuDelegate {
     
     func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?) {
         
+    }
+    
+    func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {
+        return nil
     }
 }

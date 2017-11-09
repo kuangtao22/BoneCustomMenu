@@ -16,8 +16,7 @@ class BoneDayCell: UICollectionViewCell {
         super.init(frame: frame)
         
         self.dayLabel = RoundBackgroundLabel(frame: self.bounds)
-        self.dayLabel.textAlignment = NSTextAlignment.center
-        self.dayLabel.numberOfLines = 1
+        
         self.contentView.addSubview(self.dayLabel)
     }
     

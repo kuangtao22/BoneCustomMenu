@@ -9,11 +9,24 @@
 import UIKit
 
 class BoneCustomListsView: UIView {
-    
+    ///
+    var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+    /// 行高
+    var rowHeight: CGFloat = 45
+    /// 代理方法
     var delegate: BoneCustomDelegate?
-    
-    typealias Color = BoneCustomPopup.Color
-    typealias Size = BoneCustomPopup.Size
+    var listLeftWidth: CGFloat = UIScreen.main.bounds.width * 0.3
+    /// 设置高度
+    var setHeight: CGFloat? {
+        didSet {
+            guard let height = self.setHeight else {
+                return
+            }
+            self.frame.size.height = height
+            self.leftTable.frame.size.height = height
+            self.rightTable.frame.size.height = height
+        }
+    }
     
     fileprivate var leftTable: UITableView!
     fileprivate var rightTable: UITableView!
@@ -29,14 +42,14 @@ class BoneCustomListsView: UIView {
         super.init(frame: frame)
         
         self.leftTable = UITableView(
-            frame: CGRect(x: 0, y: 0, width: Size.listLeftWidth, height: self.frame.height),
+            frame: CGRect(x: 0, y: 0, width: self.listLeftWidth, height: self.frame.height),
             style: UITableViewStyle.plain
         )
-        self.leftTable.rowHeight = Size.rowHeight
+        self.leftTable.rowHeight = self.rowHeight
         self.leftTable.delegate = self
         self.leftTable.dataSource = self
         self.leftTable.separatorColor = UIColor.clear   // 隐藏分割线
-        self.leftTable.backgroundColor = Color.section
+        self.leftTable.backgroundColor = self.sectionColor
         self.addSubview(self.leftTable)
         
         self.rightTable = UITableView(

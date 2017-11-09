@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = UIColor.lightGray
+        self.view.backgroundColor = UIColor.red
         self.filterArrays = [filterArray1, filterArray2, filterArray3]
         for i in 0...20 {
             self.data1.append("父类\(i)")
@@ -62,6 +62,17 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: BoneCustomMenuDelegate {
+    func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {
+        if column == 0 {
+            return 200
+        } else if column == 1 {
+            return 300
+        } else if column == 2 {
+            return 350
+        }
+        return 400
+    }
+    
 
     
     func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneCustomPopup.IndexPath) -> BoneCustomPopup.FilterType? {

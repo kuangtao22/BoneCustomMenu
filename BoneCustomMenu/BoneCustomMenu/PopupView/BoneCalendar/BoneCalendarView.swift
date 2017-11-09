@@ -10,6 +10,17 @@ import UIKit
 
 class BoneCalendarView: UIView {
     
+    var setHeight: CGFloat? {
+        didSet {
+            guard let height = self.setHeight else {
+                return
+            }
+            self.frame.size.height = height
+            self.footerView.frame.origin.y = self.frame.height - self.footerView.frame.height
+            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height
+        }
+    }
+    
     var delegate: BoneCalenadrDelegate?
     
     // 选中颜色
@@ -17,9 +28,6 @@ class BoneCalendarView: UIView {
     
     // 字体颜色
     var fontColor = UIColor.black
-    
-    // 选中字体颜色
-    var selectFontColor = UIColor.white
     
     // 今日字体颜色
     var todayFontColor = UIColor.red
@@ -44,7 +52,6 @@ class BoneCalendarView: UIView {
             self.scrollToMonth(newDates[0], animated: true)
             self.dataSourceManager.selectDates = newDates
             self.dates = self.dataSourceManager.selectDates
-            
         }
     }
 
@@ -54,7 +61,6 @@ class BoneCalendarView: UIView {
     fileprivate var layout: BoneCalendarLayout!
     fileprivate lazy var  dataSourceManager = BoneCalenadrDataSource()      // 日历数据源
     
-    
     fileprivate var isCollection = false      // 是日历视图滑动
     
     fileprivate var dates = [Date]()
@@ -62,9 +68,9 @@ class BoneCalendarView: UIView {
     // 按钮
     fileprivate var footerView: BoneCalendarFooter!
     
-    let identifier = "BoneDayCell"
-    let headerIdentifier = "headerIdentifier"
-    let footerIdentifier = "footerIdentifier"
+    fileprivate let identifier = "BoneDayCell"
+    fileprivate let headerIdentifier = "headerIdentifier"
+    fileprivate let footerIdentifier = "footerIdentifier"
     
     convenience init(frame: CGRect, type: BoneCalenadrDataSource.SelectionType) {
         self.init(frame: frame)
@@ -72,7 +78,6 @@ class BoneCalendarView: UIView {
         
         self.dataSourceManager.delegate = self
         self.dataSourceManager.selectionType = type
-        
         
         self.footerView = BoneCalendarFooter(frame: CGRect(x: 0, y: self.frame.height - 43, width: self.frame.width, height: 43))
         self.footerView.onClickAction { (type) in
@@ -85,7 +90,6 @@ class BoneCalendarView: UIView {
             case .today:
                 self.scrollToMonth(Date(), animated: true)
             }
-            
         }
         self.addSubview(self.footerView)
         
@@ -126,7 +130,6 @@ class BoneCalendarView: UIView {
     fileprivate func scrollToMonth(_ date: Date, animated: Bool, position: UICollectionViewScrollPosition = .centeredVertically) {
         let indexPath = self.dataSourceManager.indexPathForRowAtDate(date)
         self.collectionView.scrollToItem(at: indexPath, at: position, animated: animated)
-        
     }
 
     
@@ -167,8 +170,7 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
         
         let (date,dayState) = dataSourceManager.dayState(indexPath)
         cell?.dayLabel.backRoundColor = self.selectColor
-        cell?.dayLabel.font = UIFont.systemFont(ofSize: 15)
-        cell?.dayLabel.text = dataSourceManager.dayString(date)
+        cell?.dayLabel.text = dayState.contains(.Today) ? "今" : dataSourceManager.dayString(date)
         
         // 不在本月
         if dayState.contains(.NotThisMonth) {
@@ -182,15 +184,11 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
             cell?.dayLabel.roundType = .none
             return cell!
         }
-        
         cell?.dayLabel.roundType = dayState.roundType
         
-        if dayState.contains(.Today) {
-            cell?.dayLabel.text = "今"
-        }
         // 选中效果
         if dayState.contains(.Selected) {
-            cell?.dayLabel.textColor = self.selectFontColor
+            cell?.dayLabel.textColor = self.selectColor
         } else {
             if dayState.contains(.Today) {
                 cell?.dayLabel.textColor = self.todayFontColor

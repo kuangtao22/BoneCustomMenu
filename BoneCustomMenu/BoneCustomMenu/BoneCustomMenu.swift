@@ -12,6 +12,7 @@ protocol BoneCustomMenuProtocol {
     
     /// 重载数据
     func reloadData()
+    
 }
 
 class BoneCustomMenu: BoneCustomPopup {
@@ -25,6 +26,9 @@ class BoneCustomMenu: BoneCustomPopup {
     fileprivate var filterDatas = [[Int]]()
     fileprivate var calendarDates = [Date]()        // 日历时间
     
+    fileprivate var menuType: ColumnType = .button
+    fileprivate let defaultMenuheight = UIScreen.main.bounds.height * 0.5   // 默认菜单高度
+    
     convenience init(top: CGFloat, height: CGFloat) {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: height))
         let line = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
@@ -34,34 +38,39 @@ class BoneCustomMenu: BoneCustomPopup {
         self.scrollView = UIScrollView(frame: self.bounds)
         self.addSubview(self.scrollView)
         self.popupDelegate = self
+
+        self.menuView.addSubview(self.listView)
+        self.menuView.addSubview(self.filterView)
+        self.menuView.addSubview(self.calendarView)
         
-        self.popupView.addSubview(self.listView)
-        self.popupView.addSubview(self.filterView)
-        self.popupView.addSubview(self.calendarView)
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(sender:)))
+        self.backgroundView.addGestureRecognizer(gesture)
     }
     
     lazy var listView: BoneCustomListsView = {
-        let view = BoneCustomListsView(frame: self.popupView.bounds)
+       
+        let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
-    lazy var filterView: BoneCustomFilterView = {
-        let view = BoneCustomFilterView(frame: self.popupView.bounds)
+    lazy var filterView: BoneCustomFiltersView = {
+        let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
     lazy var calendarView: BoneCalendarView = {
-        let calenadr = BoneCalendarView(frame: self.popupView.bounds, type: .section)
-        calenadr.selectColor = UIColor.orange
+        let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight), type: .section)
+        calenadr.selectColor = Color.fontSelect
         calenadr.delegate = self
         calenadr.isHidden = true
         return calenadr
     }()
-
+    
+    /// 点击菜单栏事件
     fileprivate func currentAction(type: ColumnType, button: ColumnBtn) {
         let tag = button.tag - 100
         button.isSelected = !button.isSelected
@@ -89,6 +98,7 @@ class BoneCustomMenu: BoneCustomPopup {
             
         case .calendar:
             self.popupAction(button.isSelected)
+            self.calendarView.selectDates = self.calendarDates
         }
     }
     
@@ -108,6 +118,80 @@ class BoneCustomMenu: BoneCustomPopup {
     }
     
     
+    /// 获取菜单类型
+    ///
+    /// - 
+    private func getView(type: ColumnType) -> UIView {
+        switch type {
+        case .button: return UIView()
+        case .calendar: return self.calendarView
+        case .filter: return self.filterView
+        case .list: return self.listView
+        }
+    }
+    
+    /// 点击背景关闭菜单
+    @objc private func backgroundTapped(sender: UITapGestureRecognizer) {
+        self.popupAction(false)
+    }
+    
+    
+    /// 设置弹出菜单高度
+    fileprivate func setMenuHeight() {
+        guard let delegate = self.delegate else {
+            return
+        }
+        for i in 0..<delegate.numberOfColumns(self) {
+            let type = delegate.boneMenu(self, typeForColumnAt: i).type
+            if let height = delegate.boneMenu(self, menuHeightFor: i) {
+                let view = self.getView(type: type)
+                view.frame.size.height = height
+                view.frame.origin.y = -height
+                switch type {
+                case .button:
+                    break
+                case .filter:
+                    self.filterView.setHeight = height
+                case .calendar:
+                    self.calendarView.setHeight = height
+                case .list:
+                    self.listView.setHeight = height
+                }
+            }
+        }
+    }
+    
+    /// 显示/隐藏动画
+    ///
+    /// - Parameter isShow: 是否显示
+    open func popupAction(_ isShow: Bool) {
+        let view = self.getView(type: self.menuType)
+
+        if isShow {
+            self.menuView.frame.size.height = view.frame.height
+            self.superview?.addSubview(self.backgroundView)
+            self.superview?.addSubview(self.menuView)
+            self.backgroundView.superview?.addSubview(self)
+            
+            UIView.animate(withDuration: 0.2, animations: {
+                self.backgroundView.alpha = 1
+                view.transform = CGAffineTransform(translationX: 0, y: view.frame.height)
+            }, completion: { (finished) in
+                self.popupDelegate?.customPopup(isShow)
+            })
+            
+        } else {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.backgroundView.alpha = 0
+                view.transform = CGAffineTransform.identity
+                
+            }, completion: { (finished) in
+                self.backgroundView.removeFromSuperview()
+                self.menuView.removeFromSuperview()
+                self.popupDelegate?.customPopup(isShow)
+            })
+        }
+    }
 }
 
 
@@ -132,9 +216,24 @@ extension BoneCustomMenu: BoneCalenadrDelegate {
 
 extension BoneCustomMenu: BoneCustomMenuProtocol {
     
-    
+    /// 重载某列菜单数据
+    func reloadColumn(_ column: Int) {
+        guard let delegate = self.delegate else {
+            return
+        }
+        let type = delegate.boneMenu(self, typeForColumnAt: column).type
+        switch type {
+        case .button, .calendar:
+            break
+        case .filter:
+            self.filterView.reloadData()
+        case .list:
+            self.listView.reloadData()
+        }
+    }
 
-    internal func reloadData() {
+    /// 重载数据
+    func reloadData() {
         for view in self.scrollView.subviews {
             view.removeFromSuperview()
         }
@@ -142,7 +241,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
         guard let delegate = self.delegate else {
             return
         }
-
+        
         let num = delegate.numberOfColumns(self)
         let width = self.frame.width / CGFloat((num < 5) ? num : 4)
         self.selectArray = [IndexPath]()
@@ -159,6 +258,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             menuBtn.title = info.title
             menuBtn.tag = i + 100
             menuBtn.onClickAction(cellback: { (type, button) in
+                self.menuType = type
                 self.currentAction(type: type, button: button)
             })
             self.scrollView.addSubview(menuBtn)
@@ -169,6 +269,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 )
             }
         }
+        self.setMenuHeight()
         self.listView.reloadData()
     }
 }

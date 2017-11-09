@@ -15,11 +15,11 @@ protocol BoneCustomPopupDelegate {
 
 extension BoneCustomPopup {
     
-    var isShow: Bool {
-        get {
-            return self.show
-        }
-    }
+//    var isShow: Bool {
+//        get {
+//            return self.show
+//        }
+//    }
     
     
     /// 格式
@@ -65,9 +65,6 @@ extension BoneCustomPopup {
         static var rowHeight: CGFloat = 45
         /// list类型左边宽度
         static var listLeftWidth: CGFloat = UIScreen.main.bounds.width * 0.3
-        /// 弹出框高度
-        static var menuHeight: CGFloat = 300
-        
         static var font: CGFloat = 14
     }
     
@@ -83,105 +80,37 @@ class BoneCustomPopup: UIView {
     private var screen_width = UIScreen.main.bounds.width
     private var screen_height = UIScreen.main.bounds.height
     
-    fileprivate var show: Bool = false  // 是否显示
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    lazy var popupView: UIView = {
-        let view = UIView(frame: CGRect(
-            origin: CGPoint(x: 0, y: -self.menuView.frame.height),
-            size: self.menuView.bounds.size)
-        )
-        view.backgroundColor = UIColor.white
-        view.isHidden = !self.show
-        return view
-    }()
-    
     /// 背景
-    fileprivate lazy var backgroundView: UIView = {
-        let backgroundView = UIView(frame: CGRect(
-            origin: self.frame.origin,
-            size: CGSize(
-                width: self.frame.width,
-                height: UIScreen.main.bounds.height - self.frame.origin.x
-            )
-        ))
-        
+     lazy var backgroundView: UIView = {
+        let origin = CGPoint(x: 0, y: self.frame.origin.y + self.frame.height)
+        let size = CGSize(width: self.frame.width, height: UIScreen.main.bounds.height - self.frame.origin.y)
+        let backgroundView = UIView(frame: CGRect(origin: origin, size: size))
         backgroundView.backgroundColor = UIColor(white: 0, alpha: 0.3)
         backgroundView.alpha = 0
         backgroundView.isOpaque = false
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(BoneCustomPopup.backgroundTapped(sender:)))
-        backgroundView.addGestureRecognizer(gesture)
         return backgroundView
     }()
     
     lazy var menuView: UIView = {
-        let view = UIView(frame: CGRect(
-            x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height,
-            width: self.bounds.width,
-            height: Size.menuHeight)
-        )
+        let view = UIView(frame: self.backgroundView.bounds)
+        view.frame.origin.y = self.frame.origin.y + self.frame.height
         view.layer.masksToBounds = true
         return view
     }()
     
-    @objc private func backgroundTapped(sender: UITapGestureRecognizer) {
-        self.popupAction(false)
-    }
-    
-    open func setMenu(_ height: CGFloat) {
-        self.menuView.frame.size.height = height
-        self.popupView.frame.size.height = height
-        self.popupView.frame.origin.y = -height
-    }
-    
-    /// 显示/隐藏动画
-    ///
-    /// - Parameter isShow: 是否显示
-    open func popupAction(_ isShow: Bool) {
 
-        self.popupView.isHidden = !isShow
-        self.show = isShow
-
-        if isShow {
-            self.superview?.addSubview(self.backgroundView)
-            self.superview?.addSubview(self.menuView)
-            self.menuView.addSubview(self.popupView)
-            self.backgroundView.superview?.addSubview(self)
-            
-            UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundView.alpha = 1
-                self.popupView.transform = CGAffineTransform(translationX: 0, y:self.popupView.frame.height)
-                
-            }, completion: { (finished) in
-                self.popupDelegate?.customPopup(isShow)
-            })
-            
-        } else {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundView.alpha = 0
-                self.popupView.transform = CGAffineTransform.identity
-                
-            }, completion: { (finished) in
-                self.backgroundView.removeFromSuperview()
-                self.popupView.removeFromSuperview()
-                self.menuView.removeFromSuperview()
-
-                self.popupDelegate?.customPopup(isShow)
-            })
-        }
-    }
 }
+
+
 
 extension BoneCustomPopup {
 
@@ -218,7 +147,7 @@ extension BoneCustomPopup {
         
         override var isSelected: Bool {
             didSet {
-                if self.isSelected == true {
+                if self.isSelected {
                     self.titleLabel?.font = UIFont.boldSystemFont(ofSize: Size.font)
                 } else {
                     self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)

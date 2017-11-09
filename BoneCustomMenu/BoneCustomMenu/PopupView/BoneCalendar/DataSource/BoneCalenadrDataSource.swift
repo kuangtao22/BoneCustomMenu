@@ -168,7 +168,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     
     // 每天的信息
     func dayState(_ indexPath: IndexPath) -> (Date, DayStateOptions) {
-        let monthInfo = getMonthInfo((indexPath as NSIndexPath).section)
+        let monthInfo = getMonthInfo(indexPath.section)
         return monthInfo.getDayInfo(indexPath.row, selectedType: self.selectionType)
     }
     
@@ -345,7 +345,10 @@ class BoneCalenadrDataSource {
 
     //使用默认的开始和结束时间
     public convenience init(){
-        self.init(startDate:BoneCalenadrDataSource.defaultMinDate,endDate:BoneCalenadrDataSource.defaultMaxDate)
+        self.init(
+            startDate: BoneCalenadrDataSource.defaultMinDate,
+            endDate:BoneCalenadrDataSource.defaultMaxDate
+        )
     }
     //使用自定义的开始和结束时间
     public init(startDate: Date, endDate: Date) {
@@ -431,17 +434,17 @@ class BoneCalenadrDataSource {
     }
     
     fileprivate func setSelectedInfo(_ section: Int) {
-        let daysInmonth:Int = self.daysInMonth(section)
-        var startIndex  = -1
+        let daysInmonth: Int = self.daysInMonth(section)
+        var startIndex = -1
         var endIndex = -1
         let count = selectedIndexPaths.count
-        switch count{
+        switch count {
         case 0:
             break
         case 2:
             if selectionType == .section {
-                if (selectedIndexPaths[0]).section < section {
-                    if section < (selectedIndexPaths[1]).section {
+                if selectedIndexPaths[0].section < section {
+                    if section < selectedIndexPaths[1].section {
                         startIndex = 0
                         endIndex = daysInmonth - 1
                     } else if section == selectedIndexPaths[1].section{
@@ -458,7 +461,6 @@ class BoneCalenadrDataSource {
                         endIndex = selectedIndexPaths[1].row
                     }
                 }
-                
                 monthInfoCache?.selectedStartIndex = startIndex
                 monthInfoCache?.selectedendIndex = endIndex
                 
@@ -506,13 +508,13 @@ extension BoneCalenadrDataSource {
         }
         
         convenience init(section: Int) {
-            self.init(calendar:nil, section: -1,monthStartDate: Date(), thisMonthDayStart: -1,thisMonthDayEnd: -1, todayIndex: -1)
+            self.init(calendar:nil, section: -1,monthStartDate: Date(), thisMonthDayStart: -1, thisMonthDayEnd: -1, todayIndex: -1)
         }
         
         func getDayInfo(_ index: Int, selectedType: SelectionType) -> (Date, DayStateOptions) {
             dateComponents.day = index
             let date = (self.calendar! as NSCalendar).date(byAdding: dateComponents, to: monthStartDate, options: NSCalendar.Options(rawValue: 0))!
-            var options =  DayStateOptions(rawValue:0)
+            var options = DayStateOptions(rawValue:0)
             
             if index == todayIndex {
                 options = [options,.Today]
@@ -530,20 +532,18 @@ extension BoneCalenadrDataSource {
                         options = [options,.Selected,.SelectedLeftNone,.SelectedRightNone]
                     }
                 } else {
-                    let weekday = (self.calendar! as NSCalendar).component(.weekday, from: date)
                     if selectedStartIndex != -1{
                         if selectedStartIndex <= index && index <= selectedendIndex {
-                            options = [options,.Selected]
-                            if weekday == 1||selectedStartIndex == index || index == thisMonthDayStart {
+                            options = [options, .Selected]
+                            if selectedStartIndex == index {
                                 options = [options,.SelectedLeftNone]
-                            }
-                            if weekday == 7 || index == selectedendIndex ||  index == thisMonthDayEnd {
-                                options = [options,.SelectedRightNone]
+                            } else if index == selectedendIndex {
+                                options = [options, .SelectedRightNone]
                             }
                         }
                     } else {
                         if selectedIndex.contains(index) {
-                            options = [options,.Selected,.SelectedLeftNone,.SelectedRightNone]
+                            options = [options, .Selected, .SelectedLeftNone, .SelectedRightNone]
                         }
                     }
                 }
