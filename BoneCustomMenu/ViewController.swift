@@ -36,7 +36,7 @@ class ViewController: UIViewController {
 
         menuView = BoneCustomMenu(top: 200, height: 40)
         menuView.delegate = self
-        BoneCustomPopup.Color.font = UIColor.gray   // 字体颜色
+//        BoneCustomPopup.Color.font = UIColor.gray   // 字体颜色
 //        BoneCustomPopup.Color.fontSelect = UIColor.red
 //        BoneCustomPopup.Color.line // 分割线颜色
         self.view.addSubview(menuView)
@@ -78,14 +78,14 @@ extension ViewController: BoneCustomMenuDelegate {
     func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneCustomPopup.IndexPath) -> BoneCustomPopup.FilterType? {
         if indexPath.column == 3 {
             if indexPath.section == 0 {
-                return BoneCustomPopup.FilterType.only
+                return BoneCustomPopup.FilterType.multi
             } else if indexPath.section == 1 {
                 return BoneCustomPopup.FilterType.multi
             } else if indexPath.section == 2 {
                 return BoneCustomPopup.FilterType.only
             }
         }
-        return nil
+        return BoneCustomPopup.FilterType.only
     }
     
     
@@ -146,7 +146,7 @@ extension ViewController: BoneCustomMenuDelegate {
     /// - Returns:
     internal func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> BoneCustomPopup.ColumnInfo {
         if column == 0 {
-            return BoneCustomPopup.ColumnInfo(title: "分类", type: .list)
+            return BoneCustomPopup.ColumnInfo(title: "分类", type: .filterList)
         } else if column == 1 {
             return BoneCustomPopup.ColumnInfo(title: "时间选择", type: .calendar)
         } else if column == 2 {
@@ -166,7 +166,7 @@ extension ViewController: BoneCustomMenuDelegate {
     /// - Returns: 二级列表行数
     internal func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneCustomPopup.IndexPath) -> Int {
         if indexPath.column == 0 {
-            return self.data2.count
+            return 0
         } else if indexPath.column == 3 {
             return self.filterArrays[indexPath.section].count
         }

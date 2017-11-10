@@ -18,8 +18,6 @@ class BoneCustomFiltersView: UIView {
     
     var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
     
-    var delegate: BoneCustomDelegate?
-    
     var setHeight: CGFloat? {
         didSet {
             guard let height = self.setHeight else {
@@ -32,8 +30,13 @@ class BoneCustomFiltersView: UIView {
         }
     }
     
-    fileprivate var selectArray = [[Int]]()
-    
+    var delegate: BoneCustomDelegate? {
+        didSet {
+            self.dataSource.delegate = self.delegate
+        }
+    }
+
+    fileprivate var dataSource = BoneFilterDataSource()
     fileprivate var collectionView: UICollectionView!
     fileprivate var layout = BoneFilterLayout()
     fileprivate let identifier = "BoneDayCell"
@@ -89,6 +92,8 @@ class BoneCustomFiltersView: UIView {
             withReuseIdentifier: self.footerIdentifier
         )
         self.addSubview(self.collectionView)
+        
+        self.dataSource.delegate = self.delegate
     }
     
     /// 获取底部按钮样式
@@ -100,17 +105,14 @@ class BoneCustomFiltersView: UIView {
     
     /// 清除事件
     @objc private func cleanAction() {
-        for i in 0..<self.selectArray.count {
-            self.selectArray[i] = []
-        }
-        self.delegate?.customList(self, didSelect: self.selectArray, isConfirm: false)
+        self.dataSource.cleanData()
         self.collectionView.reloadData()
     }
     
     
     /// 确认事件
     @objc private func confirmAction() {
-        self.delegate?.customList(self, didSelect: self.selectArray, isConfirm: true)
+        self.dataSource.submitData()
     }
     
     
@@ -123,16 +125,8 @@ class BoneCustomFiltersView: UIView {
 extension BoneCustomFiltersView: BoneCustomMenuProtocol {
     
     func reloadData() {
-        guard let delegate = self.delegate else {
-            return
-        }
+        self.dataSource.initData()
 
-        self.selectArray = delegate.customFilter(self)
-        for _ in 0..<delegate.numberOfSection(self) {
-            if self.selectArray.count < delegate.numberOfSection(self) {
-                self.selectArray.append([])
-            }
-        }
         self.cleanBtn.setTitleColor(self.fontColor, for: UIControlState.normal)
         self.confirmBtn.backgroundColor = self.selectColor
         self.collectionView.reloadData()
@@ -142,28 +136,24 @@ extension BoneCustomFiltersView: BoneCustomMenuProtocol {
 extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return self.delegate?.numberOfSection(self) ?? 0
+        return self.dataSource.sectionNum
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.delegate?.customList(self, numberOfRowsInSections: section) ?? 0
+        return self.dataSource.rowNum(section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.identifier, for: indexPath) as? BoneFilterCollectionCell
-        let selectIcon = UIImage(named: "BoneCustomIcon.bundle/select")?.color(to: self.selectColor)
+        let selectIcon = UIImage(named: "BoneCustomIcon.bundle/select")?.color(self.selectColor)
         cell?.button.setImage(selectIcon, for: UIControlState.selected)
         cell?.button.lineColor = self.line
         cell?.button.selectColor = self.selectColor
         cell?.button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         cell?.button.setTitleColor(self.fontColor, for: UIControlState.normal)
         cell?.button.setTitleColor(self.selectColor, for: UIControlState.selected)
-        
-        let title = self.delegate?.customList(self, titleForSectionInRow: indexPath.section, row: indexPath.item)
-        cell?.button.setTitle(title, for: UIControlState.normal)
-
-        let select = self.selectArray[indexPath.section].contains(indexPath.item)
-        cell?.button.isSelected = select
+        cell?.button.setTitle(self.dataSource.getSubTitle(indexPath), for: UIControlState.normal)
+        cell?.button.isSelected = self.dataSource.getSelectState(indexPath)
         return cell!
     }
     
@@ -184,8 +174,7 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
         
         if kind == UICollectionElementKindSectionHeader {
             let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: self.headerIdentifier, for: indexPath) as! BoneFilterReusableView
-            let text = self.delegate?.customList(self, titleInSection: indexPath.section)
-            reusableView.label.text = text
+            reusableView.label.text = self.dataSource.getTitle(indexPath.section)
             return reusableView
             
         } else {
@@ -195,22 +184,7 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let type = self.delegate?.customList(self, filterDidForSectionAt: indexPath.section)
-
-        if type == .only {
-            if self.selectArray[indexPath.section].contains(indexPath.item) {
-                self.selectArray[indexPath.section] = []
-            } else {
-                self.selectArray[indexPath.section] = [indexPath.item]
-            }
-        } else {
-            if self.selectArray[indexPath.section].contains(indexPath.item) {
-                let items = self.selectArray[indexPath.section].filter { $0 != indexPath.item }
-                self.selectArray[indexPath.section] = items
-            } else {
-                self.selectArray[indexPath.section].append(indexPath.item)
-            }
-        }
+        self.dataSource.updata(indexPath)
         self.collectionView.reloadData()
     }
 

@@ -34,6 +34,10 @@
 		7EB9A82E1FB2D1C700CD100C /* BoneFilterReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A82D1FB2D1C700CD100C /* BoneFilterReusableView.swift */; };
 		7EB9A8301FB2D30400CD100C /* BoneCustomFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A82F1FB2D30400CD100C /* BoneCustomFiltersView.swift */; };
 		7EB9A8321FB2D60F00CD100C /* BoneFilterLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8311FB2D60F00CD100C /* BoneFilterLayout.swift */; };
+		7EB9A8651FB53E2800CD100C /* BoneCustomFilterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8641FB53E2800CD100C /* BoneCustomFilterListView.swift */; };
+		7EB9A8671FB53FD800CD100C /* BoneFilterDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8661FB53FD800CD100C /* BoneFilterDataSource.swift */; };
+		7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */; };
+		7EB9A86C1FB5599600CD100C /* BoneFilterFootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +70,10 @@
 		7EB9A82D1FB2D1C700CD100C /* BoneFilterReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterReusableView.swift; sourceTree = "<group>"; };
 		7EB9A82F1FB2D30400CD100C /* BoneCustomFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFiltersView.swift; sourceTree = "<group>"; };
 		7EB9A8311FB2D60F00CD100C /* BoneFilterLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterLayout.swift; sourceTree = "<group>"; };
+		7EB9A8641FB53E2800CD100C /* BoneCustomFilterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterListView.swift; sourceTree = "<group>"; };
+		7EB9A8661FB53FD800CD100C /* BoneFilterDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterDataSource.swift; sourceTree = "<group>"; };
+		7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterCell.swift; sourceTree = "<group>"; };
+		7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterFootView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,12 +134,22 @@
 		7E39A0701F1C999E0030EB75 /* PopupView */ = {
 			isa = PBXGroup;
 			children = (
+				7E8100A91FB5784A00ED5387 /* BoneFilter */,
 				7EB9A7EA1FB1F3FB00CD100C /* BoneCalendar */,
-				7EB9A7DE1FB18BDD00CD100C /* FilterView */,
 				7EB9A7E11FB18BDD00CD100C /* ListsView */,
 				7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */,
 			);
 			path = PopupView;
+			sourceTree = "<group>";
+		};
+		7E8100A91FB5784A00ED5387 /* BoneFilter */ = {
+			isa = PBXGroup;
+			children = (
+				7EB9A8661FB53FD800CD100C /* BoneFilterDataSource.swift */,
+				7EB9A7DE1FB18BDD00CD100C /* FilterView */,
+				7EB9A8631FB53DF300CD100C /* FilterListView */,
+			);
+			path = BoneFilter;
 			sourceTree = "<group>";
 		};
 		7EB9A7DE1FB18BDD00CD100C /* FilterView */ = {
@@ -190,6 +208,24 @@
 				7EB9A82B1FB2D18F00CD100C /* BoneFilterCollectionCell.swift */,
 				7EB9A82D1FB2D1C700CD100C /* BoneFilterReusableView.swift */,
 				7EB9A8311FB2D60F00CD100C /* BoneFilterLayout.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		7EB9A8631FB53DF300CD100C /* FilterListView */ = {
+			isa = PBXGroup;
+			children = (
+				7EB9A86A1FB5596A00CD100C /* Cell */,
+				7EB9A8641FB53E2800CD100C /* BoneCustomFilterListView.swift */,
+			);
+			path = FilterListView;
+			sourceTree = "<group>";
+		};
+		7EB9A86A1FB5596A00CD100C /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */,
+				7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -273,11 +309,14 @@
 				7EB9A7E61FB18BDD00CD100C /* BoneCustomListsView.swift in Sources */,
 				7E3038131F0F257B00B16ACB /* AppDelegate.swift in Sources */,
 				7E3038301F0FC4C100B16ACB /* BoneCustomMenuDelegate.swift in Sources */,
+				7EB9A8651FB53E2800CD100C /* BoneCustomFilterListView.swift in Sources */,
 				7E39A06F1F1C98F50030EB75 /* String+Extension.swift in Sources */,
 				7E39A0771F1C999E0030EB75 /* BoneCustomDelegate.swift in Sources */,
 				7EB9A8321FB2D60F00CD100C /* BoneFilterLayout.swift in Sources */,
+				7EB9A8671FB53FD800CD100C /* BoneFilterDataSource.swift in Sources */,
 				7EB9A82C1FB2D18F00CD100C /* BoneFilterCollectionCell.swift in Sources */,
 				7E3038261F0F48B800B16ACB /* BoneCustomPopup.swift in Sources */,
+				7EB9A86C1FB5599600CD100C /* BoneFilterFootView.swift in Sources */,
 				7EB9A7FE1FB1F3FB00CD100C /* BoneCalendarView.swift in Sources */,
 				7EB9A7E71FB18BDD00CD100C /* BoneListsCell.swift in Sources */,
 				7EB9A7FB1FB1F3FB00CD100C /* BoneCalenadrReusableView.swift in Sources */,
@@ -290,6 +329,7 @@
 				7E3038281F0FC36000B16ACB /* BoneCustomMenu.swift in Sources */,
 				7EB9A7F81FB1F3FB00CD100C /* BoneCalenadrDelegate.swift in Sources */,
 				7EB9A7FC1FB1F3FB00CD100C /* BoneDayCell.swift in Sources */,
+				7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */,
 				7EB9A7FD1FB1F3FB00CD100C /* BoneCalendarLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

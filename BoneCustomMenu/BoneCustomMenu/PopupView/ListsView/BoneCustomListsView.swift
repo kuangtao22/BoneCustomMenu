@@ -9,6 +9,10 @@
 import UIKit
 
 class BoneCustomListsView: UIView {
+    
+    var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
+    
+    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
     ///
     var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
     /// 行高
@@ -76,7 +80,7 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
     /// 重载数据
     func reloadData() {
         
-        if let data = self.delegate?.customList(currentSelectRowAt: self) {
+        if let data = self.delegate?.getSelectData() {
             self.selectRow = data
             self.selectSection = data.section
         } else {
@@ -119,9 +123,9 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == self.leftTable {
-            return self.delegate?.numberOfSection(self) ?? 1
+            return self.delegate?.numberOfSection() ?? 1
         } else {
-            return self.delegate?.customList(self, numberOfRowsInSections: section) ?? 1
+            return self.delegate?.customList(numberOfRowsInSections: section) ?? 1
         }
     }
 
@@ -129,28 +133,30 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let isLeft = tableView == self.leftTable
         let identifier = "ListCell\(indexPath.row)\(isLeft)"
-
+        let isHaveRow = self.delegate?.isRight() == true
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneListsCell
         if cell == nil {
-            cell = BoneListsCell(style: UITableViewCellStyle.default, reuseIdentifier: identifier)
-            cell?.textLabel?.textColor = BoneCustomPopup.Color.font
+            cell = BoneListsCell(style: .default, reuseIdentifier: identifier)
+            cell?.textLabel?.textColor = self.fontColor
+            cell?.selectColor = self.selectColor
+            cell?.listLeftWidth = isHaveRow ? self.listLeftWidth : 0
+            cell?.fontColor = self.fontColor
+            cell?.selectView2.isHidden = isHaveRow ? isLeft : false
+            cell?.selectView1.isHidden = !isLeft
         }
         if isLeft {
-            let isRight = (self.delegate?.isRight() == true)
             let isSelect = indexPath.row == self.selectSection
-            cell?.set(isSelect, isLeft: isRight, tableView: self.leftTable)
-            if isSelect {
-                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            }
-            cell?.textLabel?.text = self.delegate?.customList(self, titleInSection: indexPath.row)
+            cell?.backgroundColor = isSelect ? UIColor.white : self.sectionColor
+            cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
+            cell?.selectView1.isHidden = !isSelect
+            cell?.selectView2.isHidden = isHaveRow ? true : !isSelect
+            cell?.textLabel?.text = self.delegate?.customList(titleInSection: indexPath.row)
             
         } else {
+            cell?.backgroundColor = UIColor.white
             let isSelect = (self.selectRow.row == indexPath.row) && (self.selectSection == self.selectRow.section)
-            cell?.set(isSelect, isLeft: isLeft,  tableView: self.rightTable)
-            if isSelect {
-                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-            }
-            cell?.textLabel?.text = self.delegate?.customList(self, titleForSectionInRow: self.selectSection, row: indexPath.row)
+            cell?.selectView2.isHidden = !isSelect
+            cell?.textLabel?.text = self.delegate?.customList(titleForSectionInRow: self.selectSection, row: indexPath.row)
         }
         return cell!
     }
@@ -162,13 +168,13 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
             self.leftTable.reloadData()
             self.rightTable.reloadData()
             if self.delegate?.isRight() == false {
-                self.delegate?.customList(self, didSelectRowAt: self.selectSection, row: 0)
+                self.delegate?.customList(didSelectRowAt: self.selectSection, row: 0)
             }
             
         } else {
             self.selectRow.section = self.selectSection
             self.selectRow.row = indexPath.row
-            self.delegate?.customList(self, didSelectRowAt: self.selectRow.section, row: self.selectRow.row)
+            self.delegate?.customList(didSelectRowAt: self.selectRow.section, row: self.selectRow.row)
             self.rightTable.reloadData()
         }
         

@@ -39,6 +39,7 @@ extension BoneCustomPopup {
     enum ColumnType {
         case button         // 直接触发
         case list           // 列表菜单
+        case filterList     // 多选列表
         case filter         // 筛选菜单
         case calendar       // 日历
     }
@@ -49,16 +50,16 @@ extension BoneCustomPopup {
         case multi  // 多选
     }
     
-    struct Color {
-        /// 字体颜色
-        static var font = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
-        
-        static var fontSelect = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
-        /// 一级分类底色
-        static var section = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        /// 分割线颜色
-        static var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
-    }
+//    struct Color {
+//        /// 字体颜色
+//        static var font = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
+//        
+////        static var fontSelect = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
+//        /// 一级分类底色
+//        static var section = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+//        /// 分割线颜色
+//        static var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
+//    }
     
     struct Size {
         /// 行高
@@ -68,9 +69,9 @@ extension BoneCustomPopup {
         static var font: CGFloat = 14
     }
     
-    struct Icon {
-        static var select = UIImage(named: "BoneCustomIcon.bundle/select")?.color(to: Color.fontSelect)
-    }
+//    struct Icon {
+//        static var select = UIImage(named: "BoneCustomIcon.bundle/select")?.color(Color.fontSelect)
+//    }
 }
 
 class BoneCustomPopup: UIView {
@@ -106,8 +107,6 @@ class BoneCustomPopup: UIView {
         view.layer.masksToBounds = true
         return view
     }()
-    
-
 }
 
 
@@ -199,13 +198,13 @@ extension BoneCustomPopup {
             case .button:
                 return nil
             case .filter:
-                let image = UIImage(named: "BoneCustomIcon.bundle/filter")?.color(to: color)
+                let image = UIImage(named: "BoneCustomIcon.bundle/filter")?.color(color)
                 return image
-            case .list:
-                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(to: color)
+            case .list, .filterList:
+                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(color)
                 return image
             case .calendar:
-                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(to: color)
+                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(color)
                 return image
             }
         }

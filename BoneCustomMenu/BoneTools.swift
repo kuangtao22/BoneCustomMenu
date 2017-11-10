@@ -14,7 +14,7 @@ extension UIImage {
     ///
     /// - Parameter toColor: 改变颜色
     /// - Returns: 改变后的图片
-    func color(to: UIColor) -> UIImage {
+    func color(_ to: UIColor) -> UIImage {
         let drawRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         to.setFill()

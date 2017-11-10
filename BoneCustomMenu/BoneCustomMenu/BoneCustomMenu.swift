@@ -19,6 +19,14 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 代理协议
     var delegate: BoneCustomMenuDelegate?
+
+    var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
+    
+    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
+    
+    var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+    
+    var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
  
     fileprivate var scrollView: UIScrollView!
     fileprivate var currentSelect = 0               // 当前选中
@@ -32,7 +40,7 @@ class BoneCustomMenu: BoneCustomPopup {
     convenience init(top: CGFloat, height: CGFloat) {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: height))
         let line = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
-        line.backgroundColor = Color.line
+        line.backgroundColor = self.line
         self.addSubview(line)
         
         self.scrollView = UIScrollView(frame: self.bounds)
@@ -42,13 +50,13 @@ class BoneCustomMenu: BoneCustomPopup {
         self.menuView.addSubview(self.listView)
         self.menuView.addSubview(self.filterView)
         self.menuView.addSubview(self.calendarView)
+        self.menuView.addSubview(self.filterListView)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(sender:)))
         self.backgroundView.addGestureRecognizer(gesture)
     }
     
     lazy var listView: BoneCustomListsView = {
-       
         let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
         view.isHidden = true
@@ -58,13 +66,23 @@ class BoneCustomMenu: BoneCustomPopup {
     lazy var filterView: BoneCustomFiltersView = {
         let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
+        view.selectColor = self.selectColor
+        view.line = self.line
+        view.isHidden = true
+        return view
+    }()
+    
+    lazy var filterListView: BoneCustomFilterListView = {
+        let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
+        view.delegate = self
+        view.selectColor = self.selectColor
         view.isHidden = true
         return view
     }()
     
     lazy var calendarView: BoneCalendarView = {
         let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight), type: .section)
-        calenadr.selectColor = Color.fontSelect
+        calenadr.selectColor = self.selectColor
         calenadr.delegate = self
         calenadr.isHidden = true
         return calenadr
@@ -78,6 +96,7 @@ class BoneCustomMenu: BoneCustomPopup {
         self.filterView.isHidden = (type != .filter)
         self.listView.isHidden = (type != .list)
         self.calendarView.isHidden = (type != .calendar)
+        self.filterListView.isHidden = (type != .filterList)
         
         self.currentSelect = tag
         switch type {
@@ -91,6 +110,10 @@ class BoneCustomMenu: BoneCustomPopup {
         case .filter:
             self.popupAction(button.isSelected)
             self.filterView.reloadData()
+            
+        case .filterList:
+            self.popupAction(button.isSelected)
+            self.filterListView.reloadData()
             
         case .list:
             self.popupAction(button.isSelected)
@@ -126,6 +149,7 @@ class BoneCustomMenu: BoneCustomPopup {
         case .button: return UIView()
         case .calendar: return self.calendarView
         case .filter: return self.filterView
+        case .filterList: return self.filterListView
         case .list: return self.listView
         }
     }
@@ -156,6 +180,8 @@ class BoneCustomMenu: BoneCustomPopup {
                     self.calendarView.setHeight = height
                 case .list:
                     self.listView.setHeight = height
+                case .filterList:
+                    self.filterListView.setHeight = height
                 }
             }
         }
@@ -227,6 +253,8 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             break
         case .filter:
             self.filterView.reloadData()
+        case .filterList:
+            self.filterListView.reloadData()
         case .list:
             self.listView.reloadData()
         }
@@ -253,8 +281,8 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 frame: CGRect(origin: CGPoint(x: CGFloat(i) * width, y: 0), size: CGSize(width: width, height: self.frame.height)),
                 type: info.type
             )
-            menuBtn.normalColor = Color.font
-            menuBtn.selectColor = Color.fontSelect
+            menuBtn.normalColor = self.fontColor
+            menuBtn.selectColor = self.selectColor
             menuBtn.title = info.title
             menuBtn.tag = i + 100
             menuBtn.onClickAction(cellback: { (type, button) in
@@ -307,21 +335,20 @@ extension BoneCustomMenu: BoneCustomPopupDelegate {
 // MARK: - 列表类型代理协议
 extension BoneCustomMenu: BoneCustomDelegate {
     
-    
-    internal func customList(_ view: UIView, didSelect filterDatas: [[Int]], isConfirm: Bool) {
+    internal func customList(didSelect filterDatas: [[Int]], isConfirm: Bool) {
         self.filterDatas = filterDatas
         self.delegate?.boneMenu(self, didSelectRowAtColumn: self.currentSelect, filterDatas: self.filterDatas)
         self.popupAction(!isConfirm)
     }
 
     
-    internal func customList(_ view: UIView, filterDidForSectionAt section: Int) -> BoneCustomPopup.FilterType {
+    internal func customList(filterDidForSectionAt section: Int) -> BoneCustomPopup.FilterType {
         let index = BoneCustomPopup.IndexPath(column: self.currentSelect, section: section, row: 0)
         return self.delegate?.boneMenu(self, filterDidForSectionAt: index) ?? .only
     }
 
     
-    internal func customFilter(_ view: UIView) -> [[Int]] {
+    internal func customFilter() -> [[Int]] {
         return self.filterDatas
     }
     
@@ -330,15 +357,14 @@ extension BoneCustomMenu: BoneCustomDelegate {
         return self.isHaveRight
     }
 
-    
-    internal func customList(currentSelectRowAt view: UIView) -> BoneCustomListsView.SelectData {
+    func getSelectData() -> BoneCustomListsView.SelectData {
         let section = self.selectArray[self.currentSelect].section
         let row = self.selectArray[self.currentSelect].row
         let data = BoneCustomListsView.SelectData(section: section, row: row)
         return data
     }
 
-    internal func customList(_ view: UIView, didSelectRowAt section: Int, row: Int) {
+    internal func customList(didSelectRowAt section: Int, row: Int) {
         self.selectArray[self.currentSelect].column = self.currentSelect
         self.selectArray[self.currentSelect].section = section
         self.selectArray[self.currentSelect].row = row
@@ -356,23 +382,23 @@ extension BoneCustomMenu: BoneCustomDelegate {
         self.delegate?.boneMenu(self, didSelectRowAtIndexPath: self.selectArray[self.currentSelect])
     }
 
-    internal func customList(_ view: UIView, titleForSectionInRow section: Int, row: Int) -> String {
+    internal func customList(titleForSectionInRow section: Int, row: Int) -> String {
         let index = BoneCustomPopup.IndexPath(column: self.currentSelect, section: section, row: row)
         return self.delegate?.boneMenu(self, titleForRowAt: index) ?? ""
     }
 
-    internal func customList(_ view: UIView, titleInSection section: Int) -> String {
+    internal func customList(titleInSection section: Int) -> String {
         let index = BoneCustomPopup.IndexPath(column: self.currentSelect, section: section, row: 0)
         return self.delegate?.boneMenu(self, titleForSectionAt: index) ?? ""
     }
 
     
-    internal func customList(_ view: UIView, numberOfRowsInSections sections: Int) -> Int {
+    internal func customList(numberOfRowsInSections sections: Int) -> Int {
         let index = BoneCustomPopup.IndexPath(column: self.currentSelect, section: sections, row: 0)
         return self.delegate?.boneMenu(self, numberOfRowsInSections: index) ?? 0
     }
 
-    internal func numberOfSection(_ view: UIView) -> Int {
+    internal func numberOfSection() -> Int {
         return self.delegate?.boneMenu(self, numberOfSectionsInColumn: self.currentSelect) ?? 0
     }
 }

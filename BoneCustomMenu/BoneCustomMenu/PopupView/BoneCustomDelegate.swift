@@ -10,23 +10,23 @@ import UIKit
 
 protocol BoneCustomDelegate: NSObjectProtocol {
     
-    func numberOfSection(_ view: UIView) -> Int
+    func numberOfSection() -> Int
     
-    func customList(_ view: UIView, numberOfRowsInSections section: Int) -> Int
+    func customList(numberOfRowsInSections section: Int) -> Int
     
-    func customList(_ view: UIView, titleInSection section: Int) -> String
+    func customList(titleInSection section: Int) -> String
     
-    func customList(_ view: UIView, titleForSectionInRow section: Int, row: Int) -> String
+    func customList(titleForSectionInRow section: Int, row: Int) -> String
     
-    func customList(_ view: UIView, didSelectRowAt section: Int, row: Int)
+    func customList(didSelectRowAt section: Int, row: Int)
     
-    func customList(currentSelectRowAt view: UIView) -> BoneCustomListsView.SelectData
+    func getSelectData() -> BoneCustomListsView.SelectData
     
     func isRight() -> Bool
     
-    func customList(_ view: UIView,  filterDidForSectionAt section: Int) -> BoneCustomPopup.FilterType
+    func customList(filterDidForSectionAt section: Int) -> BoneCustomPopup.FilterType
     
-    func customList(_ view: UIView, didSelect filterDatas: [[Int]], isConfirm: Bool)
+    func customList(didSelect filterDatas: [[Int]], isConfirm: Bool)
     
-    func customFilter(_ view: UIView) -> [[Int]]
+    func customFilter() -> [[Int]]
 }
