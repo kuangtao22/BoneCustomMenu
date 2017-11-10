@@ -146,10 +146,10 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
             cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
             cell?.selectView1.isHidden = !isSelect
             cell?.selectView2.isHidden = self.dataSource.isHaveRow ? true : !isSelect
-            if self.dataSource.selectData.isEmpty {
-                cell?.num = 0
-            } else {
+            if self.dataSource.selectData.count > indexPath.row {
                 cell?.num = self.dataSource.selectData[indexPath.row].count
+            } else {
+                cell?.num = 0
             }
             cell?.textLabel?.text = self.dataSource.getTitle(indexPath.row)
             

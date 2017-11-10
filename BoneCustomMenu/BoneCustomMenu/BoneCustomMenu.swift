@@ -22,7 +22,18 @@ class BoneCustomMenu: BoneCustomPopup {
 
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
     
-    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
+    /// 选中颜色
+    var selectColor: UIColor? {
+        didSet {
+            guard let color = self.selectColor else {
+                return
+            }
+            self.calendarView.selectColor = color
+            self.listView.selectColor = color
+            self.filterView.selectColor = color
+            self.filterListView.selectColor = color
+        }
+    }
     
     var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
     
@@ -66,7 +77,6 @@ class BoneCustomMenu: BoneCustomPopup {
     lazy var filterView: BoneCustomFiltersView = {
         let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
-        view.selectColor = self.selectColor
         view.line = self.line
         view.isHidden = true
         return view
@@ -75,14 +85,12 @@ class BoneCustomMenu: BoneCustomPopup {
     lazy var filterListView: BoneCustomFilterListView = {
         let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
         view.delegate = self
-        view.selectColor = self.selectColor
         view.isHidden = true
         return view
     }()
     
     lazy var calendarView: BoneCalendarView = {
         let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight), type: .section)
-        calenadr.selectColor = self.selectColor
         calenadr.delegate = self
         calenadr.isHidden = true
         return calenadr

@@ -174,9 +174,9 @@
 			isa = PBXGroup;
 			children = (
 				7EB9A7EB1FB1F3FB00CD100C /* DataSource */,
-				7EB9A7EE1FB1F3FB00CD100C /* BoneCalenadrDelegate.swift */,
 				7EB9A7EF1FB1F3FB00CD100C /* Cell */,
 				7EB9A7F51FB1F3FB00CD100C /* BoneCalendarView.swift */,
+				7EB9A7EE1FB1F3FB00CD100C /* BoneCalenadrDelegate.swift */,
 			);
 			path = BoneCalendar;
 			sourceTree = "<group>";

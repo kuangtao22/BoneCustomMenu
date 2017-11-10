@@ -39,6 +39,13 @@ class BoneCalendarView: UIView {
         }
     }
     
+    /// 选择样式
+    var selectType: BoneCalenadrDataSource.SelectionType = .none {
+        didSet {
+            self.dataSourceManager.selectionType = self.selectType
+        }
+    }
+    
     /// 选中时间, 标记选中时间后，自动滚动到最小选中时间页
     var selectDates: [Date]? {
         didSet {
