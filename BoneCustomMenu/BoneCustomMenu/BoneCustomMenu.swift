@@ -29,7 +29,7 @@ class BoneCustomMenu: BoneCustomPopup {
             self.source.dataSource = self.dataSource
         }
     }
-
+    
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
     
     /// 选中颜色
@@ -48,7 +48,7 @@ class BoneCustomMenu: BoneCustomPopup {
     var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
     
     var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
- 
+    
     fileprivate var scrollView: UIScrollView!
     
     /// 所有选中索引
@@ -65,7 +65,7 @@ class BoneCustomMenu: BoneCustomPopup {
     }
     
     fileprivate var menuType: ColumnType = .button
-    fileprivate let defaultMenuheight = UIScreen.main.bounds.height * 0.5   // 默认菜单高度
+    
     
     fileprivate var source: BoneCustomMenuSource!
     
@@ -75,10 +75,21 @@ class BoneCustomMenu: BoneCustomPopup {
     
     convenience init(top: CGFloat, height: CGFloat) {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: height))
-        
+        self.initializa()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.initializa()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// 初始化
+    private func initializa() {
         self.source = BoneCustomMenuSource(menu: self)
-        
-        
         let line = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
         line.backgroundColor = self.line
         self.addSubview(line)
@@ -86,7 +97,7 @@ class BoneCustomMenu: BoneCustomPopup {
         self.scrollView = UIScrollView(frame: self.bounds)
         self.addSubview(self.scrollView)
         self.popupDelegate = self
-
+        
         self.menuView.addSubview(self.listView)
         self.menuView.addSubview(self.filterView)
         self.menuView.addSubview(self.calendarView)
@@ -97,14 +108,14 @@ class BoneCustomMenu: BoneCustomPopup {
     }
     
     lazy var listView: BoneCustomListsView = {
-        let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
+        let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
     lazy var filterView: BoneCustomFiltersView = {
-        let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
+        let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
         view.delegate = self
         view.line = self.line
         view.isHidden = true
@@ -112,14 +123,14 @@ class BoneCustomMenu: BoneCustomPopup {
     }()
     
     lazy var filterListView: BoneCustomFilterListView = {
-        let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight))
+        let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
     lazy var calendarView: BoneCalendarView = {
-        let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.defaultMenuheight, width: self.menuView.frame.width, height: self.defaultMenuheight), type: .section)
+        let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()), type: .section)
         calenadr.delegate = self
         calenadr.isHidden = true
         return calenadr
@@ -162,7 +173,7 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 获取菜单类型
     ///
-    /// - 
+    /// -
     private func getView(type: ColumnType) -> UIView {
         switch type {
         case .button: return UIView()
@@ -207,7 +218,7 @@ class BoneCustomMenu: BoneCustomPopup {
     /// - Parameter isShow: 是否显示
     open func popupAction(_ isShow: Bool) {
         let view = self.getView(type: self.menuType)
-
+        
         if isShow {
             self.menuView.frame.size.height = view.frame.height
             self.superview?.addSubview(self.backgroundView)
@@ -273,7 +284,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             self.listView.reloadData()
         }
     }
-
+    
     /// 重载数据
     func reloadData() {
         for view in self.scrollView.subviews {
@@ -281,7 +292,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
         }
         let columnNum = self.source.columnNum
         let width = self.frame.width / CGFloat(columnNum > 4 ? 4 : columnNum)
-
+        
         for i in 0..<columnNum {
             let info = self.source.columnInfo(i)
             let origin = CGPoint(x: CGFloat(i) * width, y: 0)
