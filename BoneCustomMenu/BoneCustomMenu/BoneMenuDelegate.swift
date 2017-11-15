@@ -115,7 +115,13 @@ protocol BoneMenuDelegate: NSObjectProtocol {
     func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneIndexPath)
 
     
-    
+    /// boneMenu Section 点击事件
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - column:
+    ///   - section:
+    func boneMenu(_ menu: BoneCustomMenu, didSelectSectionAtColumn column: Int, section: Int)
     
     /// boneMenu filter 点击事件
     ///
@@ -175,5 +181,7 @@ extension BoneMenuDelegate {
         
     }
     
-   
+    func boneMenu(_ menu: BoneCustomMenu, didSelectSectionAtColumn column: Int, section: Int) {
+        
+    }
 }

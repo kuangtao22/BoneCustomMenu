@@ -379,7 +379,7 @@ extension BoneCustomMenu: BoneCustomDelegate {
     }
     
     func didSelect(_ section: Int) {
-        
+        self.source.onClickSection(section)
     }
     
     func didSelectAtRow(_ indexPath: IndexPath) {

@@ -109,7 +109,7 @@ class BoneCustomMenuSource {
 
     
     func onClickSection(_ section: Int) {
-        
+        self.delegate?.boneMenu(self.menu, didSelectSectionAtColumn: self.currentSelect, section: section)
     }
     
     /// 初始化数据
@@ -126,13 +126,18 @@ class BoneCustomMenuSource {
     }
     
     /// 获取弹出菜单高度
-    func menuHeight(_ column: Int) -> CGFloat {
-        return self.dataSource?.boneMenu(self.menu, menuHeightFor: column) ?? 0
+    func menuHeight(_ column: Int? = nil) -> CGFloat {
+        if let column = column {
+            return self.dataSource?.boneMenu(self.menu, menuHeightFor: column) ?? self.defaultMenuheight
+        }
+        return self.defaultMenuheight
     }
     
     fileprivate var selectArray = [BoneIndexPath]()
     
     fileprivate var menu: BoneCustomMenu
+    /// 默认菜单高度
+    fileprivate let defaultMenuheight = UIScreen.main.bounds.height * 0.5
     
     init(menu: BoneCustomMenu) {
         self.menu = menu

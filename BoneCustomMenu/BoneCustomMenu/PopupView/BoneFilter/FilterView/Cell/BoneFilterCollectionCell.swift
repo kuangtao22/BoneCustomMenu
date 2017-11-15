@@ -17,7 +17,7 @@ class BoneFilterCollectionCell: UICollectionViewCell {
         self.backgroundColor = UIColor.white
         
         self.button = FilterButton(frame: self.bounds)
-        self.button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        self.button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         self.button.isUserInteractionEnabled = false
         self.contentView.addSubview(self.button)
     }
