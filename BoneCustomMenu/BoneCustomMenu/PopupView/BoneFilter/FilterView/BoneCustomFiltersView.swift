@@ -145,7 +145,6 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
         cell?.button.setImage(selectIcon, for: UIControlState.selected)
         cell?.button.lineColor = self.line
         cell?.button.selectColor = self.selectColor
-        cell?.button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         cell?.button.setTitleColor(self.fontColor, for: UIControlState.normal)
         cell?.button.setTitleColor(self.selectColor, for: UIControlState.selected)
         cell?.button.setTitle(self.dataSource.rowTitle(indexPath), for: UIControlState.normal)

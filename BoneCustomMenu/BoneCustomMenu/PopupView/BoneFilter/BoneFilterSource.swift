@@ -122,10 +122,7 @@ class BoneFilterSource {
             return
         }
         self.selectSection = 0
-        let getSelectIndexPaths = delegate.getSelectIndexPaths()
-        if !getSelectIndexPaths.isEmpty && self.selectArray.isEmpty {
-            self.selectArray = getSelectIndexPaths
-        }
+        self.selectArray = delegate.getSelectIndexPaths()
     }
     
     

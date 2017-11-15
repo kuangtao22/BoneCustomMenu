@@ -29,9 +29,6 @@ class BoneCalendarView: UIView {
     // 字体颜色
     var fontColor = UIColor.black
     
-    // 今日字体颜色
-    var todayFontColor = UIColor.red
-    
     // 最大选中天
     var selectMaxDay: Int? {
         didSet {
@@ -174,7 +171,7 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
         
         let (date,dayState) = dataSourceManager.dayState(indexPath)
         cell?.dayLabel.backRoundColor = self.selectColor
-        cell?.dayLabel.text = dayState.contains(.Today) ? "今" : dataSourceManager.dayString(date)
+        cell?.dayLabel.dayText = dayState.contains(.Today) ? "今" : dataSourceManager.dayString(date)
         
         // 不在本月
         if dayState.contains(.NotThisMonth) {
@@ -195,7 +192,7 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
             cell?.dayLabel.textColor = self.selectColor
         } else {
             if dayState.contains(.Today) {
-                cell?.dayLabel.textColor = self.todayFontColor
+                cell?.dayLabel.textColor = self.selectColor
             } else {
                 cell?.dayLabel.textColor = self.fontColor
             }

@@ -14,9 +14,12 @@ class RoundBackgroundLabel: UILabel {
     
     var backRoundColor: UIColor = UIColor.lightGray
     var roundType: RoundType = .single
-    override var text: String? {
+
+    /// 日期
+    var dayText: String? {
         didSet {
-            self.selectView.text = self.text
+            self.text = self.dayText
+            self.selectView.text = self.dayText
         }
     }
     
@@ -73,6 +76,7 @@ class RoundBackgroundLabel: UILabel {
             context?.addEllipse(in: newRect)
             backRoundColor.withAlphaComponent(0.1).set()
             context?.drawPath(using: CGPathDrawingMode.fill)
+            self.textColor = UIColor.clear
             
         case .middle:
             context?.addRect(newRect)
@@ -85,6 +89,7 @@ class RoundBackgroundLabel: UILabel {
             context?.addRect(CGRect(x: newRect.width/2, y: 0, width: newRect.width/2, height: newRect.height))
             backRoundColor.withAlphaComponent(0.1).set()
             context?.drawPath(using: CGPathDrawingMode.fill)
+            self.textColor = UIColor.clear
             
         case.end:
             self.selectView.isHidden = false
@@ -92,6 +97,7 @@ class RoundBackgroundLabel: UILabel {
             context?.addRect(CGRect(x: 0, y: 0, width: newRect.width/2, height: newRect.height))
             backRoundColor.withAlphaComponent(0.1).set()
             context?.drawPath(using: CGPathDrawingMode.fill)
+            self.textColor = UIColor.clear
             
         case .none:
             break
