@@ -15,6 +15,9 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             return self.indexPathFotDates()
         }
         set {
+            guard newValue.count > 0 else {
+                return
+            }
             var dates = newValue
             switch self.selectionType {
             case .none:
@@ -25,6 +28,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
                 break
             case .section:
                 dates = [newValue[0], newValue[newValue.count - 1]]
+                dates = dates[0] == dates[1] ? [dates[0]] : dates
             }
             let newIndexPath = dates.flatMap({ (date) -> IndexPath? in
                 self.indexPathForRowAtDate(date)
@@ -296,6 +300,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     func cleanAllDate() {
         self.selectedIndexPaths.removeAll()
         self.delegate?.calenadr(self, didSelect: [Date](), error: nil)
+        self.monthInfoCache = nil
     }
     
 }

@@ -18,8 +18,12 @@ class BoneCustomListsView: UIView {
     /// 行高
     var rowHeight: CGFloat = 45
     /// 代理方法
-    var delegate: BoneCustomDelegate?
-    var listLeftWidth: CGFloat = UIScreen.main.bounds.width * 0.3
+    var delegate: BoneCustomDelegate?  {
+        didSet {
+            self.dataSource.delegate = self.delegate
+        }
+    }
+    
     /// 设置高度
     var setHeight: CGFloat? {
         didSet {
@@ -34,19 +38,16 @@ class BoneCustomListsView: UIView {
     
     fileprivate var leftTable: UITableView!
     fileprivate var rightTable: UITableView!
-    fileprivate var selectSection = 0
-    fileprivate var selectRow: SelectData!
-    
-    struct SelectData {
-        var section: Int
-        var row: Int
-    }
+//    fileprivate var selectSection = 0           // 点击左边tableView
+//    fileprivate var selectIndexPath: IndexPath! // 右边tableView
 
+    fileprivate var dataSource = BoneCustomListSource()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.leftTable = UITableView(
-            frame: CGRect(x: 0, y: 0, width: self.listLeftWidth, height: self.frame.height),
+            frame: CGRect(x: 0, y: 0, width: self.dataSource.leftWidth, height: self.frame.height),
             style: UITableViewStyle.plain
         )
         self.leftTable.rowHeight = self.rowHeight
@@ -79,38 +80,29 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
     
     /// 重载数据
     func reloadData() {
-        
-        if let data = self.delegate?.getSelectData() {
-            self.selectRow = data
-            self.selectSection = data.section
-        } else {
-            self.selectRow = SelectData(section: self.selectSection, row: 0)
-        }
-        
-        if self.delegate?.isRight() == true {
-            self.rightTable.isHidden = false
-            self.leftTable.frame.size.width = self.frame.width - self.rightTable.frame.width
-            
-        } else {
-            self.rightTable.isHidden = true
-            self.leftTable.frame.size.width = self.frame.width
-        }
-
-        self.leftTable.reloadData()
-        for i in 0..<self.leftTable.numberOfSections {
-            if self.leftTable.numberOfRows(inSection: i) > 0 {
-                // 自动定位到选中行
-                let leftIndex = IndexPath(row: self.selectRow.section, section: 0)
-                self.leftTable.scrollToRow(at: leftIndex, at: .middle, animated: false)
+        self.dataSource.initData()
+        let isTwoCol = self.dataSource.isTwoCol
+        self.leftTable.isHidden = self.dataSource.isLeftHidden
+        self.leftTable.frame.size.width = self.dataSource.leftWidth
+        self.rightTable.frame.size.width = self.dataSource.rightWidth
+        self.rightTable.frame.origin.x = isTwoCol ? self.dataSource.leftWidth : 0
+        if isTwoCol {
+            self.leftTable.reloadData()
+            for i in 0..<self.leftTable.numberOfSections {
+                if self.leftTable.numberOfRows(inSection: i) > 0 {
+                    // 自动定位到选中行
+                    let leftIndex = IndexPath(row: self.dataSource.selectRow.section, section: 0)
+                    self.leftTable.scrollToRow(at: leftIndex, at: .middle, animated: false)
+                }
             }
         }
-
-        if self.delegate?.isRight() == true {
-            self.rightTable.reloadData()
-            let rightIndex = IndexPath(row: self.selectRow.row, section: 0)
-            self.rightTable.scrollToRow(at: rightIndex, at: .middle, animated: false)
+        self.rightTable.reloadData()
+        for i in 0..<self.rightTable.numberOfSections {
+            if self.rightTable.numberOfRows(inSection: i) > 0 {
+                let rightIndex = IndexPath(row: self.dataSource.selectRow.row, section: 0)
+                self.rightTable.scrollToRow(at: rightIndex, at: .middle, animated: false)
+            }
         }
-
     }
 }
 
@@ -122,41 +114,38 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == self.leftTable {
-            return self.delegate?.numberOfSection() ?? 1
-        } else {
-            return self.delegate?.customList(numberOfRowsInSections: section) ?? 1
-        }
+        return self.dataSource.rowNum(tableView == self.leftTable)
     }
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let isLeft = tableView == self.leftTable
         let identifier = "ListCell\(indexPath.row)\(isLeft)"
-        let isHaveRow = self.delegate?.isRight() == true
+        let isTwoCol = self.dataSource.isTwoCol
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneListsCell
         if cell == nil {
             cell = BoneListsCell(style: .default, reuseIdentifier: identifier)
             cell?.textLabel?.textColor = self.fontColor
+            cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.selectColor = self.selectColor
-            cell?.listLeftWidth = isHaveRow ? self.listLeftWidth : 0
             cell?.fontColor = self.fontColor
-            cell?.selectView2.isHidden = isHaveRow ? isLeft : false
-            cell?.selectView1.isHidden = !isLeft
+            cell?.selectView2.isHidden = isLeft
+            cell?.selectView1.isHidden = isTwoCol ? !isLeft : isLeft
         }
+        cell?.listLeftWidth = self.dataSource.leftWidth
         if isLeft {
-            let isSelect = indexPath.row == self.selectSection
-            cell?.backgroundColor = isSelect ? UIColor.white : self.sectionColor
-            cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
-            cell?.selectView1.isHidden = !isSelect
-            cell?.selectView2.isHidden = isHaveRow ? true : !isSelect
-            cell?.textLabel?.text = self.delegate?.customList(titleInSection: indexPath.row)
+            if isTwoCol {
+                let isSelect = self.dataSource.sectionState(indexPath.row)
+                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
+                cell?.selectView1.isHidden = !isSelect
+                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
+            }
             
         } else {
-            cell?.backgroundColor = UIColor.white
-            let isSelect = (self.selectRow.row == indexPath.row) && (self.selectSection == self.selectRow.section)
+            let isSelect = self.dataSource.rowState(indexPath.row)
             cell?.selectView2.isHidden = !isSelect
-            cell?.textLabel?.text = self.delegate?.customList(titleForSectionInRow: self.selectSection, row: indexPath.row)
+            cell?.selectView1.isHidden = !isSelect
+            cell?.textLabel?.text = self.dataSource.rowTitle(indexPath.row)
         }
         return cell!
     }
@@ -164,17 +153,12 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.leftTable {
-            self.selectSection = indexPath.row
+            self.dataSource.onClickLeft(indexPath.row)
             self.leftTable.reloadData()
             self.rightTable.reloadData()
-            if self.delegate?.isRight() == false {
-                self.delegate?.customList(didSelectRowAt: self.selectSection, row: 0)
-            }
-            
+
         } else {
-            self.selectRow.section = self.selectSection
-            self.selectRow.row = indexPath.row
-            self.delegate?.customList(didSelectRowAt: self.selectRow.section, row: self.selectRow.row)
+            self.dataSource.onClickRight(indexPath.row)
             self.rightTable.reloadData()
         }
         

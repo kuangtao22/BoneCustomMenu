@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     var filterArray2 = ["新用户优惠", "特价商品", "下单立减", "赠品优惠", "下单返券", "进店领券"]
     var filterArray3 = ["￥20以下", "￥20~40", "￥40以上"]
     var filterArrays = [[String]]()
+    var dates = [Date]()
 
     var menuView: BoneCustomMenu!
     
@@ -33,17 +34,24 @@ class ViewController: UIViewController {
         for i in 0...20 {
             self.data2.append("子类\(i)")
         }
-
-        menuView = BoneCustomMenu(top: 200, height: 40)
-        menuView.delegate = self
-//        BoneCustomPopup.Color.font = UIColor.gray   // 字体颜色
-//        BoneCustomPopup.Color.fontSelect = UIColor.red
-//        BoneCustomPopup.Color.line // 分割线颜色
+        self.dates = [date("2013-04-11"), date("2013-03-23")]
+        self.menuView = BoneCustomMenu(top: 100, height: 40)
+        self.menuView.delegate = self
+        self.menuView.dataSource = self
+        self.menuView.selectIndexPaths = [
+            BoneCustomMenuSource.BoneIndexPath(column: 0, section: 1, row: 2),
+            BoneCustomMenuSource.BoneIndexPath(column: 2, section: 0, row: 1),
+            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 1, row: 1),
+            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
+            BoneCustomMenuSource.BoneIndexPath(column: 4, section: 1, row: 2)
+        ]
+        self.menuView.selectColor = UIColor.blue
+        
         self.view.addSubview(menuView)
         
         menuView.reloadData()
         
-        menuView.calendarView.selectDates = [date("2013-04-11"), date("2013-03-23")]
+        menuView.calendarView.selectDates = self.dates
         menuView.calendarView.selectMaxDay = 20
     }
 
@@ -61,61 +69,69 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: BoneCustomMenuDelegate {
-    func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {
-        if column == 0 {
-            return 200
-        } else if column == 1 {
-            return 300
-        } else if column == 2 {
-            return 350
-        }
-        return 400
+extension ViewController: BoneMenuDataSource {
+    
+    /// 返回 boneMenu 有多少列 ，默认1列
+    ///
+    /// - Parameter menu
+    /// - Returns
+    func numberOfColumns(_ menu: BoneCustomMenu) -> Int {
+        return 5
     }
     
-
-    
-    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneCustomPopup.IndexPath) -> BoneCustomPopup.FilterType? {
-        if indexPath.column == 3 {
-            if indexPath.section == 0 {
-                return BoneCustomPopup.FilterType.multi
-            } else if indexPath.section == 1 {
-                return BoneCustomPopup.FilterType.multi
-            } else if indexPath.section == 2 {
-                return BoneCustomPopup.FilterType.only
-            }
-        }
-        return BoneCustomPopup.FilterType.only
-    }
-    
-    
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, filterDatas: [[Int]]) {
-        print("filterDatas:\(filterDatas)")
-    }
-    
-    
-    
-    internal func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneCustomPopup.IndexPath) {
-        print("indexPath:\(indexPath)")
-    }
-
-   
-    /// 返回 boneMenu row标题
+    /// 返回 boneMenu 第column列有多少行
     ///
     /// - Parameters:
     ///   - menu:
-    ///   - indexPath:
+    ///   - column:
     /// - Returns:
-    internal func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneCustomPopup.IndexPath) -> String {
-        if indexPath.column == 0 {
-            return self.data2[indexPath.row]
-            
-        } else if indexPath.column == 3 {
-            return self.filterArrays[indexPath.section][indexPath.row]
+    internal func boneMenu(_ menu: BoneCustomMenu, numberOfSectionsInColumn column: Int) -> Int {
+        if column == 0 {
+            return 0
+        } else if column == 1 {
+            return self.data3.count
+        } else if column == 3 {
+            return self.filterArrays.count
         }
-        return "ccccccc"
+        return 0    // 如果是button类型，直接返回0就可以了
     }
-
+    
+    /// 返回 boneMenu 第column列section区有多少行
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - column:
+    ///   - section:
+    /// - Returns: 二级列表行数
+    internal func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneIndexPath) -> Int {
+        if indexPath.column == 0 {
+            return self.data2.count
+        } else if indexPath.column == 3 {
+            return self.filterArrays[indexPath.section].count
+        } else if indexPath.column == 4 {
+            return self.filterArray2.count
+        }
+        return 0    // 如果是button类型/单列，直接返回0就可以了
+    }
+    
+    /// 返回 boneMenu column类型
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - column:
+    /// - Returns:
+    func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> ColumnInfo {
+        if column == 0 {
+            return BoneCustomMenuSource.ColumnInfo(title: "分类", type: .filterList)
+        } else if column == 1 {
+            return BoneCustomMenuSource.ColumnInfo(title: "时间选择", type: .calendar)
+        } else if column == 2 {
+            return BoneCustomMenuSource.ColumnInfo(title: "是否买单", type: .button)
+        } else if column == 3 {
+            return BoneCustomMenuSource.ColumnInfo(title: "筛选", type: .filter)
+        }
+        return BoneCustomMenuSource.ColumnInfo(title: "一级单选", type: .list)
+    }
     
     
     /// 返回 boneMenu section标题
@@ -125,86 +141,73 @@ extension ViewController: BoneCustomMenuDelegate {
     ///   - column:
     ///   - section:
     /// - Returns:
-    internal func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneCustomPopup.IndexPath) -> String {
+    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneIndexPath) -> String {
         if indexPath.column == 0 {
             return self.data1[indexPath.section]
         } else if indexPath.column == 1 {
             return self.data3[indexPath.section]
         } else if indexPath.column == 3 {
             return self.filters[indexPath.section]
+        } else if indexPath.column == 4 {
+            return self.filterArray2[indexPath.section]
         }
         return ""
     }
     
-    
-
-    /// 返回 boneMenu column类型
+    /// 返回 boneMenu row标题
     ///
     /// - Parameters:
     ///   - menu:
-    ///   - column:
+    ///   - indexPath:
     /// - Returns:
-    internal func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> BoneCustomPopup.ColumnInfo {
-        if column == 0 {
-            return BoneCustomPopup.ColumnInfo(title: "分类", type: .filterList)
-        } else if column == 1 {
-            return BoneCustomPopup.ColumnInfo(title: "时间选择", type: .calendar)
-        } else if column == 2 {
-            return BoneCustomPopup.ColumnInfo(title: "是否买单", type: .button)
-        }
-        return BoneCustomPopup.ColumnInfo(title: "筛选", type: .filter)
-        
-    }
-    
-    
-    /// 返回 boneMenu 第column列section区有多少行
-    ///
-    /// - Parameters:
-    ///   - menu:
-    ///   - column:
-    ///   - section:
-    /// - Returns: 二级列表行数
-    internal func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneCustomPopup.IndexPath) -> Int {
+    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneIndexPath) -> String {
         if indexPath.column == 0 {
-            return 0
+            return self.data2[indexPath.row]
+            
         } else if indexPath.column == 3 {
-            return self.filterArrays[indexPath.section].count
+            return self.filterArrays[indexPath.section][indexPath.row]
+        } else if indexPath.column == 4 {
+            return self.filterArray2[indexPath.row]
         }
-        return 0    // 如果是button类型，直接返回0就可以了
+        return "ccccccc"
     }
     
+    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuDelegate.BoneIndexPath) -> BoneMenuDelegate.SelectType? {
+        if indexPath.section == 0 {
+            return BoneMenuDelegate.SelectType.multi
+        } else if indexPath.section == 1 {
+            return BoneMenuDelegate.SelectType.multi
+        } else if indexPath.section == 2 {
+            return BoneMenuDelegate.SelectType.only
+        }
+        return nil
+    }
+
+    func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {
+        return 400
+    }
+}
+
+extension ViewController: BoneMenuDelegate {
+    
+    
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, indexPaths: [IndexPath]) {
+        print("indexPaths:\(indexPaths)")
+    }
     
 
-    /// 返回 boneMenu 第column列有多少行
-    ///
-    /// - Parameters:
-    ///   - menu:
-    ///   - column:
-    /// - Returns:
-    internal func boneMenu(_ menu: BoneCustomMenu, numberOfSectionsInColumn column: Int) -> Int {
-        if column == 0 {
-            return self.data1.count
-        } else if column == 1 {
-            return self.data3.count
-        } else if column == 3 {
-            return self.filters.count
-        }
-        return 0    // 如果是button类型，直接返回0就可以了
+    
+    internal func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneIndexPath) {
+        print("indexPath:\(indexPath)")
     }
-    
-    
 
-    /// 返回 boneMenu 有多少列 ，默认1列
-    ///
-    /// - Parameter menu
-    /// - Returns
-    internal func numberOfColumns(_ menu: BoneCustomMenu) -> Int {
-        return 4
-    }
+
+    
 
     func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?) {
         print("error:\(error)")
         print("date:\(date)")
+        self.dates = date
     }
     
 }

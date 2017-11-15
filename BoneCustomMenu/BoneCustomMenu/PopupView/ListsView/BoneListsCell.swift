@@ -10,8 +10,8 @@ import UIKit
 
 class BoneListsCell: UITableViewCell {
     
-    var selectView1: UIView!
-    var selectView2: UIImageView!
+    var selectView1: UIView!        // 左边选中样式
+    var selectView2: UIImageView!   // 右边选中样式
     var selectColor = UIColor.gray {
         didSet {
             self.selectView2.image = self.selectView2.image?.color(self.selectColor)

@@ -41,10 +41,9 @@ class BoneCustomFilterListView: UIView {
             self.dataSource.delegate = self.delegate
         }
     }
+
     
-    fileprivate var selectLeft = 0  // 记录左边点击行数
-    
-    fileprivate var dataSource = BoneFilterDataSource()
+    fileprivate var dataSource = BoneFilterSource()
     fileprivate var leftTable: UITableView!
     fileprivate var rightTable: UITableView!
     fileprivate var footView: BoneFilterFootView!
@@ -55,10 +54,9 @@ class BoneCustomFilterListView: UIView {
         self.footView.onClick = { type in
             switch type {
             case .clean:
-                self.dataSource.cleanData()
-                self.reloadData()
+                self.cleanAction()
             case .confirm:
-                self.dataSource.submitData()
+                self.confirmAction()
             }
         }
         self.addSubview(self.footView)
@@ -88,30 +86,40 @@ class BoneCustomFilterListView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    /// 清除事件
+    @objc private func cleanAction() {
+        self.dataSource.cleanData()
+        if self.dataSource.isTwoCol { self.leftTable.reloadData() }
+        self.rightTable.reloadData()
+    }
+    
+    
+    /// 确认事件
+    @objc private func confirmAction() {
+        self.dataSource.submitData()
+    }
 }
 
 extension BoneCustomFilterListView: BoneCustomMenuProtocol {
     
     func reloadData() {
         self.dataSource.initData()
-        self.selectLeft = 0
-        if self.delegate?.isRight() == true {
-            self.rightTable.isHidden = false
-            self.leftTable.frame.size.width = self.frame.width - self.rightTable.frame.width
-            self.rightTable.reloadData()
-            
-        } else {
-            self.rightTable.isHidden = true
-            self.leftTable.frame.size.width = self.frame.width
-        }        
-        self.leftTable.reloadData()
+        
+        let isTwoCol = self.dataSource.isTwoCol
+        self.leftTable.isHidden = self.dataSource.isLeftHidden
+        self.leftTable.frame.size.width = self.dataSource.leftWidth
+        self.rightTable.frame.size.width = self.dataSource.rightWidth
+        self.rightTable.frame.origin.x = isTwoCol ? self.dataSource.leftWidth : 0
+        if self.dataSource.isTwoCol {
+            self.leftTable.reloadData()
+        }
+        self.rightTable.reloadData()
 
         self.footView.selectColor = self.selectColor
         self.footView.fontColor = self.fontColor
         self.footView.line = self.line
     }
-    
-    
 }
 
 extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
@@ -119,13 +127,13 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         if tableView == self.leftTable {
             return self.dataSource.sectionNum
         } else {
-            return self.dataSource.rowNum(section)
+            return self.dataSource.rowNum(self.dataSource.selectSection)
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let isLeft = tableView == self.leftTable
-        
+        let isTwoCol = self.dataSource.isTwoCol
         let identifier = "FilterListCell\(indexPath.row)\(isLeft)"
         
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneCustomFilterCell
@@ -134,50 +142,55 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
             cell?.rowHeight = self.rowHeight
             cell?.textLabel?.textColor = self.fontColor
             cell?.selectColor = self.selectColor
-            cell?.listLeftWidth = self.dataSource.isHaveRow ? self.listLeftWidth : 0
+            cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.fontColor = self.fontColor
-            cell?.selectView2.isHidden = self.dataSource.isHaveRow ? isLeft : false
-            cell?.selectView1.isHidden = !isLeft
-            cell?.numLabel.isHidden = self.dataSource.isHaveRow ? (!isLeft) : true
+            cell?.selectView2.isHidden = isLeft
+            cell?.selectView1.isHidden = isTwoCol ? !isLeft : isLeft
+            cell?.numLabel.isHidden = isTwoCol ? (!isLeft) : true
         }
+        cell?.listLeftWidth = self.dataSource.leftWidth
+
         if isLeft {
-            let isSelect = self.selectLeft == indexPath.row
-            cell?.backgroundColor = isSelect ? UIColor.white : self.sectionColor
-            cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
-            cell?.selectView1.isHidden = !isSelect
-            cell?.selectView2.isHidden = self.dataSource.isHaveRow ? true : !isSelect
-            if self.dataSource.selectData.count > indexPath.row {
-                cell?.num = self.dataSource.selectData[indexPath.row].count
-            } else {
-                cell?.num = 0
+            if isTwoCol {
+                let isSelect = self.dataSource.sectionState(indexPath.row)
+                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
+                cell?.selectView1.isHidden = !isSelect
+                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
+                cell?.num = self.dataSource.rowSumFor(indexPath.row)
             }
-            cell?.textLabel?.text = self.dataSource.getTitle(indexPath.row)
-            
         } else {
-            cell?.backgroundColor = UIColor.white
-            let index = IndexPath(row: indexPath.row, section: self.selectLeft)
-            cell?.textLabel?.text = self.dataSource.getSubTitle(index)
-            cell?.selectView2.isHidden = !self.dataSource.getSelectState(index)
+            let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
+            let isSelect = self.dataSource.rowState(indexPath)
+            cell?.selectView2.isHidden = !isSelect
+            cell?.selectView1.isHidden = !isSelect
+            cell?.textLabel?.text = self.dataSource.rowTitle(indexPath)
         }
         return cell!
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.leftTable {
-            self.selectLeft = indexPath.row
+            self.dataSource.onClickLeft(indexPath.row)
             self.leftTable.reloadData()
             self.rightTable.reloadData()
             
         } else {
-            let index = IndexPath(row: indexPath.row, section: self.selectLeft)
-            self.dataSource.updata(index)
-            switch self.dataSource.getSelectType(self.selectLeft) {
+            let index = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
+            self.dataSource.onClickRight(index)
+            
+            switch self.dataSource.getSelectType(self.dataSource.selectSection) {
             case .multi:
+                if self.dataSource.isTwoCol {
+                    self.leftTable.reloadRows(at: [IndexPath(row: self.dataSource.selectSection, section: 0)], with: .automatic)
+                }
                 self.rightTable.reloadRows(at: [indexPath], with: .none)
+                
             case .only:
+                if self.dataSource.isTwoCol {
+                    self.leftTable.reloadData()
+                }
                 self.rightTable.reloadData()
             }
-            self.leftTable.reloadRows(at: [IndexPath(row: self.selectLeft, section: 0)], with: .automatic)
         }
         
     }

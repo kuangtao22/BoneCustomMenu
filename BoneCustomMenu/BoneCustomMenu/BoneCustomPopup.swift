@@ -22,33 +22,7 @@ extension BoneCustomPopup {
 //    }
     
     
-    /// 格式
-    struct IndexPath {
-        var column: Int     // 一级列
-        var section: Int    // 区
-        var row: Int        // 行
-    }
     
-    /// 主菜单信息(名称/类型)
-    struct ColumnInfo {
-        var title: String
-        var type: ColumnType
-    }
-    
-    /// 主菜单触发类型
-    enum ColumnType {
-        case button         // 直接触发
-        case list           // 列表菜单
-        case filterList     // 多选列表
-        case filter         // 筛选菜单
-        case calendar       // 日历
-    }
-    
-    /// 筛选类型
-    enum FilterType {
-        case only   // 单选
-        case multi  // 多选
-    }
     
 //    struct Color {
 //        /// 字体颜色
@@ -161,12 +135,12 @@ extension BoneCustomPopup {
             self.onClick = cellback
         }
         
-        private var type: ColumnType = .button
+        private var type: BoneCustomMenuSource.ColumnType = .button
         
-        typealias touchUpInside = (_ type: ColumnType, _ button: ColumnBtn) -> ()
+        typealias touchUpInside = (_ type: BoneCustomMenuSource.ColumnType, _ button: ColumnBtn) -> ()
         private var onClick: touchUpInside?
         
-        convenience init(frame: CGRect, type: ColumnType) {
+        convenience init(frame: CGRect, type: BoneCustomMenuSource.ColumnType) {
             self.init(frame: frame)
             self.type = type
             self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)

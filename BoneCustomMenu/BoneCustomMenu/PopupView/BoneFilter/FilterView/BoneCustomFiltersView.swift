@@ -24,9 +24,8 @@ class BoneCustomFiltersView: UIView {
                 return
             }
             self.frame.size.height = height
-            self.cleanBtn.frame.origin.y = self.frame.height - self.cleanBtn.frame.height
-            self.confirmBtn.frame.origin.y = self.frame.height - self.confirmBtn.frame.height
-            self.collectionView.frame.size.height = self.frame.height - self.cleanBtn.frame.height
+            self.footView.frame.origin.y = height - self.footView.frame.height
+            self.collectionView.frame.size.height = self.frame.height - self.footView.frame.height
         }
     }
     
@@ -36,35 +35,30 @@ class BoneCustomFiltersView: UIView {
         }
     }
 
-    fileprivate var dataSource = BoneFilterDataSource()
+    fileprivate var dataSource = BoneFilterSource()
     fileprivate var collectionView: UICollectionView!
     fileprivate var layout = BoneFilterLayout()
+    
     fileprivate let identifier = "BoneDayCell"
     fileprivate let headerIdentifier = "headerIdentifier"
     fileprivate let footerIdentifier = "footerIdentifier"
 
-    fileprivate var cleanBtn: UIButton!     // 清除按钮
-    fileprivate var confirmBtn: UIButton!   // 确认按钮
-    
+    fileprivate var footView: BoneFilterFootView!
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.cleanBtn = self.getFootBtn(left: 0)
-        self.cleanBtn.setTitle("清除", for: UIControlState.normal)
-        self.cleanBtn.backgroundColor = UIColor.white
-        self.cleanBtn.setTitleColor(self.fontColor, for: UIControlState.normal)
-        self.cleanBtn.layer.borderWidth = 0.5
-        self.cleanBtn.addTarget(self, action: #selector(self.cleanAction), for: UIControlEvents.touchUpInside)
-        self.cleanBtn.layer.borderColor = self.line.cgColor
-        self.addSubview(self.cleanBtn)
+        self.footView = BoneFilterFootView(self.frame.height - 45, width: self.frame.width)
+        self.footView.onClick = { type in
+            switch type {
+            case .clean:
+                self.cleanAction()
+            case .confirm:
+                self.confirmAction()
+            }
+        }
+        self.addSubview(self.footView)
         
-        self.confirmBtn = self.getFootBtn(left: self.frame.width / 2)
-        self.confirmBtn.setTitle("确认", for: UIControlState.normal)
-        self.confirmBtn.backgroundColor = self.selectColor
-        self.confirmBtn.addTarget(self, action: #selector(self.confirmAction), for: UIControlEvents.touchUpInside)
-        self.addSubview(self.confirmBtn)
-        
-        let size = CGSize(width: self.frame.width, height: self.frame.height - self.cleanBtn.frame.height)
+        let size = CGSize(width: self.frame.width, height: self.frame.height - self.footView.frame.height)
         self.collectionView = UICollectionView(
             frame: CGRect(origin: CGPoint.zero, size: size),
             collectionViewLayout: self.layout
@@ -99,7 +93,8 @@ class BoneCustomFiltersView: UIView {
     /// 获取底部按钮样式
     private func getFootBtn(left: CGFloat) -> UIButton {
         let button = UIButton(frame: CGRect(x: left, y: self.frame.height - 45, width: self.frame.width / 2, height: 45))
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         return button
     }
     
@@ -127,8 +122,9 @@ extension BoneCustomFiltersView: BoneCustomMenuProtocol {
     func reloadData() {
         self.dataSource.initData()
 
-        self.cleanBtn.setTitleColor(self.fontColor, for: UIControlState.normal)
-        self.confirmBtn.backgroundColor = self.selectColor
+        self.footView.selectColor = self.selectColor
+        self.footView.fontColor = self.fontColor
+        self.footView.line = self.line
         self.collectionView.reloadData()
     }
 }
@@ -152,8 +148,8 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
         cell?.button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         cell?.button.setTitleColor(self.fontColor, for: UIControlState.normal)
         cell?.button.setTitleColor(self.selectColor, for: UIControlState.selected)
-        cell?.button.setTitle(self.dataSource.getSubTitle(indexPath), for: UIControlState.normal)
-        cell?.button.isSelected = self.dataSource.getSelectState(indexPath)
+        cell?.button.setTitle(self.dataSource.rowTitle(indexPath), for: UIControlState.normal)
+        cell?.button.isSelected = self.dataSource.rowState(indexPath)
         return cell!
     }
     
@@ -174,7 +170,7 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
         
         if kind == UICollectionElementKindSectionHeader {
             let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: self.headerIdentifier, for: indexPath) as! BoneFilterReusableView
-            reusableView.label.text = self.dataSource.getTitle(indexPath.section)
+            reusableView.label.text = self.dataSource.sectionTitle(indexPath.section)
             return reusableView
             
         } else {
@@ -184,7 +180,7 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.dataSource.updata(indexPath)
+        self.dataSource.onClickRight(indexPath)
         self.collectionView.reloadData()
     }
 

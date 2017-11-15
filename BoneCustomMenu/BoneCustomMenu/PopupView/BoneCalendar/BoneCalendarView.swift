@@ -58,10 +58,9 @@ class BoneCalendarView: UIView {
             let newDates = dates.sorted()
             self.scrollToMonth(newDates[0], animated: true)
             self.dataSourceManager.selectDates = newDates
-            self.dates = self.dataSourceManager.selectDates
         }
     }
-
+    
     
     // 日历模块
     fileprivate var collectionView: UICollectionView!   // 日历滚动视图
@@ -69,8 +68,6 @@ class BoneCalendarView: UIView {
     fileprivate lazy var  dataSourceManager = BoneCalenadrDataSource()      // 日历数据源
     
     fileprivate var isCollection = false      // 是日历视图滑动
-    
-    fileprivate var dates = [Date]()
     
     // 按钮
     fileprivate var footerView: BoneCalendarFooter!
@@ -93,7 +90,7 @@ class BoneCalendarView: UIView {
                 self.dataSourceManager.cleanAllDate()
                 self.collectionView.reloadData()
             case .confirm:
-                self.delegate?.calenadr(self, confirm: self.dates)
+                self.delegate?.calenadr(self, confirm: self.dataSourceManager.selectDates)
             case .today:
                 self.scrollToMonth(Date(), animated: true)
             }
@@ -138,7 +135,7 @@ class BoneCalendarView: UIView {
         let indexPath = self.dataSourceManager.indexPathForRowAtDate(date)
         self.collectionView.scrollToItem(at: indexPath, at: position, animated: animated)
     }
-
+    
     
     // 点击Cell事件
     fileprivate func didCellClick(_ indexPath: IndexPath){
@@ -157,7 +154,7 @@ class BoneCalendarView: UIView {
 extension BoneCalendarView: BoneCalenadrDataSourceDelegate {
     
     func calenadr(_ dataSource: BoneCalenadrDataSource, didSelect dates: [Date], error: String?) {
-        self.dates = dates
+        self.dataSourceManager.selectDates = dates
         self.delegate?.calenadr(self, didSelect: dates, error: error)
     }
 }

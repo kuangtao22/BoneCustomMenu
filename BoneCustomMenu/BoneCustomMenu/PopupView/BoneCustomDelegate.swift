@@ -10,23 +10,35 @@ import UIKit
 
 protocol BoneCustomDelegate: NSObjectProtocol {
     
+    /// section数量
     func numberOfSection() -> Int
     
-    func customList(numberOfRowsInSections section: Int) -> Int
+    /// row数量
+    func numberOfRows(_ section: Int) -> Int
     
-    func customList(titleInSection section: Int) -> String
+    /// section标题
+    func titleOfSection(_ section: Int) -> String
     
-    func customList(titleForSectionInRow section: Int, row: Int) -> String
+    /// row标题
+    func titleForSectionInRow(_ section: Int, row: Int) -> String
     
-    func customList(didSelectRowAt section: Int, row: Int)
+//    func getSelectData() -> BoneCustomListsView.SelectData
     
-    func getSelectData() -> BoneCustomListsView.SelectData
+    /// 是否有数据
+    func isTwoCol() -> Bool
     
-    func isRight() -> Bool
+    /// 获取section内选择模式（单选/多选）
+    func filterTypeOfSection(_ section: Int) -> BoneCustomMenuSource.SelectType
     
-    func customList(filterDidForSectionAt section: Int) -> BoneCustomPopup.FilterType
+    /// 获取已选中选中IndexPaths
+    func getSelectIndexPaths() -> [IndexPath]
     
-    func customList(didSelect filterDatas: [[Int]], isConfirm: Bool)
+    /// 点击row事件
+    func didSelectAtRow(_ indexPath: IndexPath)
     
-    func customFilter() -> [[Int]]
+    /// 点击section事件
+    func didSelect(_ section: Int)
+    
+    /// 点击确认按钮事件
+    func buttonSelect(_ indexPaths: [IndexPath], isConfirm: Bool)
 }

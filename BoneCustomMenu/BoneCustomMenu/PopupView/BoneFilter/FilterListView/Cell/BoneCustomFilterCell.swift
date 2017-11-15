@@ -36,12 +36,13 @@ class BoneCustomFilterCell: BoneListsCell {
  
     convenience init(_ identifier: String, listLeftWidth: CGFloat) {
         self.init(style: .default, reuseIdentifier: identifier)
-
+        self.accessoryType = UITableViewCellAccessoryType.none
+        self.selectionStyle = UITableViewCellSelectionStyle.none
         self.numLabel = UILabel(frame: CGRect(x: listLeftWidth - 20 - 15, y: 0, width: 20, height: 15))
         self.numLabel.font = UIFont.systemFont(ofSize: 10)
         self.numLabel.textAlignment = NSTextAlignment.center
         self.numLabel.layer.masksToBounds = true
-        self.numLabel.layer.cornerRadius = self.numLabel.frame.height / 2
+        self.numLabel.layer.cornerRadius = 2
         self.numLabel.layer.borderWidth = 1
         self.contentView.addSubview(self.numLabel)
     }
