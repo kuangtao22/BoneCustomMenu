@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        self.view.backgroundColor = UIColor.red
+        self.view.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
         self.filterArrays = [filterArray1, filterArray2, filterArray3]
         for i in 0...20 {
             self.data1.append("父类\(i)")
@@ -35,17 +35,19 @@ class ViewController: UIViewController {
             self.data2.append("子类\(i)")
         }
         self.dates = [date("2013-04-11"), date("2013-03-23")]
+        
         self.menuView = BoneCustomMenu(top: 100, height: 40)
         self.menuView.delegate = self
         self.menuView.dataSource = self
+        self.menuView.isFilterBar = true    // 开启筛选工具栏
         self.menuView.selectIndexPaths = [
             BoneCustomMenuSource.BoneIndexPath(column: 0, section: 1, row: 2),
             BoneCustomMenuSource.BoneIndexPath(column: 2, section: 0, row: 1),
             BoneCustomMenuSource.BoneIndexPath(column: 3, section: 1, row: 1),
-            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
+//            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
             BoneCustomMenuSource.BoneIndexPath(column: 4, section: 1, row: 2)
         ]
-        self.menuView.selectColor = UIColor.blue
+        self.menuView.selectColor = UIColor(red: 244/255, green: 92/255, blue: 76/255, alpha: 1)
         
         self.view.addSubview(menuView)
         
@@ -107,7 +109,9 @@ extension ViewController: BoneMenuDataSource {
         if indexPath.column == 0 {
             return self.data2.count
         } else if indexPath.column == 3 {
-            return self.filterArrays[indexPath.section].count
+            if self.filterArrays.count > indexPath.section {
+                return self.filterArrays[indexPath.section].count
+            }
         } else if indexPath.column == 4 {
             return self.filterArray2.count
         }
@@ -165,7 +169,10 @@ extension ViewController: BoneMenuDataSource {
             return self.data2[indexPath.row]
             
         } else if indexPath.column == 3 {
-            return self.filterArrays[indexPath.section][indexPath.row]
+            if self.filterArrays.count > indexPath.section {
+                return self.filterArrays[indexPath.section][indexPath.row]
+            }
+            
         } else if indexPath.column == 4 {
             return self.filterArray2[indexPath.row]
         }

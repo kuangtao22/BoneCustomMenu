@@ -21,21 +21,13 @@ class BoneCustomMenuSource {
     
     /// 所有选中索引
     var selectIndexPaths: [BoneIndexPath] {
-        get {
-            return self.selectArray
-        }
+        get { return self.selectArray }
         set { self.selectArray = newValue }
     }
     
     /// 判断是否有二级分类
     var isTwoCol: Bool {
-        get {
-            guard let dataSource = self.dataSource else {
-                return false
-            }
-            let sectionNum = dataSource.boneMenu(self.menu, numberOfSectionsInColumn: self.currentSelect)
-            return sectionNum > 0
-        }
+        get { return self.sectionNum() > 0 }
     }
     
     /// column标题
@@ -44,6 +36,12 @@ class BoneCustomMenuSource {
         return self.dataSource?.boneMenu(self.menu, typeForColumnAt: column) ?? defaultInfo
     }
     
+    /// 过滤器，可把不存在的indexPaht剔除
+    func filterIndexPaths(_ indexPath: [BoneIndexPath]) -> [BoneIndexPath] {
+        return indexPath.filter {
+            $0.column < self.columnNum && $0.section < self.sectionNum($0.column) && $0.row < self.rowNum($0)
+        }
+    }
     
     /// section标题
     func sectionTitle(_ section: Int) -> String {
@@ -61,11 +59,9 @@ class BoneCustomMenuSource {
         get { return self.dataSource?.numberOfColumns(self.menu) ?? 0 }
     }
     
-    /// 分区数
-    var sectionNum: Int {
-        get {
-            return self.dataSource?.boneMenu(self.menu, numberOfSectionsInColumn: self.currentSelect) ?? 0
-        }
+    /// 分区数(column如果为空，则返回当前分区数量)
+    func sectionNum(_ column: Int? = nil) -> Int {
+        return self.dataSource?.boneMenu(self.menu, numberOfSectionsInColumn: column ?? self.currentSelect) ?? 0
     }
     
     /// 行数
@@ -82,7 +78,7 @@ class BoneCustomMenuSource {
     /// 获取当前选中column的IndexPaths
     var indexPathsForColumn: [IndexPath] {
         get {
-            let array = self.selectArray.filter { $0.column == self.currentSelect }
+            let array = self.selectIndexPaths.filter { $0.column == self.currentSelect }
             var indexPath = [IndexPath]()
             for i in array {
                 indexPath.append(IndexPath(row: i.row, section: i.section))
@@ -94,6 +90,24 @@ class BoneCustomMenuSource {
     /// 获取所有选中标题
     var selectAllTitles: [String] {
         get { return self.selectIndexPaths.map { self.rowTitle($0) }}
+    }
+    
+    /// 获取选中的某一个标题（用于barView）
+    func selectTitle(_ index: Int) -> String {
+        return self.rowTitle(self.selectIndexPaths[index])
+    }
+    
+    /// 获取某个选中的indexPath（用于barView）
+    func selectIndexPath(_ index: Int) -> BoneIndexPath {
+        return self.selectIndexPaths[index]
+    }
+    
+    /// 删除某个选中indexPath（用于barView）
+    func delSelectIndexPath(_ index: Int) {
+        self.selectIndexPaths.remove(at: index)
+//        self.selectArray = self.selectArray.filter {
+//            ($0.column != indexPath.column) && ($0.section != indexPath.section) && ($0.row != indexPath.row)
+//        }
     }
     
     /// 更新indexPaths

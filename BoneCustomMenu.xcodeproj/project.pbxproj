@@ -41,6 +41,7 @@
 		7EB9A8671FB53FD800CD100C /* BoneFilterSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8661FB53FD800CD100C /* BoneFilterSource.swift */; };
 		7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */; };
 		7EB9A86C1FB5599600CD100C /* BoneFilterFootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */; };
+		7ECC64991FBD283A008F2072 /* BoneMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECC64981FBD283A008F2072 /* BoneMenuBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,7 @@
 		7EB9A8661FB53FD800CD100C /* BoneFilterSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterSource.swift; sourceTree = "<group>"; };
 		7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterCell.swift; sourceTree = "<group>"; };
 		7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterFootView.swift; sourceTree = "<group>"; };
+		7ECC64981FBD283A008F2072 /* BoneMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneMenuBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 				7E0E01A21FBAB4D800532876 /* BoneCustomMenuSource.swift */,
 				7E30382F1F0FC4C100B16ACB /* BoneMenuDelegate.swift */,
 				7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */,
+				7ECC64981FBD283A008F2072 /* BoneMenuBarView.swift */,
 			);
 			path = BoneCustomMenu;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 				7EB9A7FC1FB1F3FB00CD100C /* BoneDayCell.swift in Sources */,
 				7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */,
 				7EB9A7FD1FB1F3FB00CD100C /* BoneCalendarLayout.swift in Sources */,
+				7ECC64991FBD283A008F2072 /* BoneMenuBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

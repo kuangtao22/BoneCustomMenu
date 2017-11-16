@@ -15,37 +15,10 @@ protocol BoneCustomPopupDelegate {
 
 extension BoneCustomPopup {
     
-//    var isShow: Bool {
-//        get {
-//            return self.show
-//        }
-//    }
-    
-    
-    
-    
-//    struct Color {
-//        /// 字体颜色
-//        static var font = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
-//        
-////        static var fontSelect = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
-//        /// 一级分类底色
-//        static var section = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-//        /// 分割线颜色
-//        static var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
-//    }
-    
     struct Size {
-        /// 行高
-        static var rowHeight: CGFloat = 45
-        /// list类型左边宽度
-        static var listLeftWidth: CGFloat = UIScreen.main.bounds.width * 0.3
+        static var rowHeight: CGFloat = 45  /// 行高
         static var font: CGFloat = 14
     }
-    
-//    struct Icon {
-//        static var select = UIImage(named: "BoneCustomIcon.bundle/select")?.color(Color.fontSelect)
-//    }
 }
 
 class BoneCustomPopup: UIView {
@@ -57,7 +30,7 @@ class BoneCustomPopup: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -125,8 +98,11 @@ extension BoneCustomPopup {
                 } else {
                     self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)
                 }
-                if self.type == .list {
+                switch self.type {
+                case .list, .filterList:
                     self.animateAction(self.isSelected)
+                default:
+                    break
                 }
             }
         }
