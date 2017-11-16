@@ -46,6 +46,7 @@ class BoneListsCell: UITableViewCell {
             origin: CGPoint(x: 0, y: 12),
             size: CGSize(width: 4, height: Size.rowHeight - 24))
         )
+        self.selectView1.isHidden = true
         self.contentView.addSubview(self.selectView1)
         
         self.selectView2 = UIImageView(frame: CGRect(
@@ -53,6 +54,7 @@ class BoneListsCell: UITableViewCell {
             size: CGSize(width: 30, height: Size.rowHeight))
         )
         self.selectView2.contentMode = .center
+        self.selectView2.isHidden = true
         let image = UIImage(named: "BoneCustomIcon.bundle/select")?.color(self.selectColor)
         self.selectView2.image = image
         self.contentView.addSubview(self.selectView2)

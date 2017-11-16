@@ -144,9 +144,6 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
             cell?.selectColor = self.selectColor
             cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.fontColor = self.fontColor
-            cell?.selectView2.isHidden = isLeft
-            cell?.selectView1.isHidden = isTwoCol ? !isLeft : isLeft
-            cell?.numLabel.isHidden = isTwoCol ? (!isLeft) : true
         }
         cell?.listLeftWidth = self.dataSource.leftWidth
 
@@ -157,12 +154,15 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
                 cell?.selectView1.isHidden = !isSelect
                 cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
                 cell?.num = self.dataSource.rowSumFor(indexPath.row)
+                cell?.numLabel.isHidden = false
             }
         } else {
             let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
             let isSelect = self.dataSource.rowState(indexPath)
             cell?.selectView2.isHidden = !isSelect
-            cell?.selectView1.isHidden = !isSelect
+            if !isTwoCol {
+                cell?.selectView1.isHidden = !isSelect
+            }
             cell?.textLabel?.text = self.dataSource.rowTitle(indexPath)
         }
         return cell!

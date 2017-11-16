@@ -44,6 +44,7 @@ class BoneCustomFilterCell: BoneListsCell {
         self.numLabel.layer.masksToBounds = true
         self.numLabel.layer.cornerRadius = 2
         self.numLabel.layer.borderWidth = 1
+        self.numLabel.isHidden = true
         self.contentView.addSubview(self.numLabel)
     }
 

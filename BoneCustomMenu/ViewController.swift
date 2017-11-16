@@ -87,7 +87,7 @@ extension ViewController: BoneMenuDataSource {
     /// - Returns:
     internal func boneMenu(_ menu: BoneCustomMenu, numberOfSectionsInColumn column: Int) -> Int {
         if column == 0 {
-            return 0
+            return self.data1.count
         } else if column == 1 {
             return self.data3.count
         } else if column == 3 {

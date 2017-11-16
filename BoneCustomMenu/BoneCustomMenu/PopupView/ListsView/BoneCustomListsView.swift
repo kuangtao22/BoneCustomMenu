@@ -129,8 +129,6 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
             cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.selectColor = self.selectColor
             cell?.fontColor = self.fontColor
-            cell?.selectView2.isHidden = isLeft
-            cell?.selectView1.isHidden = isTwoCol ? !isLeft : isLeft
         }
         cell?.listLeftWidth = self.dataSource.leftWidth
         if isLeft {
@@ -144,7 +142,9 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
         } else {
             let isSelect = self.dataSource.rowState(indexPath.row)
             cell?.selectView2.isHidden = !isSelect
-            cell?.selectView1.isHidden = !isSelect
+            if !isTwoCol {
+                cell?.selectView1.isHidden = !isSelect
+            }
             cell?.textLabel?.text = self.dataSource.rowTitle(indexPath.row)
         }
         return cell!

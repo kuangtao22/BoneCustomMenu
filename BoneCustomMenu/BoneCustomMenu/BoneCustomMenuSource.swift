@@ -56,16 +56,19 @@ class BoneCustomMenuSource {
         return self.dataSource?.boneMenu(self.menu, titleForRowAt: indexPath) ?? ""
     }
     
+    /// 列数
     var columnNum: Int {
         get { return self.dataSource?.numberOfColumns(self.menu) ?? 0 }
     }
     
+    /// 分区数
     var sectionNum: Int {
         get {
             return self.dataSource?.boneMenu(self.menu, numberOfSectionsInColumn: self.currentSelect) ?? 0
         }
     }
     
+    /// 行数
     func rowNum(_ indexPath: BoneIndexPath) -> Int {
         return self.dataSource?.boneMenu(self.menu, numberOfRowsInSections: indexPath) ?? 0
     }
@@ -76,10 +79,8 @@ class BoneCustomMenuSource {
         return self.dataSource?.boneMenu(self.menu, filterDidForSectionAt: indexPath) ?? .only
     }
     
-    
-    
-    /// 获取选中菜单IndexPaths
-    var indexPathsForBone: [IndexPath] {
+    /// 获取当前选中column的IndexPaths
+    var indexPathsForColumn: [IndexPath] {
         get {
             let array = self.selectArray.filter { $0.column == self.currentSelect }
             var indexPath = [IndexPath]()
@@ -90,13 +91,18 @@ class BoneCustomMenuSource {
         }
     }
     
+    /// 获取所有选中标题
+    var selectAllTitles: [String] {
+        get { return self.selectIndexPaths.map { self.rowTitle($0) }}
+    }
+    
     /// 更新indexPaths
     func updata(_ indexPaths: [IndexPath]) {
         self.selectArray = self.selectArray.filter { $0.column != self.currentSelect }
         for index in indexPaths {
             self.selectArray.append(BoneIndexPath(column: self.currentSelect, section: index.section, row: index.row))
         }
-        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.currentSelect, indexPaths: self.indexPathsForBone)
+        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.currentSelect, indexPaths: self.indexPathsForColumn)
     }
     
     /// 更新indexPath

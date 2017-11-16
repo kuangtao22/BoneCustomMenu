@@ -19,15 +19,12 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 代理协议
     var delegate: BoneMenuDelegate? {
-        didSet {
-            self.source.delegate = self.delegate
-        }
+        didSet { self.source.delegate = self.delegate }
     }
     
+    /// 数据源
     var dataSource: BoneMenuDataSource? {
-        didSet {
-            self.source.dataSource = self.dataSource
-        }
+        didSet { self.source.dataSource = self.dataSource }
     }
     
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
@@ -52,16 +49,20 @@ class BoneCustomMenu: BoneCustomPopup {
     fileprivate var scrollView: UIScrollView!
     
     /// 所有选中索引
-    var selectIndexPaths = [BoneIndexPath]() {
-        didSet {
-            self.source.selectIndexPaths = self.selectIndexPaths
-        }
+    var selectIndexPaths: [BoneIndexPath] {
+        get { return self.source.selectIndexPaths }
+        set { self.source.selectIndexPaths = newValue }
     }
+    
     /// 日历时间
-    var calendarDates = [Date]() {
-        didSet {
-            self.calendarView.selectDates = self.calendarDates
-        }
+    var calendarDates: [Date] {
+        get { return self.calendarView.selectDates ?? [] }
+        set { self.calendarView.selectDates = newValue }
+    }
+    
+    /// 全部已选标题
+    var selectAllTitles: [String] {
+        get { return self.source.selectAllTitles }
     }
     
     fileprivate var menuType: ColumnType = .button
@@ -397,7 +398,7 @@ extension BoneCustomMenu: BoneCustomDelegate {
     }
     
     func getSelectIndexPaths() -> [IndexPath] {
-        return self.source.indexPathsForBone
+        return self.source.indexPathsForColumn
     }
     
     func buttonSelect(_ indexPaths: [IndexPath], isConfirm: Bool) {
