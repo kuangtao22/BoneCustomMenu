@@ -20,7 +20,7 @@ class BoneCustomMenuSource {
     var dataSource: BoneMenuDataSource?
     
     /// 所有选中索引
-    var selectIndexPaths: [BoneIndexPath] {
+    var selectIndexPaths: [BoneMenuIndexPath] {
         get { return self.selectArray }
         set { self.selectArray = newValue }
     }
@@ -31,13 +31,13 @@ class BoneCustomMenuSource {
     }
     
     /// column标题
-    func columnInfo(_ column: Int) -> ColumnInfo {
-        let defaultInfo = ColumnInfo(title: "", type: .button)
+    func columnInfo(_ column: Int) -> BoneMenuColumnInfo {
+        let defaultInfo = BoneMenuColumnInfo(title: "", type: .button)
         return self.dataSource?.boneMenu(self.menu, typeForColumnAt: column) ?? defaultInfo
     }
     
     /// 过滤器，可把不存在的indexPaht剔除
-    func filterIndexPaths(_ indexPath: [BoneIndexPath]) -> [BoneIndexPath] {
+    func filterIndexPaths(_ indexPath: [BoneMenuIndexPath]) -> [BoneMenuIndexPath] {
         return indexPath.filter {
             $0.column < self.columnNum && $0.section < self.sectionNum($0.column) && $0.row < self.rowNum($0)
         }
@@ -45,12 +45,12 @@ class BoneCustomMenuSource {
     
     /// section标题
     func sectionTitle(_ section: Int) -> String {
-        let indexPath = BoneIndexPath(column: self.currentSelect, section: section, row: 0)
+        let indexPath = BoneMenuIndexPath(column: self.currentSelect, section: section, row: 0)
         return self.dataSource?.boneMenu(self.menu, titleForSectionAt: indexPath) ?? ""
     }
     
     /// row标题
-    func rowTitle(_ indexPath: BoneIndexPath) -> String {
+    func rowTitle(_ indexPath: BoneMenuIndexPath) -> String {
         return self.dataSource?.boneMenu(self.menu, titleForRowAt: indexPath) ?? ""
     }
     
@@ -65,13 +65,13 @@ class BoneCustomMenuSource {
     }
     
     /// 行数
-    func rowNum(_ indexPath: BoneIndexPath) -> Int {
+    func rowNum(_ indexPath: BoneMenuIndexPath) -> Int {
         return self.dataSource?.boneMenu(self.menu, numberOfRowsInSections: indexPath) ?? 0
     }
     
     /// 选择类型
-    func selectType(_ section: Int) -> SelectType {
-        let indexPath = BoneIndexPath(column: self.currentSelect, section: section, row: 0)
+    func selectType(_ section: Int) -> BoneMenuSelectType {
+        let indexPath = BoneMenuIndexPath(column: self.currentSelect, section: section, row: 0)
         return self.dataSource?.boneMenu(self.menu, filterDidForSectionAt: indexPath) ?? .only
     }
     
@@ -98,35 +98,44 @@ class BoneCustomMenuSource {
     }
     
     /// 获取某个选中的indexPath（用于barView）
-    func selectIndexPath(_ index: Int) -> BoneIndexPath {
+    func selectIndexPath(_ index: Int) -> BoneMenuIndexPath {
         return self.selectIndexPaths[index]
     }
     
     /// 删除某个选中indexPath（用于barView）
-    func delSelectIndexPath(_ index: Int) {
+    func updata(_ index: Int, cellback: Cellback?) {
         self.selectIndexPaths.remove(at: index)
-//        self.selectArray = self.selectArray.filter {
-//            ($0.column != indexPath.column) && ($0.section != indexPath.section) && ($0.row != indexPath.row)
-//        }
+        cellback?()
+        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.selectIndexPaths)
     }
     
     /// 更新indexPaths
-    func updata(_ indexPaths: [IndexPath]) {
+    func updata(_ indexPaths: [IndexPath], cellback: Cellback?) {
         self.selectArray = self.selectArray.filter { $0.column != self.currentSelect }
         for index in indexPaths {
-            self.selectArray.append(BoneIndexPath(column: self.currentSelect, section: index.section, row: index.row))
+            let index = BoneMenuIndexPath(column: self.currentSelect, section: index.section, row: index.row)
+            self.selectArray.append(index)
         }
-        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.currentSelect, indexPaths: self.indexPathsForColumn)
+        cellback?()
+        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.selectIndexPaths)
     }
+
     
     /// 更新indexPath
     func updata(_ indexPath: IndexPath) {
         self.selectArray = self.selectArray.filter { $0.column != self.currentSelect }
-        self.selectArray.append(BoneIndexPath(column: self.currentSelect, section: indexPath.section, row: indexPath.row))
+        self.selectArray.append(BoneMenuIndexPath(column: self.currentSelect, section: indexPath.section, row: indexPath.row))
         let current = self.selectArray.filter { $0.column == self.currentSelect }
         self.delegate?.boneMenu(self.menu, didSelectRowAtIndexPath: current[0])
     }
 
+    
+    /// 全部删除
+    func delAll(cellback: Cellback?) {
+        self.selectArray = []
+        cellback?()
+        self.delegate?.boneMenu(self.menu, didSelectRowAtColumn: self.selectIndexPaths)
+    }
     
     func onClickSection(_ section: Int) {
         self.delegate?.boneMenu(self.menu, didSelectSectionAtColumn: self.currentSelect, section: section)
@@ -138,9 +147,9 @@ class BoneCustomMenuSource {
             return
         }
         if self.selectArray.isEmpty {
-            self.selectArray = [BoneIndexPath]()
+            self.selectArray = [BoneMenuIndexPath]()
             for i in 0..<dataSource.numberOfColumns(self.menu) {
-                self.selectArray.append(BoneIndexPath(column: i, section: 0, row: 0))
+                self.selectArray.append(BoneMenuIndexPath(column: i, section: 0, row: 0))
             }
         }
     }
@@ -153,11 +162,12 @@ class BoneCustomMenuSource {
         return self.defaultMenuheight
     }
     
-    fileprivate var selectArray = [BoneIndexPath]()
+    fileprivate var selectArray = [BoneMenuIndexPath]()
     
     fileprivate var menu: BoneCustomMenu
     /// 默认菜单高度
     fileprivate let defaultMenuheight = UIScreen.main.bounds.height * 0.5
+    typealias Cellback = () -> ()
     
     init(menu: BoneCustomMenu) {
         self.menu = menu
@@ -165,35 +175,3 @@ class BoneCustomMenuSource {
     }
 }
 
-
-
-extension BoneCustomMenuSource {
-    
-    /// 格式
-    struct BoneIndexPath {
-        var column: Int     // 一级列
-        var section: Int    // 区
-        var row: Int        // 行
-    }
-    
-    /// 主菜单信息(名称/类型)
-    struct ColumnInfo {
-        var title: String
-        var type: ColumnType
-    }
-    
-    /// 主菜单触发类型
-    enum ColumnType {
-        case button         // 直接触发
-        case list           // 列表菜单
-        case filterList     // 多选列表
-        case filter         // 筛选菜单
-        case calendar       // 日历
-    }
-    
-    /// 筛选类型
-    enum SelectType {
-        case only   // 单选
-        case multi  // 多选
-    }
-}

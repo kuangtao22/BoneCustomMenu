@@ -8,13 +8,37 @@
 
 import UIKit
 
+/// 格式
+struct BoneMenuIndexPath {
+    var column: Int     // 一级列
+    var section: Int    // 区
+    var row: Int        // 行
+}
+
+/// 主菜单信息(名称/类型)
+struct BoneMenuColumnInfo {
+    var title: String
+    var type: BoneMenuColumnType
+}
+
+/// 主菜单触发类型
+enum BoneMenuColumnType {
+    case button         // 直接触发
+    case list           // 列表菜单
+    case filterList     // 多选列表
+    case filter         // 筛选菜单
+    case calendar       // 日历
+}
+
+/// 筛选类型
+enum BoneMenuSelectType {
+    case only   // 单选
+    case multi  // 多选
+}
+
 protocol BoneMenuDataSource {
     
-    typealias BoneIndexPath = BoneCustomMenuSource.BoneIndexPath
-    typealias ColumnInfo = BoneCustomMenuSource.ColumnInfo
-    typealias ColumnType = BoneCustomMenuSource.ColumnType
-    typealias SelectType = BoneCustomMenuSource.SelectType
-    
+
     /// 返回 boneMenu 有多少列 ，默认1列
     ///
     /// - Parameter menu
@@ -40,7 +64,7 @@ protocol BoneMenuDataSource {
     ///   - column:
     ///   - section:
     /// - Returns: 二级列表行数
-    func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneIndexPath) -> Int
+    func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneMenuIndexPath) -> Int
     
     
     
@@ -51,7 +75,7 @@ protocol BoneMenuDataSource {
     ///   - menu:
     ///   - column:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> ColumnInfo
+    func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> BoneMenuColumnInfo
     
     
     /// 返回每列菜单高度
@@ -70,7 +94,7 @@ protocol BoneMenuDataSource {
     ///   - column:
     ///   - section:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneIndexPath) -> String
+    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneMenuIndexPath) -> String
     
     
     
@@ -82,7 +106,7 @@ protocol BoneMenuDataSource {
     ///   - menu:
     ///   - indexPath:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneIndexPath) -> String
+    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneMenuIndexPath) -> String
     
     
     
@@ -94,17 +118,12 @@ protocol BoneMenuDataSource {
     ///   - menu:
     ///   - indexPath:
     /// - Returns: 多选/单选
-    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneIndexPath) -> SelectType?
+    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuIndexPath) -> BoneMenuSelectType?
     
     
 }
 
 protocol BoneMenuDelegate: NSObjectProtocol {
-    
-    typealias BoneIndexPath = BoneCustomMenuSource.BoneIndexPath
-    typealias ColumnInfo = BoneCustomMenuSource.ColumnInfo
-    typealias ColumnType = BoneCustomMenuSource.ColumnType
-    typealias SelectType = BoneCustomMenuSource.SelectType
     
     /// boneMenu 常规 点击事件
     ///
@@ -112,7 +131,7 @@ protocol BoneMenuDelegate: NSObjectProtocol {
     ///   - menu:
     ///   - indexPath:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneIndexPath)
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneMenuIndexPath)
 
     
     /// boneMenu Section 点击事件
@@ -129,7 +148,7 @@ protocol BoneMenuDelegate: NSObjectProtocol {
     ///   - menu:
     ///   - indexPath:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, indexPaths: [IndexPath])
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn indexPaths: [BoneMenuIndexPath])
     
     
     
@@ -142,14 +161,15 @@ protocol BoneMenuDelegate: NSObjectProtocol {
     /// - Returns:
     func boneMenu(_ menu: BoneCustomMenu, didSelectCalendar date: [Date], error: String?)
     
-    
+    /// 显示筛选器坐标
+    func boneBar(_ barView: BoneMenuBarView, contentOffsetY: CGFloat)
 }
 
 
 
 extension BoneMenuDataSource {
     
-    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneIndexPath) -> String {
+    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneMenuIndexPath) -> String {
         return ""
     }
     
@@ -161,19 +181,19 @@ extension BoneMenuDataSource {
         return nil
     }
     
-    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneIndexPath) -> SelectType? {
-        return SelectType.only
+    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuIndexPath) -> BoneMenuSelectType? {
+        return BoneMenuSelectType.only
     }
 }
 
 
 extension BoneMenuDelegate {
     
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneIndexPath) {
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneMenuIndexPath) {
         
     }
     
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, indexPaths: [IndexPath]) {
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn indexPaths: [BoneMenuIndexPath]) {
         
     }
     
@@ -184,4 +204,9 @@ extension BoneMenuDelegate {
     func boneMenu(_ menu: BoneCustomMenu, didSelectSectionAtColumn column: Int, section: Int) {
         
     }
+    
+    func boneBar(_ barView: BoneMenuBarView, contentOffsetY: CGFloat) {
+        
+    }
 }
+

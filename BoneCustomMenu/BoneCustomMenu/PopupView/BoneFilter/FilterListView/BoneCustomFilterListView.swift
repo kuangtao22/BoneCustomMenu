@@ -21,7 +21,6 @@ class BoneCustomFilterListView: UIView {
     /// 行高
     var rowHeight: CGFloat = 45
     
-    var listLeftWidth: CGFloat = UIScreen.main.bounds.width * 0.3
     /// 设置高度
     var setHeight: CGFloat? {
         didSet {
@@ -45,7 +44,7 @@ class BoneCustomFilterListView: UIView {
     
     fileprivate var dataSource = BoneFilterSource()
     fileprivate var leftTable: UITableView!
-    fileprivate var rightTable: UITableView!
+    var rightTable: UITableView!
     fileprivate var footView: BoneFilterFootView!
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,7 +61,7 @@ class BoneCustomFilterListView: UIView {
         self.addSubview(self.footView)
         
         self.leftTable = UITableView(
-            frame: CGRect(x: 0, y: 0, width: self.listLeftWidth, height: self.frame.height - self.footView.frame.height),
+            frame: CGRect(x: 0, y: 0, width: self.dataSource.leftWidth, height: self.frame.height - self.footView.frame.height),
             style: UITableViewStyle.plain
         )
         self.leftTable.rowHeight = self.rowHeight
@@ -138,9 +137,9 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneCustomFilterCell
         if cell == nil {
-            cell = BoneCustomFilterCell(identifier, listLeftWidth: self.listLeftWidth)
+            cell = BoneCustomFilterCell(identifier, listLeftWidth: self.dataSource.leftWidth)
             cell?.rowHeight = self.rowHeight
-            cell?.textLabel?.textColor = self.fontColor
+            cell?.titleLabel.textColor = self.fontColor
             cell?.selectColor = self.selectColor
             cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.fontColor = self.fontColor
@@ -150,9 +149,9 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         if isLeft {
             if isTwoCol {
                 let isSelect = self.dataSource.sectionState(indexPath.row)
-                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
+                cell?.titleLabel.textColor = isSelect ? self.selectColor : self.fontColor
                 cell?.selectView1.isHidden = !isSelect
-                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
+                cell?.titleLabel.text = self.dataSource.sectionTitle(indexPath.row)
                 cell?.num = self.dataSource.rowSumFor(indexPath.row)
                 cell?.numLabel.isHidden = false
             }
@@ -160,28 +159,29 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
             let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
             let isSelect = self.dataSource.rowState(indexPath)
             cell?.selectView2.isHidden = !isSelect
-            if !isTwoCol {
-                cell?.selectView1.isHidden = !isSelect
-            }
+            cell?.selectView1.isHidden = isTwoCol ? true : !isSelect
             cell?.textLabel?.text = self.dataSource.rowTitle(indexPath)
         }
         return cell!
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("index:\(indexPath)")
         if tableView == self.leftTable {
             self.dataSource.onClickLeft(indexPath.row)
             self.leftTable.reloadData()
             self.rightTable.reloadData()
             
         } else {
+            
             let index = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
+            print("index:\(index)")
             self.dataSource.onClickRight(index)
             
             switch self.dataSource.getSelectType(self.dataSource.selectSection) {
             case .multi:
                 if self.dataSource.isTwoCol {
-                    self.leftTable.reloadRows(at: [IndexPath(row: self.dataSource.selectSection, section: 0)], with: .automatic)
+                    self.leftTable.reloadRows(at: [IndexPath(row: self.dataSource.selectSection, section: 0)], with: .none)
                 }
                 self.rightTable.reloadRows(at: [indexPath], with: .none)
                 

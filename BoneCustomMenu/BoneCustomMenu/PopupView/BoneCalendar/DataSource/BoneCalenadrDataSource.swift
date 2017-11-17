@@ -28,7 +28,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
                 break
             case .section:
                 dates = [newValue[0], newValue[newValue.count - 1]]
-                dates = dates[0] == dates[1] ? [dates[0]] : dates
+                dates = self.timeString(dates[0]) == self.timeString(dates[1]) ? [dates[0]] : dates
             }
             let newIndexPath = dates.flatMap({ (date) -> IndexPath? in
                 self.indexPathForRowAtDate(date)
@@ -36,6 +36,8 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             self.selectedIndexPaths = newIndexPath
         }
     }
+    
+    
     
     
     var selectMaxDay: Int {
@@ -479,6 +481,15 @@ class BoneCalenadrDataSource {
                 }
             }
         }
+    }
+    
+    /// 时间格式化
+    fileprivate func timeString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.init(identifier: "zh_CN")
+        formatter.dateFormat = "yyyyMMdd"
+        let date = formatter.string(from: date)
+        return date
     }
 }
 

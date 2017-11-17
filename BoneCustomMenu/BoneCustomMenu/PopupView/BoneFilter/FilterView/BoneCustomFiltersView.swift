@@ -65,7 +65,7 @@ class BoneCustomFiltersView: UIView {
         )
         self.collectionView.allowsSelection = true          // 允许用户选择
         self.collectionView.allowsMultipleSelection = true  // 允许用户多选
-        
+        self.collectionView.alwaysBounceVertical = true
         self.collectionView.backgroundColor = self.sectionColor
         // 水平居中collectionView两边
         self.collectionView.contentInset.left = 0

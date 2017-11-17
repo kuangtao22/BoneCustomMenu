@@ -19,7 +19,7 @@ class BoneFilterSource {
     
     /// 左边表格宽度
     var leftWidth: CGFloat {
-        get { return self.isTwoCol ? UIScreen.main.bounds.width * 0.3 : 0 }
+        get { return self.isTwoCol ? BoneCustomPopup.Size.leftWidth : 0 }
     }
     
     var rightWidth: CGFloat {
@@ -75,7 +75,7 @@ class BoneFilterSource {
     }
     
     /// 获取选择类型(多选/单选)
-    func getSelectType(_ section: Int) -> BoneCustomMenuSource.SelectType {
+    func getSelectType(_ section: Int) -> BoneMenuSelectType {
         return self.delegate?.filterTypeOfSection(section) ?? .only
     }
     
@@ -89,6 +89,7 @@ class BoneFilterSource {
     
     /// 右边点击indexPath,如果已选中则取消
     func onClickRight(_ indexPath: IndexPath) {
+        print("indexPath:\(indexPath)")
         if self.selectArray.contains(indexPath) {
             let items = self.selectArray.filter { $0 != indexPath }
             self.selectArray = items

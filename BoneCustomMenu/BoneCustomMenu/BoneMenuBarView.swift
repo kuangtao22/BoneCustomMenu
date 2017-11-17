@@ -18,15 +18,26 @@ protocol BoneMenuBarDelegate {
     func onClick(_ index: Int)
     
     func clean()
-    /// 显示状态
-    func state(_ show: Bool)
     
-    func getSelectIndexPath(_ index: Int) -> BoneCustomMenuSource.BoneIndexPath
+    func getSelectIndexPath(_ index: Int) -> BoneMenuIndexPath
+    
+    func state(_ barView: BoneMenuBarView)
 }
 
 class BoneMenuBarView: UIView {
     
     var delegate: BoneMenuBarDelegate?
+    
+    var isShow: Bool {
+        get { return !self.isHidden }
+        set {
+            if (self.delegate?.getCount() ?? 0) > 0 {
+                self.isHidden = newValue
+            } else {
+                self.isHidden = true
+            }
+        }
+    }
     
     /// 默认高度
     private var defaultHeight: CGFloat = 45
@@ -71,23 +82,20 @@ class BoneMenuBarView: UIView {
     
     @objc func cleanAction() {
         self.delegate?.clean()
-        self.reloadData()
     }
     
     @objc func delAction(button: UIButton) {
         self.delegate?.onClick(button.tag - 100)
-        self.reloadData()
     }
     
     func reloadData() {
         guard let delegate = self.delegate else {
             self.isHidden = true
-            
             return
         }
         guard delegate.getCount() > 0 else {
-            delegate.state(false)
             self.isHidden = true
+            delegate.state(self)
             return
         }
         self.isHidden = false
@@ -111,7 +119,7 @@ class BoneMenuBarView: UIView {
                 self.scrollView.contentSize.width = button.frame.origin.x + button.frame.width + 10
             }
         }
-        delegate.state(true)
+        delegate.state(self)
     }
 }
 

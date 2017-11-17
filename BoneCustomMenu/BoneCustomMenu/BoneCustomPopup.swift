@@ -18,6 +18,7 @@ extension BoneCustomPopup {
     struct Size {
         static var rowHeight: CGFloat = 45  /// 行高
         static var font: CGFloat = 14
+        static var leftWidth = UIScreen.main.bounds.width * 0.3
     }
 }
 
@@ -111,12 +112,12 @@ extension BoneCustomPopup {
             self.onClick = cellback
         }
         
-        private var type: BoneCustomMenuSource.ColumnType = .button
+        private var type: BoneMenuColumnType = .button
         
-        typealias touchUpInside = (_ type: BoneCustomMenuSource.ColumnType, _ button: ColumnBtn) -> ()
+        typealias touchUpInside = (_ type: BoneMenuColumnType, _ button: ColumnBtn) -> ()
         private var onClick: touchUpInside?
         
-        convenience init(frame: CGRect, type: BoneCustomMenuSource.ColumnType) {
+        convenience init(frame: CGRect, type: BoneMenuColumnType) {
             self.init(frame: frame)
             self.type = type
             self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)

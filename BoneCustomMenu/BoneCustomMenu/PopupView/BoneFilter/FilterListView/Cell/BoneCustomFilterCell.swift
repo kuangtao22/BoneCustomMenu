@@ -33,11 +33,14 @@ class BoneCustomFilterCell: BoneListsCell {
             }
         }
     }
+    
+    var titleLabel: UILabel!
  
     convenience init(_ identifier: String, listLeftWidth: CGFloat) {
         self.init(style: .default, reuseIdentifier: identifier)
         self.accessoryType = UITableViewCellAccessoryType.none
         self.selectionStyle = UITableViewCellSelectionStyle.none
+        
         self.numLabel = UILabel(frame: CGRect(x: listLeftWidth - 20 - 15, y: 0, width: 20, height: 15))
         self.numLabel.font = UIFont.systemFont(ofSize: 10)
         self.numLabel.textAlignment = NSTextAlignment.center
@@ -46,6 +49,11 @@ class BoneCustomFilterCell: BoneListsCell {
         self.numLabel.layer.borderWidth = 1
         self.numLabel.isHidden = true
         self.contentView.addSubview(self.numLabel)
+        
+        self.titleLabel = UILabel(frame: CGRect(x: self.selectView1.frame.width + 10, y: 0, width: self.numLabel.frame.origin.x - self.selectView1.frame.width - 20, height: self.rowHeight))
+        self.titleLabel.font = self.textLabel?.font
+        self.titleLabel.numberOfLines = 2
+        self.contentView.addSubview(self.titleLabel)
     }
 
 }

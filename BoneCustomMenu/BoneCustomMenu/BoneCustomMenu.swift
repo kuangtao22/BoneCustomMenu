@@ -29,6 +29,14 @@ class BoneCustomMenu: BoneCustomPopup {
     
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
     
+    var leftWidth: CGFloat? {
+        didSet {
+            if let leftWidth = self.leftWidth {
+                BoneCustomPopup.Size.leftWidth = leftWidth
+            }
+        }
+    }
+    
     /// 选中颜色
     var selectColor: UIColor? {
         didSet {
@@ -46,13 +54,13 @@ class BoneCustomMenu: BoneCustomPopup {
     
     var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
     
-    fileprivate var scrollView: UIScrollView!
+    
     
     /// 所有选中索引
-    var selectIndexPaths: [BoneIndexPath] {
+    var selectIndexPaths: [BoneMenuIndexPath] {
         get { return self.source.selectIndexPaths }
         set {
-            self.source.selectIndexPaths = newValue //self.source.filterIndexPaths(newValue)
+            self.source.selectIndexPaths = newValue
             if self.isFilterBar == true {
                 self.barView.reloadData()
             }
@@ -71,22 +79,15 @@ class BoneCustomMenu: BoneCustomPopup {
     }
     
     /// 是否开启筛选栏
-    var isFilterBar: Bool? {
-        didSet {
-            if isFilterBar == true {
-                self.addSubview(self.barView)
-            }
-        }
-    }
+    var isFilterBar: Bool = false
     
-    fileprivate var menuType: ColumnType = .button
+    fileprivate var scrollView: UIScrollView!
+    
+    fileprivate var menuType: BoneMenuColumnType = .button
     fileprivate var defaultHeight: CGFloat = 40
     
     fileprivate var source: BoneCustomMenuSource!
     
-    typealias BoneIndexPath = BoneCustomMenuSource.BoneIndexPath
-    typealias ColumnType = BoneCustomMenuSource.ColumnType
-    typealias FilterType = BoneCustomMenuSource.SelectType
     
     convenience init(top: CGFloat, height: CGFloat) {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: height))
@@ -157,13 +158,13 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 筛选栏
     lazy var barView: BoneMenuBarView = {
-        let barView = BoneMenuBarView(self.scrollView.frame.height)
+        let barView = BoneMenuBarView(self.frame.maxY)
         barView.delegate = self
         return barView
     }()
     
     /// 点击菜单栏事件
-    fileprivate func currentAction(type: ColumnType, button: ColumnBtn) {
+    fileprivate func currentAction(type: BoneMenuColumnType, button: ColumnBtn) {
         let tag = button.tag - 100
         button.isSelected = !button.isSelected
         
@@ -200,7 +201,7 @@ class BoneCustomMenu: BoneCustomPopup {
     /// 获取菜单类型
     ///
     /// -
-    private func getView(type: ColumnType) -> UIView {
+    private func getView(type: BoneMenuColumnType) -> UIView {
         switch type {
         case .button: return UIView()
         case .calendar: return self.calendarView
@@ -217,7 +218,7 @@ class BoneCustomMenu: BoneCustomPopup {
     
     
     /// 设置弹出菜单高度
-    fileprivate func setMenuHeight() {
+    fileprivate func setColumnHeight() {
         for i in 0..<self.source.columnNum {
             let type = self.source.columnInfo(i).type
             let height = self.source.menuHeight(i)
@@ -242,19 +243,18 @@ class BoneCustomMenu: BoneCustomPopup {
     /// 显示/隐藏动画
     ///
     /// - Parameter isShow: 是否显示
-    open func popupAction(_ isShow: Bool) {
+    fileprivate func popupAction(_ isShow: Bool) {
         let view = self.getView(type: self.menuType)
         
         if isShow {
-            self.barView.isHidden = true
-            self.menuView.frame.size.height = view.frame.height
             self.superview?.addSubview(self.backgroundView)
             self.superview?.addSubview(self.menuView)
             self.backgroundView.superview?.addSubview(self)
-            
+            self.barView.removeFromSuperview()
+            self.menuView.frame.size.height = view.frame.height
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundView.alpha = 1
-                view.transform = CGAffineTransform(translationX: 0, y: view.frame.height)
+                view.frame.origin.y = 0
             }, completion: { (finished) in
                 self.popupDelegate?.customPopup(isShow)
             })
@@ -262,16 +262,16 @@ class BoneCustomMenu: BoneCustomPopup {
         } else {
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundView.alpha = 0
-                view.transform = CGAffineTransform.identity
-                
+                view.frame.origin.y = -view.frame.height
             }, completion: { (finished) in
                 self.backgroundView.removeFromSuperview()
                 self.menuView.removeFromSuperview()
                 self.popupDelegate?.customPopup(isShow)
-                self.barView.isHidden = false
+                self.superview?.addSubview(self.barView)
             })
         }
     }
+    
 }
 
 
@@ -294,6 +294,23 @@ extension BoneCustomMenu: BoneCalenadrDelegate {
 }
 
 extension BoneCustomMenu: BoneCustomMenuProtocol {
+    
+    func reloadSection(_ column: Int, section: Int) {
+        guard let dataSource = self.dataSource else {
+            return
+        }
+        let type = dataSource.boneMenu(self, typeForColumnAt: column).type
+        switch type {
+        case .button, .calendar:
+            break
+        case .filter:
+            self.filterView.reloadData()
+        case .filterList:
+            self.filterListView.rightTable.reloadData()
+        case .list:
+            self.listView.reloadData()
+        }
+    }
     
     /// 重载某列菜单数据
     func reloadColumn(_ column: Int) {
@@ -353,7 +370,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 self.scrollView.contentSize.width = menuBtn.frame.origin.x + menuBtn.frame.width
             }
         }
-        self.setMenuHeight()
+        self.setColumnHeight()
         self.listView.reloadData()
     }
 }
@@ -384,6 +401,11 @@ extension BoneCustomMenu: BoneCustomPopupDelegate {
 }
 
 extension BoneCustomMenu: BoneMenuBarDelegate {
+    func state(_ barView: BoneMenuBarView) {
+        let y = self.barView.isShow ? self.barView.frame.maxY : self.frame.maxY
+        self.delegate?.boneBar(self.barView, contentOffsetY: y)
+    }
+    
     
     func getCount() -> Int {
         return self.source.selectIndexPaths.count
@@ -393,26 +415,22 @@ extension BoneCustomMenu: BoneMenuBarDelegate {
         return self.source.selectTitle(index)
     }
     
-    func getSelectIndexPath(_ index: Int) -> BoneIndexPath {
+    func getSelectIndexPath(_ index: Int) -> BoneMenuIndexPath {
         return self.source.selectIndexPath(index)
     }
     
     func onClick(_ index: Int) {
-        self.source.delSelectIndexPath(index)
+        self.source.updata(index) {
+            self.barView.reloadData()
+        }
         self.reloadData()
     }
     
     func clean() {
-        self.source.selectIndexPaths = []
-        self.reloadData()
-    }
-    
-    func state(_ show: Bool) {
-        if show {
-            self.frame.size.height = self.scrollView.frame.height + self.barView.frame.height
-        } else {
-            self.frame.size.height = self.scrollView.frame.height
+        self.source.delAll {
+            self.barView.reloadData()
         }
+        self.reloadData()
     }
 }
 
@@ -424,7 +442,7 @@ extension BoneCustomMenu: BoneCustomDelegate {
     }
     
     func numberOfRows(_ section: Int) -> Int {
-        let indexPath = BoneIndexPath(column: self.source.currentSelect, section: section, row: 0)
+        let indexPath = BoneMenuIndexPath(column: self.source.currentSelect, section: section, row: 0)
         return self.source.rowNum(indexPath)
     }
     
@@ -433,7 +451,7 @@ extension BoneCustomMenu: BoneCustomDelegate {
     }
     
     func titleForSectionInRow(_ section: Int, row: Int) -> String {
-        let indexPath = BoneIndexPath(column: self.source.currentSelect, section: section, row: row)
+        let indexPath = BoneMenuIndexPath(column: self.source.currentSelect, section: section, row: row)
         return self.source.rowTitle(indexPath)
     }
     
@@ -446,16 +464,16 @@ extension BoneCustomMenu: BoneCustomDelegate {
     }
     
     func didSelectAtRow(_ indexPath: IndexPath) {
-        self.source.updata(indexPath)
-        let currentSelect = self.source.currentSelect
         self.popupAction(false)
+        self.source.updata(indexPath)
         
+        let currentSelect = self.source.currentSelect
         let menuBtn = self.scrollView.viewWithTag(currentSelect + 100) as? ColumnBtn
-        let indexPath = BoneIndexPath(column: self.source.currentSelect, section: indexPath.section, row: indexPath.row)
-        menuBtn?.title = self.source.rowTitle(indexPath)
+        let index = BoneMenuIndexPath(column: self.source.currentSelect, section: indexPath.section, row: indexPath.row)
+        menuBtn?.title = self.source.rowTitle(index)
     }
     
-    func filterTypeOfSection(_ section: Int) -> BoneCustomMenuSource.SelectType {
+    func filterTypeOfSection(_ section: Int) -> BoneMenuSelectType {
         return self.source.selectType(section)
     }
     
@@ -466,10 +484,9 @@ extension BoneCustomMenu: BoneCustomDelegate {
     func buttonSelect(_ indexPaths: [IndexPath], isConfirm: Bool) {
         if isConfirm {
             self.popupAction(false)
-            self.source.updata(indexPaths)
-            if self.isFilterBar == true {
+            self.source.updata(indexPaths, cellback: {
                 self.barView.reloadData()
-            }
+            })
         }
     }
 }

@@ -28,7 +28,7 @@ protocol BoneCustomDelegate: NSObjectProtocol {
     func isTwoCol() -> Bool
     
     /// 获取section内选择模式（单选/多选）
-    func filterTypeOfSection(_ section: Int) -> BoneCustomMenuSource.SelectType
+    func filterTypeOfSection(_ section: Int) -> BoneMenuSelectType
     
     /// 获取已选中选中IndexPaths
     func getSelectIndexPaths() -> [IndexPath]

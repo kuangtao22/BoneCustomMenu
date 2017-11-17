@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		7E0E01A31FBAB4D800532876 /* BoneCustomMenuSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E01A21FBAB4D800532876 /* BoneCustomMenuSource.swift */; };
 		7E0E01A51FBAD87200532876 /* BoneCustomListSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E01A41FBAD87200532876 /* BoneCustomListSource.swift */; };
-		7E0E01A71FBB37D100532876 /* BoneMenuPublicSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E0E01A61FBB37D100532876 /* BoneMenuPublicSource.swift */; };
 		7E1A4FD41F160B1B00971EC1 /* BoneCustomIcon.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */; };
 		7E3038131F0F257B00B16ACB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038121F0F257B00B16ACB /* AppDelegate.swift */; };
 		7E3038151F0F257B00B16ACB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E3038141F0F257B00B16ACB /* ViewController.swift */; };
@@ -47,7 +46,6 @@
 /* Begin PBXFileReference section */
 		7E0E01A21FBAB4D800532876 /* BoneCustomMenuSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomMenuSource.swift; sourceTree = "<group>"; };
 		7E0E01A41FBAD87200532876 /* BoneCustomListSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomListSource.swift; sourceTree = "<group>"; };
-		7E0E01A61FBB37D100532876 /* BoneMenuPublicSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneMenuPublicSource.swift; sourceTree = "<group>"; };
 		7E1A4FD31F160B1B00971EC1 /* BoneCustomIcon.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BoneCustomIcon.bundle; sourceTree = "<group>"; };
 		7E30380F1F0F257B00B16ACB /* BoneCustomMenu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoneCustomMenu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E3038121F0F257B00B16ACB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -148,7 +146,6 @@
 				7EB9A7EA1FB1F3FB00CD100C /* BoneCalendar */,
 				7EB9A7E11FB18BDD00CD100C /* ListsView */,
 				7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */,
-				7E0E01A61FBB37D100532876 /* BoneMenuPublicSource.swift */,
 			);
 			path = PopupView;
 			sourceTree = "<group>";
@@ -334,7 +331,6 @@
 				7EB9A7E71FB18BDD00CD100C /* BoneListsCell.swift in Sources */,
 				7EB9A7FB1FB1F3FB00CD100C /* BoneCalenadrReusableView.swift in Sources */,
 				7EB9A7F71FB1F3FB00CD100C /* BoneCalenadrDataSource.swift in Sources */,
-				7E0E01A71FBB37D100532876 /* BoneMenuPublicSource.swift in Sources */,
 				7EB9A7F61FB1F3FB00CD100C /* BoneCalenadrDataSourceProtocol.swift in Sources */,
 				7EB9A7FA1FB1F3FB00CD100C /* RoundBackgroundLabel.swift in Sources */,
 				7EB9A8301FB2D30400CD100C /* BoneCustomFiltersView.swift in Sources */,

@@ -40,13 +40,13 @@ class ViewController: UIViewController {
         self.menuView.delegate = self
         self.menuView.dataSource = self
         self.menuView.isFilterBar = true    // 开启筛选工具栏
-        self.menuView.selectIndexPaths = [
-            BoneCustomMenuSource.BoneIndexPath(column: 0, section: 1, row: 2),
-            BoneCustomMenuSource.BoneIndexPath(column: 2, section: 0, row: 1),
-            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 1, row: 1),
-//            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
-            BoneCustomMenuSource.BoneIndexPath(column: 4, section: 1, row: 2)
-        ]
+//        self.menuView.selectIndexPaths = [
+//            BoneCustomMenuSource.BoneIndexPath(column: 0, section: 1, row: 2),
+//            BoneCustomMenuSource.BoneIndexPath(column: 2, section: 0, row: 1),
+//            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 1, row: 1),
+////            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
+//            BoneCustomMenuSource.BoneIndexPath(column: 4, section: 1, row: 2)
+//        ]
         self.menuView.selectColor = UIColor(red: 244/255, green: 92/255, blue: 76/255, alpha: 1)
         
         self.view.addSubview(menuView)
@@ -105,7 +105,7 @@ extension ViewController: BoneMenuDataSource {
     ///   - column:
     ///   - section:
     /// - Returns: 二级列表行数
-    internal func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneIndexPath) -> Int {
+    internal func boneMenu(_ menu: BoneCustomMenu, numberOfRowsInSections indexPath: BoneMenuIndexPath) -> Int {
         if indexPath.column == 0 {
             return self.data2.count
         } else if indexPath.column == 3 {
@@ -124,17 +124,17 @@ extension ViewController: BoneMenuDataSource {
     ///   - menu:
     ///   - column:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> ColumnInfo {
+    func boneMenu(_ menu: BoneCustomMenu, typeForColumnAt column: Int) -> BoneMenuColumnInfo {
         if column == 0 {
-            return BoneCustomMenuSource.ColumnInfo(title: "分类", type: .filterList)
+            return BoneMenuColumnInfo(title: "分类", type: .filterList)
         } else if column == 1 {
-            return BoneCustomMenuSource.ColumnInfo(title: "时间选择", type: .calendar)
+            return BoneMenuColumnInfo(title: "时间选择", type: .calendar)
         } else if column == 2 {
-            return BoneCustomMenuSource.ColumnInfo(title: "是否买单", type: .button)
+            return BoneMenuColumnInfo(title: "是否买单", type: .button)
         } else if column == 3 {
-            return BoneCustomMenuSource.ColumnInfo(title: "筛选", type: .filter)
+            return BoneMenuColumnInfo(title: "筛选", type: .filter)
         }
-        return BoneCustomMenuSource.ColumnInfo(title: "一级单选", type: .list)
+        return BoneMenuColumnInfo(title: "一级单选", type: .list)
     }
     
     
@@ -145,7 +145,7 @@ extension ViewController: BoneMenuDataSource {
     ///   - column:
     ///   - section:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneIndexPath) -> String {
+    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneMenuIndexPath) -> String {
         if indexPath.column == 0 {
             return self.data1[indexPath.section]
         } else if indexPath.column == 1 {
@@ -164,7 +164,7 @@ extension ViewController: BoneMenuDataSource {
     ///   - menu:
     ///   - indexPath:
     /// - Returns:
-    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneIndexPath) -> String {
+    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneMenuIndexPath) -> String {
         if indexPath.column == 0 {
             return self.data2[indexPath.row]
             
@@ -179,13 +179,13 @@ extension ViewController: BoneMenuDataSource {
         return "ccccccc"
     }
     
-    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuDelegate.BoneIndexPath) -> BoneMenuDelegate.SelectType? {
+    func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuIndexPath) -> BoneMenuSelectType? {
         if indexPath.section == 0 {
-            return BoneMenuDelegate.SelectType.multi
+            return BoneMenuSelectType.multi
         } else if indexPath.section == 1 {
-            return BoneMenuDelegate.SelectType.multi
+            return BoneMenuSelectType.multi
         } else if indexPath.section == 2 {
-            return BoneMenuDelegate.SelectType.only
+            return BoneMenuSelectType.only
         }
         return nil
     }
@@ -198,13 +198,13 @@ extension ViewController: BoneMenuDataSource {
 extension ViewController: BoneMenuDelegate {
     
     
-    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn column: Int, indexPaths: [IndexPath]) {
+    func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtColumn indexPaths: [BoneMenuIndexPath]) {
         print("indexPaths:\(indexPaths)")
     }
     
 
     
-    internal func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneIndexPath) {
+    internal func boneMenu(_ menu: BoneCustomMenu, didSelectRowAtIndexPath indexPath: BoneMenuIndexPath) {
         print("indexPath:\(indexPath)")
     }
 
