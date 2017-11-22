@@ -166,7 +166,6 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("index:\(indexPath)")
         if tableView == self.leftTable {
             self.dataSource.onClickLeft(indexPath.row)
             self.leftTable.reloadData()
@@ -175,7 +174,6 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         } else {
             
             let index = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
-            print("index:\(index)")
             self.dataSource.onClickRight(index)
             
             switch self.dataSource.getSelectType(self.dataSource.selectSection) {

@@ -66,7 +66,10 @@ class BoneCustomMenuSource {
     
     /// 行数
     func rowNum(_ indexPath: BoneMenuIndexPath) -> Int {
-        return self.dataSource?.boneMenu(self.menu, numberOfRowsInSections: indexPath) ?? 0
+        if self.sectionNum() > indexPath.section {
+            return self.dataSource?.boneMenu(self.menu, numberOfRowsInSections: indexPath) ?? 0
+        }
+        return 0
     }
     
     /// 选择类型
@@ -94,7 +97,10 @@ class BoneCustomMenuSource {
     
     /// 获取选中的某一个标题（用于barView）
     func selectTitle(_ index: Int) -> String {
-        return self.rowTitle(self.selectIndexPaths[index])
+        if self.selectIndexPaths.count > index {
+            return self.rowTitle(self.selectIndexPaths[index])
+        }
+        return ""
     }
     
     /// 获取某个选中的indexPath（用于barView）

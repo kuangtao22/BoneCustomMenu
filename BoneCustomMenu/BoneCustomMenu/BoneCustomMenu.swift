@@ -371,7 +371,6 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             }
         }
         self.setColumnHeight()
-        self.listView.reloadData()
     }
 }
 

@@ -89,7 +89,6 @@ class BoneFilterSource {
     
     /// 右边点击indexPath,如果已选中则取消
     func onClickRight(_ indexPath: IndexPath) {
-        print("indexPath:\(indexPath)")
         if self.selectArray.contains(indexPath) {
             let items = self.selectArray.filter { $0 != indexPath }
             self.selectArray = items

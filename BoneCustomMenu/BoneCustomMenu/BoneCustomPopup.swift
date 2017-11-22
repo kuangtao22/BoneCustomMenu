@@ -155,7 +155,7 @@ extension BoneCustomPopup {
                 let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(color)
                 return image
             case .calendar:
-                let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(color)
+                let image = UIImage(named: "BoneCustomIcon.bundle/calendar")?.color(color)
                 return image
             }
         }

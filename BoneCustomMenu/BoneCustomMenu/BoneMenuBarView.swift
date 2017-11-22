@@ -51,6 +51,9 @@ class BoneMenuBarView: UIView {
         self.init(frame: CGRect(x: 0, y: top, width: UIScreen.main.bounds.width, height: 0))
         self.frame.size.height = self.defaultHeight
         self.isHidden = true
+        let bottomList = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
+        bottomList.backgroundColor = UIColor.black.withAlphaComponent(0.05)
+        self.addSubview(bottomList)
         
         self.scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: self.frame.width - 80, height: self.frame.height))
         self.scrollView.showsVerticalScrollIndicator = false
@@ -62,7 +65,7 @@ class BoneMenuBarView: UIView {
         self.addSubview(rightView)
         
         let lineView = UIView(frame: CGRect(x: 0, y: 0, width: 0.5, height: rightView.frame.height))
-        lineView.backgroundColor = UIColor.black.withAlphaComponent(0.09)
+        lineView.backgroundColor = bottomList.backgroundColor
         rightView.addSubview(lineView)
         
         let cleanSize = CGSize(width: rightView.frame.width - 20, height: rightView.frame.height - 15)

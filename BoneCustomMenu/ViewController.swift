@@ -41,11 +41,11 @@ class ViewController: UIViewController {
         self.menuView.dataSource = self
         self.menuView.isFilterBar = true    // 开启筛选工具栏
 //        self.menuView.selectIndexPaths = [
-//            BoneCustomMenuSource.BoneIndexPath(column: 0, section: 1, row: 2),
-//            BoneCustomMenuSource.BoneIndexPath(column: 2, section: 0, row: 1),
-//            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 1, row: 1),
-////            BoneCustomMenuSource.BoneIndexPath(column: 3, section: 0, row: 2),
-//            BoneCustomMenuSource.BoneIndexPath(column: 4, section: 1, row: 2)
+//            BoneMenuIndexPath(column: 0, section: 1, row: 2),
+//            BoneMenuIndexPath(column: 2, section: 0, row: 1),
+//            BoneMenuIndexPath(column: 3, section: 1, row: 1),
+//            BoneMenuIndexPath(column: 3, section: 0, row: 2),
+//            BoneMenuIndexPath(column: 4, section: 1, row: 2)
 //        ]
         self.menuView.selectColor = UIColor(red: 244/255, green: 92/255, blue: 76/255, alpha: 1)
         

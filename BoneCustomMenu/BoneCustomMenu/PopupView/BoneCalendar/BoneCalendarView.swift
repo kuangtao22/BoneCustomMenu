@@ -36,6 +36,15 @@ class BoneCalendarView: UIView {
         }
     }
     
+    var endDate: Date? {
+        didSet {
+            if let endDate = self.endDate {
+                self.dataSourceManager.endDate = endDate
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    
     /// 选择样式
     var selectType: BoneCalenadrDataSource.SelectionType = .none {
         didSet {

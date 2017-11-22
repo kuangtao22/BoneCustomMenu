@@ -66,8 +66,7 @@ class BoneCustomListsView: UIView {
         self.rightTable.dataSource = self
         self.rightTable.separatorColor = UIColor.clear
         self.addSubview(self.rightTable)
-        
-        self.reloadData()
+    
     }
     
     required init?(coder aDecoder: NSCoder) {
