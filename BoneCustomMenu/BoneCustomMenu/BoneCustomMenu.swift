@@ -27,6 +27,7 @@ class BoneCustomMenu: BoneCustomPopup {
         didSet { self.source.dataSource = self.dataSource }
     }
     
+    /// 字体颜色
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
     
     var leftWidth: CGFloat? {
@@ -250,7 +251,8 @@ class BoneCustomMenu: BoneCustomPopup {
             self.superview?.addSubview(self.backgroundView)
             self.superview?.addSubview(self.menuView)
             self.backgroundView.superview?.addSubview(self)
-            self.barView.removeFromSuperview()
+            if self.isFilterBar { self.barView.removeFromSuperview() }
+            
             self.menuView.frame.size.height = view.frame.height
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundView.alpha = 1
@@ -267,7 +269,7 @@ class BoneCustomMenu: BoneCustomPopup {
                 self.backgroundView.removeFromSuperview()
                 self.menuView.removeFromSuperview()
                 self.popupDelegate?.customPopup(isShow)
-                self.superview?.addSubview(self.barView)
+                if self.isFilterBar { self.superview?.addSubview(self.barView) }
             })
         }
     }
@@ -347,7 +349,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             menuBtn.selectColor = self.selectColor
             menuBtn.title = info.title
             menuBtn.tag = i + 100
-
+            
             switch info.type {
             case .button:
                 menuBtn.isSelected = self.source.selectIndexPaths.contains {
@@ -404,7 +406,6 @@ extension BoneCustomMenu: BoneMenuBarDelegate {
         let y = self.barView.isShow ? self.barView.frame.maxY : self.frame.maxY
         self.delegate?.boneBar(self.barView, contentOffsetY: y)
     }
-    
     
     func getCount() -> Int {
         return self.source.selectIndexPaths.count
