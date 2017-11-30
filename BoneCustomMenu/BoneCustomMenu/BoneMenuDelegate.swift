@@ -169,12 +169,12 @@ protocol BoneMenuDelegate: NSObjectProtocol {
 
 extension BoneMenuDataSource {
     
-    func boneMenu(_ menu: BoneCustomMenu, titleForRowAt indexPath: BoneMenuIndexPath) -> String {
+    func boneMenu(_ menu: BoneCustomMenu, titleForSectionAt indexPath: BoneMenuIndexPath) -> String {
         return ""
     }
     
     func boneMenu(_ menu: BoneCustomMenu, numberOfSectionsInColumn column: Int) -> Int {
-        return 1
+        return 0
     }
     
     func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {

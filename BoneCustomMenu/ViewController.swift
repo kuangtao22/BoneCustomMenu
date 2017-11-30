@@ -191,6 +191,9 @@ extension ViewController: BoneMenuDataSource {
     }
 
     func boneMenu(_ menu: BoneCustomMenu, menuHeightFor column: Int) -> CGFloat? {
+        if column == 0 {
+            return 450
+        }
         return 400
     }
 }

@@ -129,14 +129,14 @@ class BoneCustomMenu: BoneCustomPopup {
     }
     
     lazy var listView: BoneCustomListsView = {
-        let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
+        let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
     lazy var filterView: BoneCustomFiltersView = {
-        let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
+        let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
         view.line = self.line
         view.isHidden = true
@@ -144,14 +144,14 @@ class BoneCustomMenu: BoneCustomPopup {
     }()
     
     lazy var filterListView: BoneCustomFilterListView = {
-        let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()))
+        let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
         view.isHidden = true
         return view
     }()
     
     lazy var calendarView: BoneCalendarView = {
-        let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.source.menuHeight(), width: self.menuView.frame.width, height: self.source.menuHeight()), type: .section)
+        let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight), type: .section)
         calenadr.delegate = self
         calenadr.isHidden = true
         return calenadr
@@ -220,24 +220,19 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 设置弹出菜单高度
     fileprivate func setColumnHeight() {
-        for i in 0..<self.source.columnNum {
-            let type = self.source.columnInfo(i).type
-            let height = self.source.menuHeight(i)
-            let view = self.getView(type: type)
-            view.frame.size.height = height
-            view.frame.origin.y = -height
-            switch type {
-            case .button:
-                break
-            case .filter:
-                self.filterView.setHeight = height
-            case .calendar:
-                self.calendarView.setHeight = height
-            case .list:
-                self.listView.setHeight = height
-            case .filterList:
-                self.filterListView.setHeight = height
-            }
+        let view = self.getView(type: self.menuType)
+        let height = self.source.menuHeight
+        if let view = view as? BoneCustomFiltersView {
+            view.setHeight = height
+        }
+        if let view = view as? BoneCalendarView {
+            view.setHeight = height
+        }
+        if let view = view as? BoneCustomListsView {
+            view.setHeight = height
+        }
+        if let view = view as? BoneCustomFilterListView {
+            view.setHeight = height
         }
     }
     
@@ -246,7 +241,7 @@ class BoneCustomMenu: BoneCustomPopup {
     /// - Parameter isShow: 是否显示
     fileprivate func popupAction(_ isShow: Bool) {
         let view = self.getView(type: self.menuType)
-        
+        self.setColumnHeight()
         if isShow {
             self.superview?.addSubview(self.backgroundView)
             self.superview?.addSubview(self.menuView)
@@ -349,7 +344,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             menuBtn.selectColor = self.selectColor
             menuBtn.title = info.title
             menuBtn.tag = i + 100
-            
+
             switch info.type {
             case .button:
                 menuBtn.isSelected = self.source.selectIndexPaths.contains {
@@ -372,7 +367,6 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 self.scrollView.contentSize.width = menuBtn.frame.origin.x + menuBtn.frame.width
             }
         }
-        self.setColumnHeight()
     }
 }
 

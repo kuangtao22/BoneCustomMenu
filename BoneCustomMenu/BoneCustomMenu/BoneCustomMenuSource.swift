@@ -30,6 +30,13 @@ class BoneCustomMenuSource {
         get { return self.sectionNum() > 0 }
     }
     
+    /// 获取弹出菜单高度
+    var menuHeight: CGFloat {
+        get {
+            return self.dataSource?.boneMenu(self.menu, menuHeightFor: self.currentSelect) ?? self.defaultMenuheight
+        }
+    }
+    
     /// column标题
     func columnInfo(_ column: Int) -> BoneMenuColumnInfo {
         let defaultInfo = BoneMenuColumnInfo(title: "", type: .button)
@@ -61,12 +68,13 @@ class BoneCustomMenuSource {
     
     /// 分区数(column如果为空，则返回当前分区数量)
     func sectionNum(_ column: Int? = nil) -> Int {
-        return self.dataSource?.boneMenu(self.menu, numberOfSectionsInColumn: column ?? self.currentSelect) ?? 0
+        let sectionNum = self.dataSource?.boneMenu(self.menu, numberOfSectionsInColumn: column ?? self.currentSelect)
+        return sectionNum ?? 0
     }
     
     /// 行数
     func rowNum(_ indexPath: BoneMenuIndexPath) -> Int {
-        if self.sectionNum() > indexPath.section {
+        if (self.sectionNum() > indexPath.section) || (self.sectionNum() == 0) {
             return self.dataSource?.boneMenu(self.menu, numberOfRowsInSections: indexPath) ?? 0
         }
         return 0
@@ -160,13 +168,6 @@ class BoneCustomMenuSource {
         }
     }
     
-    /// 获取弹出菜单高度
-    func menuHeight(_ column: Int? = nil) -> CGFloat {
-        if let column = column {
-            return self.dataSource?.boneMenu(self.menu, menuHeightFor: column) ?? self.defaultMenuheight
-        }
-        return self.defaultMenuheight
-    }
     
     fileprivate var selectArray = [BoneMenuIndexPath]()
     

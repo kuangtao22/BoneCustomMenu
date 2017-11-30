@@ -80,12 +80,12 @@ extension BoneCustomListsView: BoneCustomMenuProtocol {
     /// 重载数据
     func reloadData() {
         self.dataSource.initData()
-        let isTwoCol = self.dataSource.isTwoCol
         self.leftTable.isHidden = self.dataSource.isLeftHidden
         self.leftTable.frame.size.width = self.dataSource.leftWidth
         self.rightTable.frame.size.width = self.dataSource.rightWidth
-        self.rightTable.frame.origin.x = isTwoCol ? self.dataSource.leftWidth : 0
-        if isTwoCol {
+        self.rightTable.frame.origin.x = self.dataSource.leftWidth
+        
+        if self.dataSource.isTwoCol {
             self.leftTable.reloadData()
             for i in 0..<self.leftTable.numberOfSections {
                 if self.leftTable.numberOfRows(inSection: i) > 0 {

@@ -20,7 +20,9 @@ class BoneCustomListSource {
     }
     
     var isTwoCol: Bool {
-        get { return self.delegate?.isTwoCol() ?? false }
+        get {
+            return self.delegate?.isTwoCol() ?? false
+        }
     }
     
     /// 左边表格宽度
@@ -28,6 +30,7 @@ class BoneCustomListSource {
         get { return self.isTwoCol ? UIScreen.main.bounds.width * 0.3 : 0 }
     }
     
+    /// 右边表格宽度
     var rightWidth: CGFloat {
         get { return self.isTwoCol ? (UIScreen.main.bounds.width - self.leftWidth) : UIScreen.main.bounds.width }
     }
@@ -52,7 +55,7 @@ class BoneCustomListSource {
     /// - Parameter isLeft: 左边列表
     func rowNum(_ isLeft: Bool) -> Int {
         if isLeft {
-            return self.delegate?.numberOfSection() ?? 1
+            return self.delegate?.numberOfSection() ?? 0
         } else {
             if self.isTwoCol {
                 return self.delegate?.numberOfRows(self.selectSection) ?? 1
