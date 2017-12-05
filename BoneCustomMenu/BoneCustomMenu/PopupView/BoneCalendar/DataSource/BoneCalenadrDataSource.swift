@@ -58,6 +58,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             if firstDate != nil && (newValue == firstDate){
                 return
             }
+            
             if lastDate != nil{
                 let result = newValue.compare(lastDate)
                 if result == .orderedDescending {
@@ -86,7 +87,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             if lastDate != nil && (newValue == lastDate){
                 return
             }
-            if firstDate != nil{
+            if firstDate != nil {
                 let result = firstDate.compare(newValue)
                 if result == .orderedDescending {
                     fatalError("startDate must smaller than endDate")
@@ -100,8 +101,9 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             let firstOfMonth = self.clampDate(date: newValue, toComponents: [.month,.year])
             var offsetComponents = DateComponents()
             offsetComponents.month = 1
-            let temp = (self.calendar as NSCalendar).date(byAdding: offsetComponents, to: firstOfMonth, options: .wrapComponents)!
-            lastDateMonthEndDate = Date(timeIntervalSince1970: temp.timeIntervalSince1970 - 1)
+//            let temp = (self.calendar as NSCalendar).date(byAdding: offsetComponents, to: firstOfMonth, options: .wrapComponents)!
+            lastDateMonthEndDate = firstOfMonth//Date(timeIntervalSince1970: temp.timeIntervalSince1970 - 1)
+
             if firstDate != nil{
                 let today = Date()
                 let result1 = today.compare(firstDate)
@@ -127,12 +129,11 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
         }
     }
     
-    
-    
     // 多少月
     var monthCount: Int {
         get{
             let calendar = self.calendar as NSCalendar
+//            let month = calendar.components(.month, from: self.startDate, to: self.endDate, options: .wrapComponents).month ?? 0
             let month = calendar.components(.month, from: firstDateMonthBegainDate, to: lastDateMonthEndDate, options: .wrapComponents).month ?? 0
             return month + 1
         }
@@ -140,9 +141,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     
     // 一星期多少天
     var weekCount: Int {
-        get {
-            return calendar.maximumRange(of: .weekday)?.count ?? 0
-        }
+        get { return calendar.maximumRange(of: .weekday)?.count ?? 0 }
     }
     
     // 一个月多少天
@@ -212,7 +211,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     // 某日期所在的section
     func sectionForDate(_ date: Date) -> Int {
         let calendar = (self.calendar as NSCalendar)
-        return calendar.components(.month, from: self.firstDateMonthBegainDate,to: date,options: .wrapComponents).month!
+        return calendar.components(.month, from: self.firstDateMonthBegainDate, to: date,options: .wrapComponents).month ?? 0
     }
     
     // 某日期所在的IndexPath
@@ -310,7 +309,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
 class BoneCalenadrDataSource {
     /// 默认最小最大年月
     fileprivate static let defaultMinDate = Date(timeIntervalSince1970: -28800)
-    fileprivate static let defaultMaxDate = Date(timeIntervalSince1970:2145801599)
+    fileprivate static let defaultMaxDate = Date(timeIntervalSince1970: 2145801599)
     
     /// 日历开始的日期
     fileprivate var firstDate: Date!
@@ -354,7 +353,7 @@ class BoneCalenadrDataSource {
     public convenience init(){
         self.init(
             startDate: BoneCalenadrDataSource.defaultMinDate,
-            endDate:BoneCalenadrDataSource.defaultMaxDate
+            endDate: BoneCalenadrDataSource.defaultMaxDate
         )
     }
     //使用自定义的开始和结束时间

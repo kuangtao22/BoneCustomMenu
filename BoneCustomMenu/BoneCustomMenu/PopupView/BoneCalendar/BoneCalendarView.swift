@@ -36,12 +36,23 @@ class BoneCalendarView: UIView {
         }
     }
     
-    var endDate: Date? {
-        didSet {
-            if let endDate = self.endDate {
-                self.dataSourceManager.endDate = endDate
-                self.collectionView.reloadData()
-            }
+    /// 最小时间
+    var minDate: Date {
+        get {
+            return self.dataSourceManager.startDate
+        }
+        set {
+            self.dataSourceManager.startDate = newValue
+            self.collectionView.reloadData()
+        }
+    }
+    
+    /// 最大时间
+    var maxDate: Date {
+        get { return self.dataSourceManager.endDate }
+        set {
+            self.dataSourceManager.endDate = newValue
+            self.collectionView.reloadData()
         }
     }
     
