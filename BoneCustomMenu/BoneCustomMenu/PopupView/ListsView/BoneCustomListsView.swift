@@ -129,7 +129,6 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
             cell?.selectColor = self.selectColor
             cell?.fontColor = self.fontColor
         }
-        cell?.listLeftWidth = self.dataSource.leftWidth
         if isLeft {
             if isTwoCol {
                 let isSelect = self.dataSource.sectionState(indexPath.row)

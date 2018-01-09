@@ -139,21 +139,23 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         if cell == nil {
             cell = BoneCustomFilterCell(identifier, listLeftWidth: self.dataSource.leftWidth)
             cell?.rowHeight = self.rowHeight
-            cell?.titleLabel.textColor = self.fontColor
+            cell?.textLabel?.textColor = self.fontColor
             cell?.selectColor = self.selectColor
             cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
             cell?.fontColor = self.fontColor
         }
-        cell?.listLeftWidth = self.dataSource.leftWidth
-
+        cell?.isLeft = isLeft
+        
         if isLeft {
             if isTwoCol {
                 let isSelect = self.dataSource.sectionState(indexPath.row)
-                cell?.titleLabel.textColor = isSelect ? self.selectColor : self.fontColor
+                cell?.isSelect = isSelect
+                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
                 cell?.selectView1.isHidden = !isSelect
-                cell?.titleLabel.text = self.dataSource.sectionTitle(indexPath.row)
+                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
                 cell?.num = self.dataSource.rowSumFor(indexPath.row)
                 cell?.numLabel.isHidden = false
+                cell?.backgroundColor = isSelect ? UIColor.white : self.sectionColor
             }
         } else {
             let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)

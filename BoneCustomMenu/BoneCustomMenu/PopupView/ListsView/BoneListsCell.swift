@@ -19,14 +19,7 @@ class BoneListsCell: UITableViewCell {
         }
     }
     var fontColor = UIColor.gray
-    var listLeftWidth: CGFloat? {
-        didSet {
-            guard let width = self.listLeftWidth else {
-                return
-            }
-            self.selectView2.frame.origin.x = (UIScreen.main.bounds.width - width) - self.selectView2.frame.width
-        }
-    }
+
     typealias Size = BoneCustomPopup.Size
     
 
@@ -48,15 +41,9 @@ class BoneListsCell: UITableViewCell {
         )
         self.selectView1.isHidden = true
         self.contentView.addSubview(self.selectView1)
-        
-        self.selectView2 = UIImageView(frame: CGRect(
-            origin: CGPoint.zero,
-            size: CGSize(width: 30, height: Size.rowHeight))
-        )
-        self.selectView2.contentMode = .center
+
+        self.selectView2 = UIImageView(image: UIImage(named: "BoneCustomIcon.bundle/select")?.color(self.selectColor))
         self.selectView2.isHidden = true
-        let image = UIImage(named: "BoneCustomIcon.bundle/select")?.color(self.selectColor)
-        self.selectView2.image = image
-        self.contentView.addSubview(self.selectView2)
+        self.accessoryView = self.selectView2
     }
 }
