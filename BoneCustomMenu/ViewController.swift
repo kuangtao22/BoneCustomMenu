@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         for i in 0...20 {
             self.data2.append("子类\(i)")
         }
-        self.dates = [date("2013-04-11"), date("2013-03-23")]
+        self.dates = [date("2018-04-11"), date("2018-04-23")]
         
         self.menuView = BoneCustomMenu(top: 100, height: 40)
         self.menuView.delegate = self
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         self.view.addSubview(menuView)
         
         self.menuView.reloadData()
-        self.menuView.calendarView.maxDate = date("2018-01-20")
+        self.menuView.calendarView.maxDate = date("2018-09-20")
         self.menuView.calendarDates = self.dates
         self.menuView.calendarView.selectMaxDay = 20
         self.menuView.calendarView.selectType = .section

@@ -59,22 +59,21 @@ class BoneCalendarView: UIView {
     }
     
     /// 选中时间, 标记选中时间后，自动滚动到最小选中时间页
-    var selectDates: [Date]? {
-        didSet {
-            guard let dates = self.selectDates else {
+    var selectDates: [Date] {
+        get { return self.dataSourceManager.selectDates }
+        set {
+            guard newValue.count > 0 else {
                 return
             }
-            guard dates.count > 0 else {
-                return
-            }
-            let newDates = dates.sorted()
-            self.scrollToMonth(newDates[0], animated: true)
+            let newDates = newValue.sorted { $0 < $1 }
             self.dataSourceManager.selectDates = newDates
+            self.layoutSubviews()
+            self.updata()
         }
     }
     
     /// 显示时间
-    var showTime = true
+    var showTime = false
     
     // 日历模块
     fileprivate var collectionView: UICollectionView!   // 日历滚动视图
@@ -171,9 +170,6 @@ class BoneCalendarView: UIView {
         }
 
         self.updata()
-        
-        // 滑动到今日
-        self.scrollToMonth(Date(), animated: false)
     }
     
     /// 刷新
@@ -207,6 +203,18 @@ class BoneCalendarView: UIView {
             self.collectionView?.reloadData()
         }
         self.updata()
+    }
+    
+    // 在CollectionView完全计算出subView布局的地方调用此方法
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.selectDates.count > 0 {
+            let newDates = self.selectDates.sorted { $0 < $1 }
+            self.scrollToMonth(newDates[0], animated: false)
+        } else {
+            // 滑动到今日
+            self.scrollToMonth(Date(), animated: false)
+        }
     }
     
     /// 动画

@@ -39,6 +39,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
         }
     }
     
+
     var selectDates: [Date] {
         get {
             let dates = self.indexPathFotDates()
@@ -53,7 +54,6 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
                     end.minute = self.timeDatas.end.minute
                     return [self.calendar.date(from: start)!, self.calendar.date(from: end)!]
                 }
-                
             }
             return dates
         }
