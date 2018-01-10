@@ -54,6 +54,7 @@ class ViewController: UIViewController {
         
         self.menuView.reloadData()
         self.menuView.calendarView.maxDate = date("2018-09-20")
+        self.menuView.calendarView.showTime = true
         self.menuView.calendarDates = self.dates
         self.menuView.calendarView.selectMaxDay = 20
         self.menuView.calendarView.selectType = .section

@@ -21,8 +21,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             case .single:
                 if let date = self.selectDates.first {
                     formatter.dateFormat = "yyyy-MM-dd"
-                    let time = formatter.string(from: date)
-                    return String(format: "时间: %@", time)
+                    return formatter.string(from: date)
                 }
                 return "请选择时间"
             case .mutable:
@@ -32,7 +31,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
                     formatter.dateFormat = "yyyy-MM-dd HH:mm"
                     let start = formatter.string(from: self.selectDates[0])
                     let end = formatter.string(from: self.selectDates[self.selectDates.count - 1])
-                    return String(format: "时间: %@ 至 %@", start, end)
+                    return String(format: "%@ 至 %@", start, end)
                 }
                 return "请选择时间"
             }

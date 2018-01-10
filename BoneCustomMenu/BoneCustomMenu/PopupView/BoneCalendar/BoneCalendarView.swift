@@ -17,7 +17,14 @@ class BoneCalendarView: UIView {
             }
             self.frame.size.height = height
             self.footerView.frame.origin.y = self.frame.height - self.footerView.frame.height
-            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height
+            if self.showTime {
+                self.collectionView.frame.origin.y = self.headerView.frame.maxY
+                self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height - self.headerView.frame.height
+                self.timePicker.setHeight = self.collectionView.frame.height
+            } else {
+                self.collectionView.frame.origin.y = 0
+                self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height
+            }
         }
     }
     
@@ -174,14 +181,7 @@ class BoneCalendarView: UIView {
     
     /// 刷新
     func reloadData() {
-        if self.showTime {
-            self.collectionView.frame.origin.y = self.headerView.frame.maxY
-            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height - self.headerView.frame.height
-            self.timePicker.setHeight = self.collectionView.frame.height
-        } else {
-            self.collectionView.frame.origin.y = 0
-            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height
-        }
+        
         self.headerView.reloadData()
         self.footerView.reloadData(isSelect: self.headerView.isSelect)
     }

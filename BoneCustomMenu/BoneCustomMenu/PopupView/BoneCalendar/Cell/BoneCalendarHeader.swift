@@ -42,11 +42,16 @@ class BoneCalendarHeader: UIView {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
         
-        self.button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 65, height: self.frame.height - 17)))
+        let timeIcon = UIImageView(image: UIImage(named: "BoneCustomIcon.bundle/calendar_time"))
+        timeIcon.center.y = self.center.y
+        timeIcon.frame.origin.x = 10
+        self.addSubview(timeIcon)
+        
+        self.button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 60, height: self.frame.height - 17)))
         self.button.center.y = self.center.y
-        self.button.frame.origin.x = self.frame.width - self.button.frame.width - 15
+        self.button.frame.origin.x = self.frame.width - self.button.frame.width - 10
         self.button.setTitle("选择时间", for: UIControlState.normal)
-        self.button.setTitle("选择日期", for: UIControlState.selected)
+        self.button.setTitle("返回日历", for: UIControlState.selected)
         self.button.setTitleColor(UIColor.white, for: UIControlState.normal)
         self.button.titleLabel?.font = UIFont.systemFont(ofSize: 11)
         self.button.layer.masksToBounds = true
@@ -54,9 +59,10 @@ class BoneCalendarHeader: UIView {
         self.button.addTarget(self, action: #selector(self.timeAction), for: UIControlEvents.touchUpInside)
         self.addSubview(self.button)
         
-        self.textLabel = UILabel(frame: CGRect(x: 15, y: 0, width: self.button.frame.origin.x - 20, height: 40))
+        self.textLabel = UILabel(frame: CGRect(x: timeIcon.frame.maxX + 5, y: 0, width: self.button.frame.origin.x - timeIcon.frame.maxX, height: 40))
         self.textLabel.font = UIFont.systemFont(ofSize: 12)
         self.textLabel.textColor = UIColor.gray
+        self.textLabel.adjustsFontSizeToFitWidth = true
         self.addSubview(self.textLabel)
 
         self.reloadData()

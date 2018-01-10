@@ -67,8 +67,10 @@ class BoneCalendarTimePicker: UIView {
                 return
             }
             self.frame.size.height = height
-            self.startPicker.frame.size.height = self.frame.height - startTitle.frame.maxY
+            self.startPicker.frame.size.height = height - self.startTitle.frame.maxY
             self.endPicker.frame.size.height = self.startPicker.frame.height
+            self.startPicker.center.y = (height - self.startTitle.frame.maxY) / 2 + self.startTitle.frame.maxY
+            self.endPicker.center.y = self.startPicker.center.y
         }
     }
     
@@ -86,20 +88,21 @@ class BoneCalendarTimePicker: UIView {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
 
-
         self.startTitle = self.getTitle(CGPoint(x: 0, y: 15), text: "开始时间")
         self.addSubview(startTitle)
         
         let pickerWidth = (self.frame.width - 15 * 3) / 2
-        self.startPicker = UIDatePicker(frame: CGRect(x: 15, y: startTitle.frame.maxY, width: pickerWidth, height: self.frame.height - startTitle.frame.maxY))
+        self.startPicker = UIDatePicker()
+        self.startPicker.frame = CGRect(x: 15, y: startTitle.frame.maxY, width: pickerWidth, height: self.frame.height - startTitle.frame.maxY)
         self.startPicker.addTarget(self, action: #selector(self.selectTime(picker:)), for:UIControlEvents.valueChanged)
         self.startPicker.datePickerMode = .time
         self.addSubview(self.startPicker)
-        
+
         let endTitle = self.getTitle(CGPoint(x: startTitle.frame.maxX, y: startTitle.frame.minY), text: "结束时间")
         self.addSubview(endTitle)
         
-        self.endPicker = UIDatePicker(frame: CGRect(x: 15 + self.startPicker.frame.maxX, y: self.startPicker.frame.minY, width: pickerWidth, height: self.startPicker.frame.height))
+        self.endPicker = UIDatePicker()
+        self.endPicker.frame = CGRect(x: 15 + self.startPicker.frame.maxX, y: self.startPicker.frame.minY, width: pickerWidth, height: self.startPicker.frame.height)
         self.endPicker.datePickerMode = .time
         self.endPicker.addTarget(self, action: #selector(self.selectTime(picker:)), for:UIControlEvents.valueChanged)
         self.addSubview(self.endPicker)
@@ -136,9 +139,11 @@ class BoneCalendarTimePicker: UIView {
         BoneCustomPopup.Color.line.setStroke()
         let path = UIBezierPath()
         path.move(to: CGPoint(x: self.center.x, y: self.startPicker.frame.minY))
-        path.addLine(to: CGPoint(x: self.center.x, y: rect.maxY))
+        path.addLine(to: CGPoint(x: self.center.x, y: self.startPicker.frame.maxY))
+        path.lineWidth = 1 / UIScreen.main.scale
         path.close()
         path.stroke()
+
     }
  
 }
