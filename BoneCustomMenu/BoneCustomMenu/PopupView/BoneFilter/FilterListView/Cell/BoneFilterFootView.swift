@@ -10,25 +10,9 @@ import UIKit
 
 class BoneFilterFootView: UIView {
     
-    var fontColor: UIColor? {
-        didSet {
-            self.cleanBtn.setTitleColor(self.fontColor, for: UIControlState.normal)
-        }
-    }
-    
-    var selectColor: UIColor? {
-        didSet {
-            self.confirmBtn.backgroundColor = self.selectColor
-        }
-    }
-    
-    var line: UIColor? {
-        didSet {
-            self.cleanBtn.layer.borderColor = self.line?.cgColor
-        }
-    }
-    
     typealias touchUpInside = (_ type: Type) -> ()
+    typealias Color = BoneCustomPopup.Color
+    
     var onClick: touchUpInside?
     var cleanBtn: UIButton!     // 清除按钮
     var confirmBtn: UIButton!   // 确认按钮
@@ -39,20 +23,25 @@ class BoneFilterFootView: UIView {
         self.cleanBtn = self.getFootBtn(left: 0)
         self.cleanBtn.setTitle("清除", for: UIControlState.normal)
         self.cleanBtn.backgroundColor = UIColor.white
-        
+        self.cleanBtn.layer.borderColor = Color.line.cgColor
         self.cleanBtn.layer.borderWidth = 0.5
         self.cleanBtn.addTarget(self, action: #selector(self.cleanAction), for: UIControlEvents.touchUpInside)
-        
+        self.cleanBtn.setTitleColor(Color.font, for: UIControlState.normal)
         self.addSubview(self.cleanBtn)
         
         self.confirmBtn = self.getFootBtn(left: self.frame.width / 2)
         self.confirmBtn.setTitle("确认", for: UIControlState.normal)
-        
+        self.confirmBtn.backgroundColor = Color.select
         self.confirmBtn.addTarget(self, action: #selector(self.confirmAction), for: UIControlEvents.touchUpInside)
         self.addSubview(self.confirmBtn)
     }
     
-
+    /// 刷新样式
+    func reloadData() {
+        self.confirmBtn.backgroundColor = Color.select
+        self.cleanBtn.layer.borderColor = Color.line.cgColor
+        self.cleanBtn.setTitleColor(Color.font, for: UIControlState.normal)
+    }
     
     /// 获取底部按钮样式
     private func getFootBtn(left: CGFloat) -> UIButton {

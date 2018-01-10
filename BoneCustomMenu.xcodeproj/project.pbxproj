@@ -21,6 +21,8 @@
 		7E39A06E1F1C98F50030EB75 /* BoneTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A06C1F1C98F50030EB75 /* BoneTools.swift */; };
 		7E39A06F1F1C98F50030EB75 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A06D1F1C98F50030EB75 /* String+Extension.swift */; };
 		7E39A0771F1C999E0030EB75 /* BoneCustomDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */; };
+		7E4C1A1A2004AFC000B22EAD /* BoneCalendarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C1A192004AFC000B22EAD /* BoneCalendarHeader.swift */; };
+		7E4C1A1C2005A30500B22EAD /* BoneCalendarTimePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C1A1B2005A30400B22EAD /* BoneCalendarTimePicker.swift */; };
 		7EB9A7E61FB18BDD00CD100C /* BoneCustomListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A7E21FB18BDD00CD100C /* BoneCustomListsView.swift */; };
 		7EB9A7E71FB18BDD00CD100C /* BoneListsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A7E31FB18BDD00CD100C /* BoneListsCell.swift */; };
 		7EB9A7F61FB1F3FB00CD100C /* BoneCalenadrDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A7EC1FB1F3FB00CD100C /* BoneCalenadrDataSourceProtocol.swift */; };
@@ -38,7 +40,6 @@
 		7EB9A8321FB2D60F00CD100C /* BoneFilterLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8311FB2D60F00CD100C /* BoneFilterLayout.swift */; };
 		7EB9A8651FB53E2800CD100C /* BoneCustomFilterListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8641FB53E2800CD100C /* BoneCustomFilterListView.swift */; };
 		7EB9A8671FB53FD800CD100C /* BoneFilterSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8661FB53FD800CD100C /* BoneFilterSource.swift */; };
-		7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */; };
 		7EB9A86C1FB5599600CD100C /* BoneFilterFootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */; };
 		7ECC64991FBD283A008F2072 /* BoneMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECC64981FBD283A008F2072 /* BoneMenuBarView.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,8 @@
 		7E39A06C1F1C98F50030EB75 /* BoneTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneTools.swift; sourceTree = "<group>"; };
 		7E39A06D1F1C98F50030EB75 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		7E39A0721F1C999E0030EB75 /* BoneCustomDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomDelegate.swift; sourceTree = "<group>"; };
+		7E4C1A192004AFC000B22EAD /* BoneCalendarHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCalendarHeader.swift; sourceTree = "<group>"; };
+		7E4C1A1B2005A30400B22EAD /* BoneCalendarTimePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCalendarTimePicker.swift; sourceTree = "<group>"; };
 		7EB9A7E21FB18BDD00CD100C /* BoneCustomListsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCustomListsView.swift; sourceTree = "<group>"; };
 		7EB9A7E31FB18BDD00CD100C /* BoneListsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneListsCell.swift; sourceTree = "<group>"; };
 		7EB9A7EC1FB1F3FB00CD100C /* BoneCalenadrDataSourceProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoneCalenadrDataSourceProtocol.swift; sourceTree = "<group>"; };
@@ -77,7 +80,6 @@
 		7EB9A8311FB2D60F00CD100C /* BoneFilterLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterLayout.swift; sourceTree = "<group>"; };
 		7EB9A8641FB53E2800CD100C /* BoneCustomFilterListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterListView.swift; sourceTree = "<group>"; };
 		7EB9A8661FB53FD800CD100C /* BoneFilterSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterSource.swift; sourceTree = "<group>"; };
-		7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneCustomFilterCell.swift; sourceTree = "<group>"; };
 		7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilterFootView.swift; sourceTree = "<group>"; };
 		7ECC64981FBD283A008F2072 /* BoneMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneMenuBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -202,7 +204,9 @@
 		7EB9A7EF1FB1F3FB00CD100C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				7E4C1A192004AFC000B22EAD /* BoneCalendarHeader.swift */,
 				7EB9A7F01FB1F3FB00CD100C /* BoneCalendarFooter.swift */,
+				7E4C1A1B2005A30400B22EAD /* BoneCalendarTimePicker.swift */,
 				7EB9A7F11FB1F3FB00CD100C /* RoundBackgroundLabel.swift */,
 				7EB9A7F21FB1F3FB00CD100C /* BoneCalenadrReusableView.swift */,
 				7EB9A7F31FB1F3FB00CD100C /* BoneDayCell.swift */,
@@ -233,7 +237,6 @@
 		7EB9A86A1FB5596A00CD100C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				7EB9A8681FB54F1100CD100C /* BoneCustomFilterCell.swift */,
 				7EB9A86B1FB5599600CD100C /* BoneFilterFootView.swift */,
 			);
 			path = Cell;
@@ -266,7 +269,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "鱼骨头";
 				TargetAttributes = {
 					7E30380E1F0F257B00B16ACB = {
@@ -317,12 +320,14 @@
 				7E3038151F0F257B00B16ACB /* ViewController.swift in Sources */,
 				7E0E01A51FBAD87200532876 /* BoneCustomListSource.swift in Sources */,
 				7EB9A7E61FB18BDD00CD100C /* BoneCustomListsView.swift in Sources */,
+				7E4C1A1C2005A30500B22EAD /* BoneCalendarTimePicker.swift in Sources */,
 				7E3038131F0F257B00B16ACB /* AppDelegate.swift in Sources */,
 				7E3038301F0FC4C100B16ACB /* BoneMenuDelegate.swift in Sources */,
 				7EB9A8651FB53E2800CD100C /* BoneCustomFilterListView.swift in Sources */,
 				7E39A06F1F1C98F50030EB75 /* String+Extension.swift in Sources */,
 				7E39A0771F1C999E0030EB75 /* BoneCustomDelegate.swift in Sources */,
 				7EB9A8321FB2D60F00CD100C /* BoneFilterLayout.swift in Sources */,
+				7E4C1A1A2004AFC000B22EAD /* BoneCalendarHeader.swift in Sources */,
 				7EB9A8671FB53FD800CD100C /* BoneFilterSource.swift in Sources */,
 				7EB9A82C1FB2D18F00CD100C /* BoneFilterCollectionCell.swift in Sources */,
 				7E3038261F0F48B800B16ACB /* BoneCustomPopup.swift in Sources */,
@@ -340,7 +345,6 @@
 				7E3038281F0FC36000B16ACB /* BoneCustomMenu.swift in Sources */,
 				7EB9A7F81FB1F3FB00CD100C /* BoneCalenadrDelegate.swift in Sources */,
 				7EB9A7FC1FB1F3FB00CD100C /* BoneDayCell.swift in Sources */,
-				7EB9A8691FB54F1100CD100C /* BoneCustomFilterCell.swift in Sources */,
 				7EB9A7FD1FB1F3FB00CD100C /* BoneCalendarLayout.swift in Sources */,
 				7ECC64991FBD283A008F2072 /* BoneMenuBarView.swift in Sources */,
 			);
@@ -377,7 +381,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -385,7 +391,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -426,7 +436,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -434,7 +446,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

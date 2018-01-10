@@ -23,13 +23,8 @@ class BoneCalendarView: UIView {
     
     var delegate: BoneCalenadrDelegate?
     
-    // 选中颜色
-    var selectColor = UIColor.red
-    
-    // 字体颜色
-    var fontColor = UIColor.black
-    
-    // 最大选中天
+
+    // 最大选中天数范围
     var selectMaxDay: Int? {
         didSet {
             self.dataSourceManager.selectMaxDay = self.selectMaxDay ?? 0
@@ -78,6 +73,8 @@ class BoneCalendarView: UIView {
         }
     }
     
+    /// 显示时间
+    var showTime = true
     
     // 日历模块
     fileprivate var collectionView: UICollectionView!   // 日历滚动视图
@@ -86,8 +83,12 @@ class BoneCalendarView: UIView {
     
     fileprivate var isCollection = false      // 是日历视图滑动
     
-    // 按钮
+    /// 顶部显示
+    fileprivate var headerView: BoneCalendarHeader!
+    /// 底部按钮
     fileprivate var footerView: BoneCalendarFooter!
+    
+    fileprivate var timePicker: BoneCalendarTimePicker!
     
     fileprivate let identifier = "BoneDayCell"
     fileprivate let headerIdentifier = "headerIdentifier"
@@ -104,19 +105,36 @@ class BoneCalendarView: UIView {
         self.footerView.onClickAction { (type) in
             switch type {
             case .clean:
-                self.dataSourceManager.cleanAllDate()
-                self.collectionView.reloadData()
+                if self.headerView.isSelect {
+                    self.timePicker.clean()
+                } else {
+                    self.dataSourceManager.cleanAllDate()
+                    self.collectionView.reloadData()
+                }
+            case .today:
+                if self.headerView.isSelect {
+                    self.timePicker.today()
+                } else {
+                    self.scrollToMonth(Date(), animated: true)
+                }
             case .confirm:
                 self.delegate?.calenadr(self, confirm: self.dataSourceManager.selectDates)
-            case .today:
-                self.scrollToMonth(Date(), animated: true)
             }
         }
         self.addSubview(self.footerView)
         
+        
+        self.headerView = BoneCalendarHeader(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 40))
+        self.headerView.timeSelectAction { (button) in
+            self.animate(isShow: button.isSelected)
+            self.footerView.reloadData(isSelect: button.isSelected)
+        }
+        self.addSubview(self.headerView)
+        
+        
         self.layout = BoneCalendarLayout(self.bounds.width)
         self.collectionView = UICollectionView(
-            frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height - self.footerView.frame.height),
+            frame: CGRect(x: 0, y: self.headerView.frame.maxY, width: self.bounds.width, height: self.bounds.height - self.footerView.frame.height - self.headerView.frame.height),
             collectionViewLayout: self.layout
         )
         self.collectionView.allowsSelection = true          // 允许用户选择
@@ -143,8 +161,33 @@ class BoneCalendarView: UIView {
         )
         self.addSubview(self.collectionView)
         
+        
+        // 时间选择器
+        self.timePicker = BoneCalendarTimePicker(frame: self.collectionView.frame)
+        self.timePicker.timeData = self.dataSourceManager.timeDatas
+        self.timePicker.selectTimeAction { (timeData) in
+            self.dataSourceManager.timeDatas = timeData
+            self.updata()
+        }
+
+        self.updata()
+        
         // 滑动到今日
         self.scrollToMonth(Date(), animated: false)
+    }
+    
+    /// 刷新
+    func reloadData() {
+        if self.showTime {
+            self.collectionView.frame.origin.y = self.headerView.frame.maxY
+            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height - self.headerView.frame.height
+            self.timePicker.setHeight = self.collectionView.frame.height
+        } else {
+            self.collectionView.frame.origin.y = 0
+            self.collectionView.frame.size.height = self.bounds.height - self.footerView.frame.height
+        }
+        self.headerView.reloadData()
+        self.footerView.reloadData(isSelect: self.headerView.isSelect)
     }
     
     // 滑动到当前月当前时间
@@ -163,6 +206,32 @@ class BoneCalendarView: UIView {
         if self.dataSourceManager.didSelectItemAtIndexPath(indexPath) {
             self.collectionView?.reloadData()
         }
+        self.updata()
+    }
+    
+    /// 动画
+    private func animate(isShow: Bool) {
+        if isShow {
+            self.timePicker.alpha = 0
+            self.addSubview(self.timePicker)
+            UIView.animate(withDuration: 0.2, animations: {
+                self.timePicker.alpha = 1
+            }) { (complete) in
+                self.collectionView.removeFromSuperview()
+            }
+        } else {
+            self.collectionView.alpha = 0
+            self.addSubview(self.collectionView)
+            UIView.animate(withDuration: 0.2, animations: {
+                self.collectionView.alpha = 1
+            }) { (complete) in
+                self.timePicker.removeFromSuperview()
+            }
+        }
+    }
+    
+    private func updata() {
+        self.headerView.text = self.dataSourceManager.currentDateInfo
     }
 }
 
@@ -190,7 +259,7 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.identifier, for: indexPath) as? BoneDayCell
         
         let (date,dayState) = dataSourceManager.dayState(indexPath)
-        cell?.dayLabel.backRoundColor = self.selectColor
+        cell?.dayLabel.backRoundColor = BoneCustomPopup.Color.select
         cell?.dayLabel.dayText = dayState.contains(.Today) ? "今" : dataSourceManager.dayString(date)
         
         // 不在本月
@@ -209,12 +278,12 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
         
         // 选中效果
         if dayState.contains(.Selected) {
-            cell?.dayLabel.textColor = self.selectColor
+            cell?.dayLabel.textColor = BoneCustomPopup.Color.select
         } else {
             if dayState.contains(.Today) {
-                cell?.dayLabel.textColor = self.selectColor
+                cell?.dayLabel.textColor = BoneCustomPopup.Color.select
             } else {
-                cell?.dayLabel.textColor = self.fontColor
+                cell?.dayLabel.textColor = BoneCustomPopup.Color.font
             }
         }
         return cell!

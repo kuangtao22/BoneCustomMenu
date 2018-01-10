@@ -15,10 +15,26 @@ protocol BoneCustomPopupDelegate {
 
 extension BoneCustomPopup {
     
+    /// 尺寸
     struct Size {
-        static var rowHeight: CGFloat = 45  /// 行高
+        /// 行高
+        static var rowHeight: CGFloat = 45
+        /// 字体大小
         static var font: CGFloat = 14
+        /// 左边宽度
         static var leftWidth = UIScreen.main.bounds.width * 0.3
+    }
+    
+    /// 颜色
+    struct Color {
+        /// 选中颜色
+        static var select = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
+        /// 字体颜色
+        static var font = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
+        /// 分割线颜色
+        static var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
+        /// 左列或表格的背景颜色
+        static var section = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
     }
 }
 
@@ -29,14 +45,6 @@ class BoneCustomPopup: UIView {
     private var screen_width = UIScreen.main.bounds.width
     private var screen_height = UIScreen.main.bounds.height
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     /// 背景
      lazy var backgroundView: UIView = {
@@ -61,6 +69,7 @@ class BoneCustomPopup: UIView {
 
 extension BoneCustomPopup {
 
+    /// 菜单按钮样式
     class ColumnBtn: UIButton {
         
         var normalColor: UIColor? {

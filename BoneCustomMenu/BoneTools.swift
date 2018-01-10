@@ -235,10 +235,10 @@ struct BoneTools {
     public func checkColor(_ code: String, alpha: CGFloat = 1) -> UIColor {
         var cString: String = code.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
         
-        if cString.characters.count < 6 {return UIColor.black}
+        if cString.count < 6 {return UIColor.black}
         if cString.hasPrefix("0X") {cString = cString.substring(from: cString.index(cString.startIndex, offsetBy: 2))}
         if cString.hasPrefix("#") {cString = cString.substring(from: cString.index(cString.startIndex, offsetBy: 1))}
-        if cString.characters.count != 6 {return UIColor.black}
+        if cString.count != 6 {return UIColor.black}
         var range: NSRange = NSMakeRange(0, 2)
         let rString = (cString as NSString).substring(with: range)
         range.location = 2

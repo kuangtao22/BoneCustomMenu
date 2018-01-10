@@ -9,15 +9,9 @@
 import UIKit
 
 class BoneCustomFiltersView: UIView {
+    
+    typealias Color = BoneCustomPopup.Color
 
-    var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
-    
-    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
-    
-    var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-    
-    var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
-    
     var setHeight: CGFloat? {
         didSet {
             guard let height = self.setHeight else {
@@ -66,7 +60,7 @@ class BoneCustomFiltersView: UIView {
         self.collectionView.allowsSelection = true          // 允许用户选择
         self.collectionView.allowsMultipleSelection = true  // 允许用户多选
         self.collectionView.alwaysBounceVertical = true
-        self.collectionView.backgroundColor = self.sectionColor
+        self.collectionView.backgroundColor = Color.section
         // 水平居中collectionView两边
         self.collectionView.contentInset.left = 0
         self.collectionView.contentInset.right = 0
@@ -121,11 +115,8 @@ extension BoneCustomFiltersView: BoneCustomMenuProtocol {
     
     func reloadData() {
         self.dataSource.initData()
-
-        self.footView.selectColor = self.selectColor
-        self.footView.fontColor = self.fontColor
-        self.footView.line = self.line
         self.collectionView.reloadData()
+        self.footView.reloadData()
     }
 }
 
@@ -141,12 +132,6 @@ extension BoneCustomFiltersView: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.identifier, for: indexPath) as? BoneFilterCollectionCell
-        let selectIcon = UIImage(named: "BoneCustomIcon.bundle/select")?.color(self.selectColor)
-        cell?.button.setImage(selectIcon, for: UIControlState.selected)
-        cell?.button.lineColor = self.line
-        cell?.button.selectColor = self.selectColor
-        cell?.button.setTitleColor(self.fontColor, for: UIControlState.normal)
-        cell?.button.setTitleColor(self.selectColor, for: UIControlState.selected)
         cell?.button.setTitle(self.dataSource.rowTitle(indexPath), for: UIControlState.normal)
         cell?.button.isSelected = self.dataSource.rowState(indexPath)
         return cell!

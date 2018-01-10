@@ -100,7 +100,7 @@ extension String {
     
     /// 去除空格
     var delSpace: String {
-        get { return String(self.characters.filter { $0 != " " }) }
+        get { return String(self.filter { $0 != " " }) }
     }
     
     /// 判断整型
@@ -131,10 +131,6 @@ extension String {
         get { return self.removingPercentEncoding ?? "" }
     }
     
-    /// 计算字符串字数
-    var count: Int {
-        get { return self.characters.count }
-    }
     
     /// 截取字符串
     ///

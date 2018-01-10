@@ -47,14 +47,16 @@ class ViewController: UIViewController {
 //            BoneMenuIndexPath(column: 3, section: 0, row: 2),
 //            BoneMenuIndexPath(column: 4, section: 1, row: 2)
 //        ]
+//        self.menuView.lineColor = UIColor.red //
         self.menuView.selectColor = UIColor(red: 244/255, green: 92/255, blue: 76/255, alpha: 1)
-        
+        self.menuView.fontSize = 14
         self.view.addSubview(menuView)
         
-        menuView.reloadData()
-        
-        menuView.calendarView.selectDates = self.dates
-        menuView.calendarView.selectMaxDay = 20
+        self.menuView.reloadData()
+        self.menuView.calendarView.maxDate = date("2018-01-20")
+        self.menuView.calendarDates = self.dates
+        self.menuView.calendarView.selectMaxDay = 20
+        self.menuView.calendarView.selectType = .section
     }
 
     override func didReceiveMemoryWarning() {

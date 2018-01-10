@@ -27,33 +27,41 @@ class BoneCustomMenu: BoneCustomPopup {
         didSet { self.source.dataSource = self.dataSource }
     }
     
-    /// 字体颜色
-    var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
-    
-    var leftWidth: CGFloat? {
-        didSet {
-            if let leftWidth = self.leftWidth {
-                BoneCustomPopup.Size.leftWidth = leftWidth
-            }
-        }
+    /// 字体大小
+    var fontSize: CGFloat {
+        get { return Size.font }
+        set { Size.font = newValue }
     }
+    
+    /// 字体颜色
+    var fontColor: UIColor {
+        get { return Color.font }
+        set { Color.font = newValue }
+    }
+    
+    /// 左边宽度
+    var leftWidth: CGFloat {
+        get { return Size.leftWidth }
+        set { Size.leftWidth = newValue }
+    }
+    
     
     /// 选中颜色
-    var selectColor: UIColor? {
-        didSet {
-            guard let color = self.selectColor else {
-                return
-            }
-            self.calendarView.selectColor = color
-            self.listView.selectColor = color
-            self.filterView.selectColor = color
-            self.filterListView.selectColor = color
-        }
+    var selectColor: UIColor {
+        get { return Color.select }
+        set { Color.select = newValue }
     }
     
-    var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+    var sectionColor: UIColor {
+        get { return Color.section }
+        set { Color.section = newValue }
+    }
     
-    var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
+    /// 分割线颜色
+    var lineColor: UIColor {
+        get { return Color.line }
+        set { Color.line = newValue }
+    }
     
     
     
@@ -109,11 +117,8 @@ class BoneCustomMenu: BoneCustomPopup {
     /// 初始化
     private func initializa() {
         self.source = BoneCustomMenuSource(menu: self)
-        let line = UIView(frame: CGRect(x: 0, y: self.frame.height - 0.5, width: self.frame.width, height: 0.5))
-        line.backgroundColor = self.line
-        self.addSubview(line)
-        
-        self.scrollView = UIScrollView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.frame.width, height: self.defaultHeight)))
+        self.backgroundColor = UIColor.white
+        self.scrollView = UIScrollView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.frame.width, height: self.frame.height - 1)))
         self.scrollView.backgroundColor = UIColor.white
         self.addSubview(self.scrollView)
         
@@ -128,6 +133,7 @@ class BoneCustomMenu: BoneCustomPopup {
         self.backgroundView.addGestureRecognizer(gesture)
     }
     
+    /// 列表
     lazy var listView: BoneCustomListsView = {
         let view = BoneCustomListsView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
@@ -135,14 +141,15 @@ class BoneCustomMenu: BoneCustomPopup {
         return view
     }()
     
+    /// 表格型筛选
     lazy var filterView: BoneCustomFiltersView = {
         let view = BoneCustomFiltersView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
-        view.line = self.line
         view.isHidden = true
         return view
     }()
     
+    /// 列表型筛选
     lazy var filterListView: BoneCustomFilterListView = {
         let view = BoneCustomFilterListView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
         view.delegate = self
@@ -150,6 +157,7 @@ class BoneCustomMenu: BoneCustomPopup {
         return view
     }()
     
+    /// 日历
     lazy var calendarView: BoneCalendarView = {
         let calenadr = BoneCalendarView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight), type: .section)
         calenadr.delegate = self
@@ -195,6 +203,7 @@ class BoneCustomMenu: BoneCustomPopup {
             
         case .calendar:
             self.popupAction(button.isSelected)
+            self.calendarView.reloadData()
         }
     }
     
@@ -367,6 +376,16 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 self.scrollView.contentSize.width = menuBtn.frame.origin.x + menuBtn.frame.width
             }
         }
+    }
+    
+    override func draw(_ rect: CGRect) {
+        BoneCustomPopup.Color.line.setStroke()
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.close()
+        path.stroke()
+        super.draw(rect)
     }
 }
 

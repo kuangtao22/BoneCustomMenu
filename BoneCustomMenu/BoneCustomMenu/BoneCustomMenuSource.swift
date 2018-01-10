@@ -10,7 +10,6 @@ import UIKit
 
 class BoneCustomMenuSource {
 
-    
     /// 当前选中菜单
     var currentSelect = 0
     

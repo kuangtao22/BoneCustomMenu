@@ -9,18 +9,7 @@
 import UIKit
 
 class BoneCustomFilterListView: UIView {
-    /// 字体颜色
-    var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
-    /// 选中颜色
-    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
-    ///
-    var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-    
-    var line = UIColor(red: 234/255, green: 234/255, blue: 234/255, alpha: 1)
 
-    /// 行高
-    var rowHeight: CGFloat = 45
-    
     /// 设置高度
     var setHeight: CGFloat? {
         didSet {
@@ -64,11 +53,11 @@ class BoneCustomFilterListView: UIView {
             frame: CGRect(x: 0, y: 0, width: self.dataSource.leftWidth, height: self.frame.height - self.footView.frame.height),
             style: UITableViewStyle.plain
         )
-        self.leftTable.rowHeight = self.rowHeight
+        self.leftTable.rowHeight = BoneCustomPopup.Size.rowHeight
         self.leftTable.delegate = self
         self.leftTable.dataSource = self
         self.leftTable.separatorColor = UIColor.clear   // 隐藏分割线
-        self.leftTable.backgroundColor = self.sectionColor
+        self.leftTable.backgroundColor = BoneCustomPopup.Color.section
         self.addSubview(self.leftTable)
         
         self.rightTable = UITableView(
@@ -114,10 +103,7 @@ extension BoneCustomFilterListView: BoneCustomMenuProtocol {
             self.leftTable.reloadData()
         }
         self.rightTable.reloadData()
-
-        self.footView.selectColor = self.selectColor
-        self.footView.fontColor = self.fontColor
-        self.footView.line = self.line
+        self.footView.reloadData()
     }
 }
 
@@ -135,33 +121,19 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         let isTwoCol = self.dataSource.isTwoCol
         let identifier = "FilterListCell\(indexPath.row)\(isLeft)"
         
-        var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneCustomFilterCell
+        var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneListsCell
         if cell == nil {
-            cell = BoneCustomFilterCell(identifier, listLeftWidth: self.dataSource.leftWidth)
-            cell?.rowHeight = self.rowHeight
-            cell?.textLabel?.textColor = self.fontColor
-            cell?.selectColor = self.selectColor
-            cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
-            cell?.fontColor = self.fontColor
+            cell = BoneListsCell(style: .default, reuseIdentifier: identifier)
         }
-        cell?.isLeft = isLeft
-        
         if isLeft {
-            if isTwoCol {
-                let isSelect = self.dataSource.sectionState(indexPath.row)
-                cell?.isSelect = isSelect
-                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
-                cell?.selectView1.isHidden = !isSelect
-                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
-                cell?.num = self.dataSource.rowSumFor(indexPath.row)
-                cell?.numLabel.isHidden = false
-                cell?.backgroundColor = isSelect ? UIColor.white : self.sectionColor
-            }
+            let isSelect = self.dataSource.sectionState(indexPath.row)
+            cell?.set(isLeft: isLeft, isSelect: isSelect, isTwo: isTwoCol)
+            cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
+            cell?.num = self.dataSource.rowSumFor(indexPath.row)
         } else {
             let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
             let isSelect = self.dataSource.rowState(indexPath)
-            cell?.selectView2.isHidden = !isSelect
-            cell?.selectView1.isHidden = isTwoCol ? true : !isSelect
+            cell?.set(isLeft: isLeft, isSelect: isSelect, isTwo: isTwoCol)
             cell?.textLabel?.text = self.dataSource.rowTitle(indexPath)
         }
         return cell!

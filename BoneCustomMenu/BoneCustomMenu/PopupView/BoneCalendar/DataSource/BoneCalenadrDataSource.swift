@@ -10,9 +10,52 @@ import UIKit
 
 extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     
+    /// 当前时间内容
+    var currentDateInfo: String {
+        get {
+            let formatter = DateFormatter()
+            
+            switch self.selectionType {
+            case .none:
+                return "当前日历不可用"
+            case .single:
+                if let date = self.selectDates.first {
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    let time = formatter.string(from: date)
+                    return String(format: "时间: %@", time)
+                }
+                return "请选择时间"
+            case .mutable:
+                return String(format: "已选择%d天", self.selectDates.count)
+            case .section:
+                if self.selectDates.count > 0 {
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm"
+                    let start = formatter.string(from: self.selectDates[0])
+                    let end = formatter.string(from: self.selectDates[self.selectDates.count - 1])
+                    return String(format: "时间: %@ 至 %@", start, end)
+                }
+                return "请选择时间"
+            }
+        }
+    }
+    
     var selectDates: [Date] {
         get {
-            return self.indexPathFotDates()
+            let dates = self.indexPathFotDates()
+            if self.selectionType == .section {
+                if dates.count > 0 {
+                    var start = self.calendar.dateComponents([.year,.month, .day, .hour,.minute], from: dates[0])
+                    start.hour = self.timeDatas.start.hour
+                    start.minute = self.timeDatas.start.minute
+                    
+                    var end = self.calendar.dateComponents([.year,.month, .day, .hour,.minute], from: dates[dates.count - 1])
+                    end.hour = self.timeDatas.end.hour
+                    end.minute = self.timeDatas.end.minute
+                    return [self.calendar.date(from: start)!, self.calendar.date(from: end)!]
+                }
+                
+            }
+            return dates
         }
         set {
             guard newValue.count > 0 else {
@@ -37,45 +80,52 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
         }
     }
     
+    /// 时间模型
+    struct TimeMode {
+        /// 开始时间
+        var start: Mode
+        /// 结束时间
+        var end: Mode
+        struct Mode {
+            var hour: Int
+            var minute: Int
+        }
+    }
     
     
     
     var selectMaxDay: Int {
-        get {
-            return self.maxDay
-        }
-        set {
-            self.maxDay = newValue
-        }
+        get { return self.maxDay }
+        set { self.maxDay = newValue }
     }
     
     /// 日历开始的日期, 计算属性
     var startDate: Date {
         get {
-            return firstDate
+            return self.firstDate
         }
         set {
-            if firstDate != nil && (newValue == firstDate){
+            if self.firstDate != nil && (newValue == self.firstDate){
                 return
             }
             
-            if lastDate != nil{
-                let result = newValue.compare(lastDate)
+            if self.lastDate != nil{
+                let result = newValue.compare(self.lastDate)
                 if result == .orderedDescending {
                     fatalError("startDate must smaller than endDate")
                 }
             }
             
-            firstDate = clampDate(date: newValue, toComponents: [.year,.month,.day])
-            firstDateMonthBegainDate = clampDate(date: newValue, toComponents: [.month,.year])
-            if lastDate != nil{
+            self.firstDate = self.clampDate(date: newValue, toComponents: [.year,.month,.day])
+            self.firstDateMonthBegainDate = self.clampDate(date: newValue, toComponents: [.month,.year])
+            if self.lastDate != nil{
                 let today = Date()
                 let result1 = today.compare(newValue)
-                let result2 = today.compare(lastDate)
+                let result2 = today.compare(self.lastDate)
                 if result1 != .orderedAscending && result2 != .orderedDescending{
-                    todayIndex = indexPathForRowAtDate(today)
+                    self.todayIndex = self.indexPathForRowAtDate(today)
                 } else {
-                    todayIndex = nil
+                    self.todayIndex = nil
                 }
             }
         }
@@ -84,11 +134,11 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     /// 日历结束的日期, 计算属性
     var endDate: Date {
         set{
-            if lastDate != nil && (newValue == lastDate){
+            if self.lastDate != nil && (newValue == self.lastDate){
                 return
             }
-            if firstDate != nil {
-                let result = firstDate.compare(newValue)
+            if self.firstDate != nil {
+                let result = self.firstDate.compare(newValue)
                 if result == .orderedDescending {
                     fatalError("startDate must smaller than endDate")
                 }
@@ -97,34 +147,34 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
             components.hour = 23
             components.minute = 59
             components.second = 59
-            lastDate = self.calendar.date(from: components)
+            self.lastDate = self.calendar.date(from: components)
             let firstOfMonth = self.clampDate(date: newValue, toComponents: [.month,.year])
             var offsetComponents = DateComponents()
             offsetComponents.month = 1
 //            let temp = (self.calendar as NSCalendar).date(byAdding: offsetComponents, to: firstOfMonth, options: .wrapComponents)!
-            lastDateMonthEndDate = firstOfMonth//Date(timeIntervalSince1970: temp.timeIntervalSince1970 - 1)
+            self.lastDateMonthEndDate = firstOfMonth//Date(timeIntervalSince1970: temp.timeIntervalSince1970 - 1)
 
-            if firstDate != nil{
+            if self.firstDate != nil{
                 let today = Date()
-                let result1 = today.compare(firstDate)
+                let result1 = today.compare(self.firstDate)
                 let result2 = today.compare(newValue)
                 if result1 != .orderedAscending && result2 != .orderedDescending {
-                    todayIndex = indexPathForRowAtDate(today)
+                    self.todayIndex = indexPathForRowAtDate(today)
                 } else {
-                    todayIndex = nil
+                    self.todayIndex = nil
                 }
             }
         }
         get{
-            return lastDate
+            return self.lastDate
         }
     }
     
     //多少年
     var yearCount: Int {
         get {
-            let startYear = (calendar as NSCalendar).components(.year,from: BoneCalenadrDataSource.defaultMinDate, to: firstDateMonthBegainDate, options: .wrapComponents).year ?? 0
-            let endYear = (calendar as NSCalendar).components(.year,from: BoneCalenadrDataSource.defaultMinDate, to: lastDateMonthEndDate,options: .wrapComponents).year ?? 0
+            let startYear = (self.calendar as NSCalendar).components(.year,from: BoneCalenadrDataSource.defaultMinDate, to: self.firstDateMonthBegainDate, options: .wrapComponents).year ?? 0
+            let endYear = (self.calendar as NSCalendar).components(.year,from: BoneCalenadrDataSource.defaultMinDate, to: self.lastDateMonthEndDate,options: .wrapComponents).year ?? 0
             return endYear - startYear + 1
         }
     }
@@ -134,30 +184,30 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
         get{
             let calendar = self.calendar as NSCalendar
 //            let month = calendar.components(.month, from: self.startDate, to: self.endDate, options: .wrapComponents).month ?? 0
-            let month = calendar.components(.month, from: firstDateMonthBegainDate, to: lastDateMonthEndDate, options: .wrapComponents).month ?? 0
+            let month = calendar.components(.month, from: self.firstDateMonthBegainDate, to: self.lastDateMonthEndDate, options: .wrapComponents).month ?? 0
             return month + 1
         }
     }
     
     // 一星期多少天
     var weekCount: Int {
-        get { return calendar.maximumRange(of: .weekday)?.count ?? 0 }
+        get { return self.calendar.maximumRange(of: .weekday)?.count ?? 0 }
     }
     
     // 一个月多少天
     func daysInMonth(_ monthIndex: Int) -> Int {
-        return weeksInMonth(monthIndex) * weekCount
+        return self.weeksInMonth(monthIndex) * self.weekCount
     }
     
     /// 输出年
     func yearString(_ item: Int) -> Int {
-        let firstYear = self.calendar.component(.year, from: firstDateMonthBegainDate)
+        let firstYear = self.calendar.component(.year, from: self.firstDateMonthBegainDate)
         return item + firstYear
     }
     
     func itemAtDate(_ date: Date) -> Int {
         let year = Calendar.current.dateComponents([.year], from: date).year ?? 0
-        let firstYear = self.calendar.component(.year, from: firstDateMonthBegainDate)
+        let firstYear = self.calendar.component(.year, from: self.firstDateMonthBegainDate)
         return year - firstYear
     }
     
@@ -173,7 +223,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     
     // 每天的信息
     func dayState(_ indexPath: IndexPath) -> (Date, DayStateOptions) {
-        let monthInfo = getMonthInfo(indexPath.section)
+        let monthInfo = self.getMonthInfo(indexPath.section)
         return monthInfo.getDayInfo(indexPath.row, selectedType: self.selectionType)
     }
     
@@ -184,7 +234,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
     
     // 格式化日期
     func dateString(_ fromDate: Date) -> String {
-        return formatter.string(from: fromDate)
+        return self.formatter.string(from: fromDate)
     }
     
     //某个section的对应月份有几个星期
@@ -199,7 +249,7 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
         var offset = DateComponents()
         offset.month = monthIndex
         let calendar = (self.calendar as NSCalendar)
-        return calendar.date(byAdding: offset, to: firstDateMonthBegainDate, options: NSCalendar.Options(rawValue: 0))!
+        return calendar.date(byAdding: offset, to: self.firstDateMonthBegainDate, options: NSCalendar.Options(rawValue: 0))!
     }
     
     /// 获取当前indexPath时间
@@ -307,6 +357,20 @@ extension BoneCalenadrDataSource: BoneCalenadrDataSourceProtocol {
 }
 
 class BoneCalenadrDataSource {
+    
+    /// 设置日期编码
+    var formatter: DateFormatter
+    
+    /// 代理方法
+    var delegate: BoneCalenadrDataSourceDelegate?
+    
+    /// 时间范围，默认（开始时间00:00,结束时间23:59）
+    var timeDatas = TimeMode(start: TimeMode.Mode(hour: 00, minute: 00), end: TimeMode.Mode(hour: 23, minute: 59))
+    
+    /// 选择模式
+    var selectionType: SelectionType = .none
+    
+    
     /// 默认最小最大年月
     fileprivate static let defaultMinDate = Date(timeIntervalSince1970: -28800)
     fileprivate static let defaultMaxDate = Date(timeIntervalSince1970: 2145801599)
@@ -316,6 +380,7 @@ class BoneCalenadrDataSource {
     
     /// 日历结束的日期
     fileprivate var lastDate: Date!
+    
     
     
     /// 最大选中日期范围
@@ -340,24 +405,16 @@ class BoneCalenadrDataSource {
     /// 选中的日子所在的位置的数组，单选保持0-1个值，多选 0-N个值,节选 0-2个值
     fileprivate var selectedIndexPaths = [IndexPath]()
     
-    /// 设置日期编码
-    var formatter: DateFormatter
-    
-    var delegate: BoneCalenadrDataSourceDelegate?
-    
-    /// 选择模式
-    public var selectionType: SelectionType = .none
-    
 
     //使用默认的开始和结束时间
-    public convenience init(){
+    convenience init() {
         self.init(
             startDate: BoneCalenadrDataSource.defaultMinDate,
             endDate: BoneCalenadrDataSource.defaultMaxDate
         )
     }
     //使用自定义的开始和结束时间
-    public init(startDate: Date, endDate: Date) {
+    init(startDate: Date, endDate: Date) {
         
         let result = startDate.compare(endDate)
         // 降序
@@ -368,24 +425,21 @@ class BoneCalenadrDataSource {
         self.startDate = startDate
         self.endDate = endDate
         formatter.dateFormat = "yyyy年MM月"
-        
-        
     }
     
     fileprivate func getMonthInfo(_ section: Int) -> MonthInfoCache {
         if self.monthInfoCache?.section != section{
             //每月1号那天
             let firstOfMonth =  self.firstOfMonthForSection(section)
-            
+            let nsCalendar = (self.calendar as NSCalendar)
             //需要填补的天数
-            let ordinalityOfFirstDay =  (self.calendar as NSCalendar).component(.weekday, from: firstOfMonth) - 1
+            let ordinalityOfFirstDay =  nsCalendar.component(.weekday, from: firstOfMonth) - 1
             
             var offset = DateComponents()
             offset.day = -ordinalityOfFirstDay
             
-            let placeHolderFirstOfMonth = (self.calendar as NSCalendar).date(byAdding: offset, to: firstOfMonth, options: NSCalendar.Options(rawValue: 0))!
-            let nsCalendar = (calendar as NSCalendar)
-            
+            let placeHolderFirstOfMonth = nsCalendar.date(byAdding: offset, to: firstOfMonth, options: NSCalendar.Options(rawValue: 0))!
+
             //这个月天数
             let ordinalityOfLastDay = nsCalendar.range(of: .day, in: .month, for: firstOfMonth).length
             
@@ -476,7 +530,7 @@ class BoneCalenadrDataSource {
         default:
             for indexPath in selectedIndexPaths {
                 if indexPath.section == section{
-                    monthInfoCache?.selectedIndex.insert(indexPath.row)
+                    self.monthInfoCache?.selectedIndex.insert(indexPath.row)
                 }
             }
         }

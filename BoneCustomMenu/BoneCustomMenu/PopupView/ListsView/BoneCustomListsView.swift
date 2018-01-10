@@ -12,7 +12,6 @@ class BoneCustomListsView: UIView {
     
     var fontColor = UIColor(red: 96/255, green: 96/255, blue: 96/255, alpha: 1)
     
-    var selectColor = UIColor(red: 0/255, green: 139/255, blue: 254/255, alpha: 1)
     ///
     var sectionColor = UIColor(red: 250/255, green: 250/255, blue: 250/255, alpha: 1)
     /// 行高
@@ -124,25 +123,16 @@ extension BoneCustomListsView: UITableViewDelegate, UITableViewDataSource {
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? BoneListsCell
         if cell == nil {
             cell = BoneListsCell(style: .default, reuseIdentifier: identifier)
-            cell?.textLabel?.textColor = self.fontColor
-            cell?.backgroundColor = isLeft ? self.sectionColor : UIColor.white
-            cell?.selectColor = self.selectColor
-            cell?.fontColor = self.fontColor
         }
+
         if isLeft {
-            if isTwoCol {
-                let isSelect = self.dataSource.sectionState(indexPath.row)
-                cell?.textLabel?.textColor = isSelect ? self.selectColor : self.fontColor
-                cell?.selectView1.isHidden = !isSelect
-                cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
-            }
-            
+            let isSelect = self.dataSource.sectionState(indexPath.row)
+            cell?.set(isLeft: isLeft, isSelect: isSelect, isTwo: isTwoCol)
+            cell?.textLabel?.text = self.dataSource.sectionTitle(indexPath.row)
         } else {
+            let indexPath = IndexPath(row: indexPath.row, section: self.dataSource.selectSection)
             let isSelect = self.dataSource.rowState(indexPath.row)
-            cell?.selectView2.isHidden = !isSelect
-            if !isTwoCol {
-                cell?.selectView1.isHidden = !isSelect
-            }
+            cell?.set(isLeft: isLeft, isSelect: isSelect, isTwo: isTwoCol)
             cell?.textLabel?.text = self.dataSource.rowTitle(indexPath.row)
         }
         return cell!
