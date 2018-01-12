@@ -9,6 +9,8 @@
 import UIKit
 
 class BoneListsCell: UITableViewCell {
+    
+    var openNum: Bool = false
 
     fileprivate var isLeft = true
     fileprivate var isSelect = true
@@ -27,7 +29,7 @@ class BoneListsCell: UITableViewCell {
             self.numLabel.textColor = self.textLabel?.textColor.withAlphaComponent(0.5)
             self.numLabel.layer.borderColor = self.numLabel.textColor.cgColor
             self.backgroundColor = isLeft ? Color.section : UIColor.white
-            self.accessoryView = self.numLabel
+            self.accessoryView = self.openNum ? self.numLabel : nil
             self.selectView1.isHidden = !isSelect
             self.backgroundColor = isSelect ? UIColor.white : Color.section
         } else {
@@ -52,6 +54,7 @@ class BoneListsCell: UITableViewCell {
         self.accessoryType = UITableViewCellAccessoryType.none
         self.selectionStyle = UITableViewCellSelectionStyle.none
         self.textLabel?.textColor = Color.font
+        self.textLabel?.numberOfLines = 2
         self.textLabel?.font = UIFont.systemFont(ofSize: 14)
         self.contentView.addSubview(self.selectView1)
     }

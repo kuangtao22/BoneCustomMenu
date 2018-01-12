@@ -125,6 +125,7 @@ extension BoneCustomFilterListView: UITableViewDelegate, UITableViewDataSource {
         if cell == nil {
             cell = BoneListsCell(style: .default, reuseIdentifier: identifier)
         }
+        cell?.openNum = true
         if isLeft {
             let isSelect = self.dataSource.sectionState(indexPath.row)
             cell?.set(isLeft: isLeft, isSelect: isSelect, isTwo: isTwoCol)
