@@ -78,7 +78,7 @@ class BoneCustomMenu: BoneCustomPopup {
     
     /// 日历时间
     var calendarDates: [Date] {
-        get { return self.calendarView.selectDates ?? [] }
+        get { return self.calendarView.selectDates }
         set { self.calendarView.selectDates = newValue }
     }
     

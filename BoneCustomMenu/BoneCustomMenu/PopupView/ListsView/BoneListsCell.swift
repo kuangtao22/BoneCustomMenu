@@ -97,8 +97,8 @@ class BoneListsCell: UITableViewCell {
     override func draw(_ rect: CGRect) {
         if self.isLeft {
             Color.line.setStroke()
-            let path = UIBezierPath()
             if self.isSelect {
+                let path = UIBezierPath()
                 path.move(to: CGPoint(x: rect.minX, y: rect.minY))
                 path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
                 path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
@@ -106,6 +106,7 @@ class BoneListsCell: UITableViewCell {
                 path.close()
                 path.stroke()
             } else {
+                let path = UIBezierPath()
                 path.move(to: CGPoint(x: rect.maxX, y: rect.minY))
                 path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
                 path.close()

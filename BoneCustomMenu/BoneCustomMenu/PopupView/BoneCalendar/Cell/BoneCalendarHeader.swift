@@ -40,7 +40,7 @@ class BoneCalendarHeader: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor(red: 0.98, green: 0.98, blue: 0.98, alpha: 1)
         
         let timeIcon = UIImageView(image: UIImage(named: "BoneCustomIcon.bundle/calendar_time"))
         timeIcon.center.y = self.center.y
@@ -62,6 +62,7 @@ class BoneCalendarHeader: UIView {
         self.textLabel = UILabel(frame: CGRect(x: timeIcon.frame.maxX + 5, y: 0, width: self.button.frame.origin.x - timeIcon.frame.maxX, height: 40))
         self.textLabel.font = UIFont.systemFont(ofSize: 12)
         self.textLabel.textColor = UIColor.gray
+        self.textLabel.numberOfLines = 2
         self.textLabel.adjustsFontSizeToFitWidth = true
         self.addSubview(self.textLabel)
 

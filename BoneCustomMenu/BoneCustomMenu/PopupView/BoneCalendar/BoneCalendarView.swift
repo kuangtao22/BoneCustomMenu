@@ -107,7 +107,7 @@ class BoneCalendarView: UIView {
         self.dataSourceManager.delegate = self
         self.dataSourceManager.selectionType = type
         
-        self.footerView = BoneCalendarFooter(frame: CGRect(x: 0, y: self.frame.height - 43, width: self.frame.width, height: 43))
+        self.footerView = BoneCalendarFooter(frame: CGRect(x: 0, y: self.frame.height - 45, width: self.frame.width, height: 45))
         self.footerView.onClickAction { (type) in
             switch type {
             case .clean:
@@ -272,7 +272,7 @@ extension BoneCalendarView: UICollectionViewDelegate, UICollectionViewDataSource
         
         // 不在本月
         if dayState.contains(.NotThisMonth) {
-            cell?.dayLabel.textColor = UIColor.lightGray
+            cell?.dayLabel.textColor = UIColor.clear
             cell?.dayLabel.roundType = .none
             return cell!
         }
