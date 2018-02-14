@@ -81,7 +81,7 @@ extension ViewController: BoneMenuDataSource {
     /// - Parameter menu
     /// - Returns
     func numberOfColumns(_ menu: BoneCustomMenu) -> Int {
-        return 5
+        return 6
     }
     
     /// 返回 boneMenu 第column列有多少行
@@ -136,8 +136,10 @@ extension ViewController: BoneMenuDataSource {
             return BoneMenuColumnInfo(title: "是否买单", type: .button)
         } else if column == 3 {
             return BoneMenuColumnInfo(title: "筛选", type: .filter)
+        } else if column == 4 {
+            return BoneMenuColumnInfo(title: "一级单选", type: .list)
         }
-        return BoneMenuColumnInfo(title: "一级单选", type: .list)
+        return BoneMenuColumnInfo(title: "自定义", type: .custom)
     }
     
     
@@ -198,6 +200,13 @@ extension ViewController: BoneMenuDataSource {
             return 450
         }
         return 400
+    }
+    
+    func boneMenu(_ menu: BoneCustomMenu, customViewForSectionAt column: Int) -> UIView? {
+        print("column:\(column)")
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 300))
+        view.backgroundColor = UIColor.red
+        return view
     }
 }
 

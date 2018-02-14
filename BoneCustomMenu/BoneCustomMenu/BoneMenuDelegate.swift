@@ -28,6 +28,7 @@ enum BoneMenuColumnType {
     case filterList     // 多选列表
     case filter         // 筛选菜单
     case calendar       // 日历
+    case custom         // 自定义
 }
 
 /// 筛选类型
@@ -110,6 +111,13 @@ protocol BoneMenuDataSource {
     
     
     
+    /// 自定义UIView
+    ///
+    /// - Parameters:
+    ///   - menu:
+    ///   - column:
+    /// - Returns:
+    func boneMenu(_ menu: BoneCustomMenu, customViewForSectionAt column: Int) -> UIView?
     
     
     /// 返回 boneMenu filter section选择类型
@@ -183,6 +191,10 @@ extension BoneMenuDataSource {
     
     func boneMenu(_ menu: BoneCustomMenu, filterDidForSectionAt indexPath: BoneMenuIndexPath) -> BoneMenuSelectType? {
         return BoneMenuSelectType.only
+    }
+    
+    func boneMenu(_ menu: BoneCustomMenu, customViewForSectionAt column: Int) -> UIView? {
+        return nil
     }
 }
 

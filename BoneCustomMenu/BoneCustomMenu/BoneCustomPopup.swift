@@ -109,7 +109,7 @@ extension BoneCustomPopup {
                     self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)
                 }
                 switch self.type {
-                case .list, .filterList:
+                case .list, .filterList, .custom:
                     self.animateAction(self.isSelected)
                 default:
                     break
@@ -160,7 +160,7 @@ extension BoneCustomPopup {
             case .filter:
                 let image = UIImage(named: "BoneCustomIcon.bundle/filter")?.color(color)
                 return image
-            case .list, .filterList:
+            case .list, .filterList, .custom:
                 let image = UIImage(named: "BoneCustomIcon.bundle/pointer")?.color(color)
                 return image
             case .calendar:

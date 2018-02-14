@@ -42,6 +42,11 @@ class BoneCustomMenuSource {
         return self.dataSource?.boneMenu(self.menu, typeForColumnAt: column) ?? defaultInfo
     }
     
+    /// 获取自定义view
+    func customView(_ column: Int) -> UIView? {
+        return self.dataSource?.boneMenu(self.menu, customViewForSectionAt: column)
+    }
+    
     /// 过滤器，可把不存在的indexPaht剔除
     func filterIndexPaths(_ indexPath: [BoneMenuIndexPath]) -> [BoneMenuIndexPath] {
         return indexPath.filter {

@@ -45,6 +45,9 @@ class BoneCustomMenu: BoneCustomPopup {
         set { Size.leftWidth = newValue }
     }
     
+    var menuFontColor: UIColor?
+    
+    var menuSelectColor: UIColor?
     
     /// 选中颜色
     var selectColor: UIColor {
@@ -63,7 +66,15 @@ class BoneCustomMenu: BoneCustomPopup {
         set { Color.line = newValue }
     }
     
-    
+    /// 是否显示菜单
+    var showMenu: Bool? {
+        didSet {
+            guard let showMenu = self.showMenu else {
+                return
+            }
+            self.popupAction(showMenu)
+        }
+    }
     
     /// 所有选中索引
     var selectIndexPaths: [BoneMenuIndexPath] {
@@ -86,6 +97,9 @@ class BoneCustomMenu: BoneCustomPopup {
     var selectAllTitles: [String] {
         get { return self.source.selectAllTitles }
     }
+    
+    /// 添加底部线
+    var isBottomLine: Bool = true
     
     /// 是否开启筛选栏
     var isFilterBar: Bool = false
@@ -119,7 +133,6 @@ class BoneCustomMenu: BoneCustomPopup {
         self.source = BoneCustomMenuSource(menu: self)
         self.backgroundColor = UIColor.white
         self.scrollView = UIScrollView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.frame.width, height: self.frame.height - 1)))
-        self.scrollView.backgroundColor = UIColor.white
         self.addSubview(self.scrollView)
         
         self.popupDelegate = self
@@ -128,10 +141,18 @@ class BoneCustomMenu: BoneCustomPopup {
         self.menuView.addSubview(self.filterView)
         self.menuView.addSubview(self.calendarView)
         self.menuView.addSubview(self.filterListView)
+        self.menuView.addSubview(self.customView)
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(self.backgroundTapped(sender:)))
         self.backgroundView.addGestureRecognizer(gesture)
     }
+    
+    /// 自定义
+    lazy var customView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: -self.source.menuHeight, width: self.menuView.frame.width, height: self.source.menuHeight))
+        view.backgroundColor = UIColor.white
+        return view
+    }()
     
     /// 列表
     lazy var listView: BoneCustomListsView = {
@@ -181,6 +202,7 @@ class BoneCustomMenu: BoneCustomPopup {
         self.listView.isHidden = (type != .list)
         self.calendarView.isHidden = (type != .calendar)
         self.filterListView.isHidden = (type != .filterList)
+        self.customView.isHidden = (type != .custom)
         
         self.source.currentSelect = tag
         switch type {
@@ -204,13 +226,20 @@ class BoneCustomMenu: BoneCustomPopup {
         case .calendar:
             self.popupAction(button.isSelected)
             self.calendarView.reloadData()
+            
+        case .custom:
+            self.popupAction(button.isSelected)
+            if let view = self.source.customView(tag) {
+                for view in self.customView.subviews {
+                    view.removeFromSuperview()
+                }
+                self.customView.addSubview(view)
+            }
         }
     }
     
     
     /// 获取菜单类型
-    ///
-    /// -
     private func getView(type: BoneMenuColumnType) -> UIView {
         switch type {
         case .button: return UIView()
@@ -218,6 +247,7 @@ class BoneCustomMenu: BoneCustomPopup {
         case .filter: return self.filterView
         case .filterList: return self.filterListView
         case .list: return self.listView
+        case .custom: return self.customView
         }
     }
     
@@ -233,15 +263,14 @@ class BoneCustomMenu: BoneCustomPopup {
         let height = self.source.menuHeight
         if let view = view as? BoneCustomFiltersView {
             view.setHeight = height
-        }
-        if let view = view as? BoneCalendarView {
+        } else if let view = view as? BoneCalendarView {
             view.setHeight = height
-        }
-        if let view = view as? BoneCustomListsView {
+        } else if let view = view as? BoneCustomListsView {
             view.setHeight = height
-        }
-        if let view = view as? BoneCustomFilterListView {
+        } else if let view = view as? BoneCustomFilterListView {
             view.setHeight = height
+        } else {
+            view.frame.size.height = height
         }
     }
     
@@ -307,7 +336,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
         }
         let type = dataSource.boneMenu(self, typeForColumnAt: column).type
         switch type {
-        case .button, .calendar:
+        case .button, .calendar, .custom:
             break
         case .filter:
             self.filterView.reloadData()
@@ -325,7 +354,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
         }
         let type = dataSource.boneMenu(self, typeForColumnAt: column).type
         switch type {
-        case .button, .calendar:
+        case .button, .calendar, .custom:
             break
         case .filter:
             self.filterView.reloadData()
@@ -349,8 +378,8 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             let origin = CGPoint(x: CGFloat(i) * width, y: 0)
             let size = CGSize(width: width, height: self.scrollView.frame.height)
             let menuBtn = ColumnBtn(frame: CGRect(origin: origin, size: size), type: info.type)
-            menuBtn.normalColor = self.fontColor
-            menuBtn.selectColor = self.selectColor
+            menuBtn.normalColor = self.menuFontColor ?? self.fontColor
+            menuBtn.selectColor = self.menuSelectColor ?? self.selectColor
             menuBtn.title = info.title
             menuBtn.tag = i + 100
 
@@ -364,6 +393,7 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
                 if !listArray.isEmpty {
                     menuBtn.title = self.source.rowTitle(listArray[0])
                 }
+                
             default:
                 break
             }
@@ -379,6 +409,9 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
     }
     
     override func draw(_ rect: CGRect) {
+        guard self.isBottomLine else {
+            return
+        }
         BoneCustomPopup.Color.line.setStroke()
         let path = UIBezierPath()
         path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
@@ -414,6 +447,7 @@ extension BoneCustomMenu: BoneCustomPopupDelegate {
     }
 }
 
+/// 筛选显示栏
 extension BoneCustomMenu: BoneMenuBarDelegate {
     func state(_ barView: BoneMenuBarView) {
         let y = self.barView.isShow ? self.barView.frame.maxY : self.frame.maxY
