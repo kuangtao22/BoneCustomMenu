@@ -41,13 +41,13 @@ extension BoneCustomPopup {
 class BoneCustomPopup: UIView {
     
     var popupDelegate: BoneCustomPopupDelegate?
-
+    
     private var screen_width = UIScreen.main.bounds.width
     private var screen_height = UIScreen.main.bounds.height
     
     
     /// 背景
-     lazy var backgroundView: UIView = {
+    lazy var backgroundView: UIView = {
         let origin = CGPoint(x: 0, y: self.frame.origin.y + self.frame.height)
         let size = CGSize(width: self.frame.width, height: UIScreen.main.bounds.height - self.frame.origin.y)
         let backgroundView = UIView(frame: CGRect(origin: origin, size: size))
@@ -68,7 +68,7 @@ class BoneCustomPopup: UIView {
 
 
 extension BoneCustomPopup {
-
+    
     /// 菜单按钮样式
     class ColumnBtn: UIButton {
         
@@ -90,13 +90,7 @@ extension BoneCustomPopup {
             didSet {
                 self.setTitle(self.title, for: UIControlState.normal)
                 if self.type != .button {
-                    
-                    guard let font = self.titleLabel?.font else {
-                        return
-                    }
-                    let titleWidth = BoneTools.shared.getTextWidth(text: self.title ?? "", font: font, height: self.frame.height)
-                    self.titleEdgeInsets.left = -(self.imageView?.frame.width ?? 0) * 2 - 5
-                    self.imageEdgeInsets.right = -titleWidth * 2 - 5
+                    self.layout(.imageRight, spacing: 5)
                 }
             }
         }
@@ -129,7 +123,9 @@ extension BoneCustomPopup {
         convenience init(frame: CGRect, type: BoneMenuColumnType) {
             self.init(frame: frame)
             self.type = type
+            self.layer.masksToBounds = true
             self.titleLabel?.font = UIFont.systemFont(ofSize: Size.font)
+            self.titleLabel?.lineBreakMode = .byTruncatingMiddle
             self.addTarget(self, action: #selector(ColumnBtn.action(button:)), for: UIControlEvents.touchUpInside)
         }
         
@@ -170,3 +166,4 @@ extension BoneCustomPopup {
         }
     }
 }
+

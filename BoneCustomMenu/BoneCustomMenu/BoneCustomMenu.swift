@@ -382,7 +382,6 @@ extension BoneCustomMenu: BoneCustomMenuProtocol {
             menuBtn.selectColor = self.menuSelectColor ?? self.selectColor
             menuBtn.title = info.title
             menuBtn.tag = i + 100
-
             switch info.type {
             case .button:
                 menuBtn.isSelected = self.source.selectIndexPaths.contains {
