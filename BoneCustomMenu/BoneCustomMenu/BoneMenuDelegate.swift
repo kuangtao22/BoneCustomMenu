@@ -37,7 +37,7 @@ enum BoneMenuSelectType {
     case multi  // 多选
 }
 
-protocol BoneMenuDataSource {
+protocol BoneMenuDataSource: NSObjectProtocol {
     
 
     /// 返回 boneMenu 有多少列 ，默认1列

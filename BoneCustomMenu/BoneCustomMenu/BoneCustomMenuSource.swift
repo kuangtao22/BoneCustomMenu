@@ -14,9 +14,9 @@ class BoneCustomMenuSource {
     var currentSelect = 0
     
     /// 代理协议
-    var delegate: BoneMenuDelegate?
+    weak var delegate: BoneMenuDelegate?
     
-    var dataSource: BoneMenuDataSource?
+    weak var dataSource: BoneMenuDataSource?
     
     /// 所有选中索引
     var selectIndexPaths: [BoneMenuIndexPath] {

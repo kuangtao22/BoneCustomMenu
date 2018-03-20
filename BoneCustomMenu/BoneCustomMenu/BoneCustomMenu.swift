@@ -18,12 +18,12 @@ protocol BoneCustomMenuProtocol {
 class BoneCustomMenu: BoneCustomPopup {
     
     /// 代理协议
-    var delegate: BoneMenuDelegate? {
+    weak var delegate: BoneMenuDelegate? {
         didSet { self.source.delegate = self.delegate }
     }
     
     /// 数据源
-    var dataSource: BoneMenuDataSource? {
+    weak var dataSource: BoneMenuDataSource? {
         didSet { self.source.dataSource = self.dataSource }
     }
     

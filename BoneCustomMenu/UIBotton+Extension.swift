@@ -48,7 +48,7 @@ extension UIButton {
             
             titleInsetsLeft = -(imageFrame.width + space)
             titleInsetsRight = -titleInsetsLeft
-
+            
         case .imageLeft:
             let spacing = spacing * 0.5;
             
@@ -89,3 +89,4 @@ extension UIButton {
     }
     
 }
+
